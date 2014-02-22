@@ -17,7 +17,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'rv@q5h3#8dzazigjbyqy#y$p*_ta+vkkjwx-m1#!y@k)lp9&x@'
+SECRET_KEY = '()8k4nq(+t#@tel1!u4xiss-5y%53tg3-=!z7z$ooh0ya&gfko'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -79,15 +79,4 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
-STATIC_URL = '/static/'
-
-import dj_database_url
-DATABASES['default'] = dj_database_url.config()
-
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-ALLOWED_HOSTS = ['*']
-
-iport os
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
