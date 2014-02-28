@@ -13,7 +13,5 @@ class CourseInfoItem(Item):
     department = Field()
     course_level = Field()
     terms_offered = Field()
-    grading = Field()
-    hours_format = Field()
-    description = Field()    
+
 

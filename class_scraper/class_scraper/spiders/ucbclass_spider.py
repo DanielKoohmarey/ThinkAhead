@@ -20,6 +20,7 @@ class UCBClassSpider(Spider):
            yield Request(response.url+major.xpath('a/@href').extract()[0].encode('utf-8').replace('/courses/',''),callback=self.parse_class) #'/courses/aerospc/'
 
     def parse_class(self, response):
+        """ debug why csv data split up, check individual item data"""
         info = CourseInfoItem()
         sel = Selector(response)
         courses = sel.xpath('//div[@class="courseblock"]') #assuming on course page i.e http://bulletin.berkeley.edu/courses/aerospc/
@@ -31,5 +32,5 @@ class UCBClassSpider(Spider):
             info['course_code'] = course_code.replace(major_name,'').strip('\xc2\xa0')
             info['course_name'] = course.xpath('p/span[@class="title"]/text()').extract()[0].encode('utf-8') # Foundations of the U.S. Air Force
             info['units'] = course.xpath('p/span[@class="hours"]/text()').extract()[0].encode('utf-8') # '1 Unit'
-            info['department'], info['course_level'], info['terms_offered'], info['grading'], info['hours_format'], info['description'] =  [elem.encode('utf-8') for elem in course.xpath('p/text()').extract()[4:10]]
+            info['department'], info['course_level'], info['terms_offered'] =  [elem.encode('utf-8') for elem in course.xpath('p/text()').extract()[4:7]]
             yield info
