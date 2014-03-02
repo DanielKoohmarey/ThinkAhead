@@ -20,7 +20,7 @@ class WritePipeline(object):
 
     def process_item(self, item, spider):
         if item:
-            f = open('classes.csv', 'a')
+            f = open('courses.csv', 'a')
             new_data = ''
             for key in ['major','course_code','course_name', 'units', 'department', 'course_level', 'terms_offered']:
                 new_data +=u'{},'.format(item[key])
