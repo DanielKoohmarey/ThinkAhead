@@ -25,12 +25,10 @@ class UCBClassSpider(Spider):
         sel = Selector(response)
         courses = sel.xpath('//div[@class="courseblock"]') #assuming on course page i.e http://bulletin.berkeley.edu/courses/aerospc/
         major = sel.xpath('//h1/text()').extract()[0].encode('utf-8')
-        major_name = major[major.find('('):].strip('()')
         info['major'] = major 
         for course in courses:
-            course_code = course.xpath('p/span[@class="code"]/text()').extract()[0].encode('utf-8') #'AEROSPC\xc2\xa01A'
-            info['course_code'] = course_code.replace(major_name,'').strip('\xc2\xa0')
+            info['course_code'] = course.xpath('p/span[@class="code"]/text()').extract()[0].encode('utf-8').replace('\xc2\xa0',' ')#'AEROSPC\xc2\xa01A'
             info['course_name'] = course.xpath('p/span[@class="title"]/text()').extract()[0].encode('utf-8') # Foundations of the U.S. Air Force
-            info['units'] = course.xpath('p/span[@class="hours"]/text()').extract()[0].encode('utf-8') # '1 Unit'
+            info['units'] = course.xpath('p/span[@class="hours"]/text()').extract()[0].encode('utf-8').rstrip(' units') # '1 Unit'
             info['department'], info['course_level'], info['terms_offered'] =  [elem.encode('utf-8') for elem in course.xpath('p/text()').extract()[4:7]]
             yield info
