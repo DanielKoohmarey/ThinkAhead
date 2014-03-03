@@ -11,6 +11,10 @@ class UserLoginInformation(models.Model):
     email = models.EmailField(max_length=256)
     password = models.CharField(max_length=256)
 
+    def add(self, user, password):
+        if UserLoginInformation.objects.filter(username=user):
+            return 1
+
 class UserProfile(models.Model):
     username = models.CharField(max_length=256)
     major = models.CharField(max_length=128)
