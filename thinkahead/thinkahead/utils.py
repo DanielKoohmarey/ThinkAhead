@@ -10,8 +10,22 @@ def userExists(username):
     @return Boolean
     """
     matches = UserLoginInformation.objects.filter(username=username)
-    num_matches = matches.count()
-    if num_matches > 0:
+    numMatches = matches.count()
+    if numMatches > 0:
+        return True
+    else:
+        return False
+
+def emailExists(email):
+    """
+    Checks if an email is already registered under another user
+
+    @param email is a string
+    @return Boolean
+    """
+    matches = UserLoginInformation.objects.filter(email=email)
+    numMatches = matches.count()
+    if numMatches > 0:
         return True
     else:
         return False

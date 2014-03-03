@@ -3,30 +3,42 @@ from djorm_pgarray.fields import ArrayField #Postgres package that enables Array
 from utils import * 
 
 # Create your models here.
-class DBName(models.Model):
-    pass
 
 class UserLoginInformation(models.Model):
     username = models.CharField(max_length=256)
     email = models.EmailField(max_length=256)
     password = models.CharField(max_length=256)
 
-    @static
-    def addUser(self, user, email, password):
+    @staticmethod
+    def addUser(username, email, password):
         """
         This functions check that user does not exists, the username is not empty, the e-mail is valid
 
         * On success returns SUCCESS and adds entry to the appropriate Database
-        * On failure, the result is an error code (< 0) from the list: [ERR_USER_EXISTS, ERR_EMAIL_EXISTS, ERR_BAD_USERNAME, ERR_BAD_PASSWORD, ERR_BAD_EMAIL]
+        * On failure, the result is an error code (< 0) from the list: 
+        [ERR_USER_EXISTS, ERR_EMAIL_EXISTS, ERR_BAD_USERNAME, ERR_BAD_PASSWORD, ERR_BAD_EMAIL]
         """
-        pass
+        if !validUsername(username):
+            return ERR_BAD_USERNAME
+        if !validPassword(password):
+            return ERR_BAD_PASSWORD
+        if !validEMail(email):
+            return ERR_BAD_EMAIL
+        if userExists(username):
+            return ERR_USER_EXISTS
+        if emailExists(email):
+            return ERR_EMAIL_EXISTS
+
+        newUser = UserLoginInformation(username=username,email=email, password=password)
+        newUser.save()
+        return SUCCESS
     
-    @static
-    def login(self, user, password):
+    @staticmethod
+    def login(user, password):
         pass
 
-    @static
-    def logout(self, user):
+    @staticmethod
+    def logout(user):
 
 
 
@@ -39,36 +51,49 @@ class UserProfile(models.Model):
     plannerID = models.IntegerField()
     unitsCompleted = models.IntegerField()
 
-    @static
-    def addUserProfile(self, username, major, graduationSemester, graduationYear,coursesTaken, unitsCompleted):
+    @staticmethod
+    def addUserProfile(username, major, graduationSemester, graduationYear):
         """
-        """
-        pass
+        Checks if a username does not exist
 
-    @static
-    def addCourseTaken(self, username, coursename):
+        * On success return SUCCESS with the corresponding fields filled in the DB.
+        coursesTaken and unitsCompleted default to [] and 0 respectively
+        creates a planner that corresponds with this user
+        * If username already exists, return ERR_USER_EXISTS
         """
+        if userExists(username):
+            return ERR_USER_EXISTS
+        newUser = UserProfile(username=username, major=major, graduationSemester=graduationSemester, 
+                              graduationYear=graduationYear, coursesTaken=[], unitsCompleted=0)
+        #==TODO ADD PLANNERID==
+        newUser.save()
+        return SUCCESS
+
+    @staticmethod
+    def addCourseTaken(username, coursename):
+        """
+        Adds corresponding course into list of courses taken by user. If course already in list, nothing happens
         Change units completed appropriately
         """
         pass    
 
-    @static
-    def removeCourseTaken(self, username, coursename):
+    @staticmethod
+    def removeCourseTaken(username, coursename):
         """
         Change units completed appropriately
         """
         pass
     
-    @static
-    def changeGraduationSemester(self, username, semester):
+    @staticmethod
+    def changeGraduationSemester(username, semester):
         pass
 
-    @static
-    def changeGraduationYear(self, username, year):
+    @staticmethod
+    def changeGraduationYear(username, year):
         pass
 
-    @static
-    def changeMajor(self, username, newMajor):
+    @staticmethod
+    def changeMajor(username, newMajor):
         pass
 
 
@@ -90,23 +115,23 @@ class Planner(models.Model):
     semester14 = ArrayField(dbtype="varchar(255)")
     semester15 = ArrayField(dbtype="varchar(255)")
 
-    @static
-    def addPlanner(self):
+    @staticmethod
+    def addPlanner():
         """
         Initializes a new planner
         """
         pass
 
-    @static
-    def addCourseToPlanner(self, plannerID, index, coursename):
+    @staticmethod
+    def addCourseToPlanner(plannerID, index, coursename):
         pass
 
-    @static
-    def removeCourseFromPlanner(self, plannerID, index, coursename):
+    @staticmethod
+    def removeCourseFromPlanner(plannerID, index, coursename):
         pass
 
-    @static
-    def totalUnitsPlanner(self, plannerID, index):
+    @staticmethod
+    def totalUnitsPlanner(plannerID, index):
         pass
 
 
@@ -119,8 +144,8 @@ class Courses(models.Model):
     maxUnit = models.IntegerField()
     department = models.CharField(max_length=128)
 
-    @static
-    def getCourseUnits(self, courseName):
+    @staticmethod
+    def getCourseUnits(courseName):
         pass
 
 
@@ -128,8 +153,8 @@ class Colleges(models.Model):
     major = models.CharField(max_length=128)
     college = models.CharField(max_length=128)
 
-    @static
-    def majorToCollege(self, major):
+    @staticmethod
+    def majorToCollege(major):
         pass
 
 """
