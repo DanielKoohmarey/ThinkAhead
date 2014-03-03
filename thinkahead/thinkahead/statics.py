@@ -1,3 +1,7 @@
+"""
+Contains static variables that will be used throughout other files
+"""
+
 # The success return code
 SUCCESS = 1
 
