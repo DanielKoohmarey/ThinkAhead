@@ -1,4 +1,4 @@
-from django.db import models
+fafrom django.db import models
 from djorm_pgarray.fields import ArrayField #Postgres package that enables ArrayField
 from utils import * 
 
@@ -28,6 +28,7 @@ class UserLoginInformation(models.Model):
             return ERR_USER_EXISTS
         if emailExists(email):
             return ERR_EMAIL_EXISTS
+
 
         newUser = UserLoginInformation(username=username,email=email, password=password)
         newUser.save()
@@ -63,9 +64,9 @@ class UserProfile(models.Model):
         """
         if userExists(username):
             return ERR_USER_EXISTS
+        plannerID = Planner.addPlanner()
         newUser = UserProfile(username=username, major=major, graduationSemester=graduationSemester, 
-                              graduationYear=graduationYear, coursesTaken=[], unitsCompleted=0)
-        #==TODO ADD PLANNERID==
+                              graduationYear=graduationYear, coursesTaken=[], plannerID=plannerID, unitsCompleted=0)
         newUser.save()
         return SUCCESS
 
@@ -74,28 +75,93 @@ class UserProfile(models.Model):
         """
         Adds corresponding course into list of courses taken by user. If course already in list, nothing happens
         Change units completed appropriately
+
+        * return SUCCESS
+        * If username is not registered, return ERR_NO_RECORD_FOUND
         """
-        pass    
+        matches = UserPofile.objects.filter(username=username)
+        numMatches = matches.count()
+        if numMatches == 0:
+            return ERR_NO_RECORD_FOUND
+        account = matches[0]
+        if coursename not in account.coursesTaken: 
+            account.coursesTaken = account.coursesTaken + [coursename]
+            account.unitsCompleted += getCourseUnits(coursename)
+            account.save()
+        return SUCCESS
 
     @staticmethod
     def removeCourseTaken(username, coursename):
         """
+        Removes corresponding course from list of courses taken by user. If course is not in list, nothing happens
         Change units completed appropriately
+
+        * If successful, return SUCCESS 
+        * If username is not registered, return ERR_NO_RECORD_FOUND
         """
-        pass
+        matches = UserProfile.objects.filter(username=username)
+        numMatches = matches.count()
+        if numMatches == 0:
+            return ERR_NO_RECORD_FOUND
+        account = matches[0]
+        if coursename in account.coursesTaken: 
+            account.coursesTaken.remove(coursename)
+            account.unitsCompleted -= getCourseUnits(coursename)
+            account.save()
+        return SUCCESS
     
     @staticmethod
     def changeGraduationSemester(username, semester):
-        pass
+        """
+        Changes the entry for graduation semester of the corresponding username
+        semester should be either [SPRING_SEMESTER,SUMMER_SEMESTER,FALL_SEMESTER]
+        
+        * If successful, return SUCCESS
+        * If username is not registered, return ERR_NO_RECORD_FOUND
+        """
+        matches = UserProfile.objects.filter(username=username)
+        numMatches = matches.count()
+        if numMatches == 0:
+            return ERR_NO_RECORD_FOUND
+        account = matches[0]
+        account.graduationSemester = semester
+        account.save()
+        return SUCCESS
+
 
     @staticmethod
     def changeGraduationYear(username, year):
-        pass
+        """
+        Changes the entry for graduation year of the corresponding username
+        
+        * If successful, return SUCCESS
+        * If username is not registered, return ERR_NO_RECORD_FOUND
+        """
+        matches = UserProfile.objects.filter(username=username)
+        numMatches = matches.count()
+        if numMatches == 0:
+            return ERR_NO_RECORD_FOUND
+        account = matches[0]
+        account.graduationYear = year
+        account.save()
+        return SUCCESS
 
     @staticmethod
     def changeMajor(username, newMajor):
-        pass
-
+        """
+        Changes the entry for major  of the corresponding username
+        
+        * If successful, return SUCCESS
+        * If username is not registered, return ERR_NO_RECORD_FOUND
+        """
+        matches = UserProfile.objects.filter(username=username)
+        if numMatches == 0:
+            return ERR_NO_RECORD_FOUND
+        account = matches[0]
+        account.major = newMajor
+        account.save()
+        return SUCCESS
+        
 
 class Planner(models.Model):
     plannerID = models.IntegerField()
@@ -118,24 +184,87 @@ class Planner(models.Model):
     @staticmethod
     def addPlanner():
         """
-        Initializes a new planner
+        Initializes a new planner and add it to the database.
+        plannerID is determined by how many elements are there in the database upon creation
+        
+        * Returns the ID of the new planner
+        * Initializes all semesters' list of courses to []
         """
-        pass
+        count = Planner.objects.count()
+        planner = Planner(plannerID=count, semester1=[], semester2=[], semester3=[],
+                          semester4=[], semester5=[], semester6=[],
+                          semester7=[], semester8=[], semester9=[],
+                          semester10=[], semester11=[], semester12=[],
+                          semester13=[], semester14=[], semester15=[])
+        planner.save()
+        return count
 
     @staticmethod
     def addCourseToPlanner(plannerID, index, coursename):
-        pass
+        """
+        Adds a new course to the planner's index-th semester. 
+        index should be between 1 and 15 inclusive.
+        If the course already is in the list, no change
+        
+        * Return SUCCESS if successfully added
+        * If plannerID does not exist, return ERR_NO_RECORD_FOUND
+        """
+        matches = Planner.objects.filter(plannerID=plannerID)
+        numMatches = matches.count()
+        if numMatches == 0:
+            return ERR_NO_RECORD_FOUND
+        account = matches[0]
+        semester = 'semester'+str(index)
+        courseList = getattr(account, semester) # Gets the list of courses for corresponding semester
+        if coursename not in courseList:
+            setattr(account, semester, courseList + [coursename])
+        return SUCCESS           
+        
 
     @staticmethod
     def removeCourseFromPlanner(plannerID, index, coursename):
-        pass
+        """
+        Adds a new course to the planner's index-th semester. 
+        index should be between 1 and 15 inclusive.
+        If the course already is not in the list, no change
+        
+        * Return SUCCESS if successfully added
+        * If plannerID does not exist, return ERR_NO_RECORD_FOUND
+        """
+        matches = Planner.objects.filter(plannerID=plannerID)
+        numMatches = matches.count()
+        if numMatches == 0:
+            return ERR_NO_RECORD_FOUND
+        account = matches[0]
+        semester = 'semester'+str(index)
+        courseList = getattr(account, semester) # Gets the list of courses for corresponding semester
+        if coursename in courseList:
+            courseList.remove(coursename)
+        return SUCCESS           
 
     @staticmethod
     def totalUnitsPlanner(plannerID, index):
-        pass
+        """
+        Calculates total number of points in a given semester
+        index should be between 1 and 15 inclusive
 
+        * Return total number of units in the semester
+        * If plannerID does not exist, return ERR_NO_RECORD_FOUND
+        """
+        matches = Planner.objects.filter(plannerID=plannerID)
+        numMatches = matches.count()
+        if numMatches == 0:
+            return ERR_NO_RECORD_FOUND
+        account = matches[0]
+        semester = 'semester'+str(index)
+        courseList = getattr(account, semester)
 
-class Courses(models.Model):
+        unitCount = 0
+        for i in range(0, len(courseList)):
+            unitCount += getCourseUnits(courseList[i])
+        return unitCount
+
+class Courses(models.Model)
     courseCode = models.IntegerField()
     courseName = models.CharField(max_length=128)
     courseDescription = models.CharField(max_length=128)
@@ -146,7 +275,13 @@ class Courses(models.Model):
 
     @staticmethod
     def getCourseUnits(courseName):
-        pass
+        """
+        * Return number of units for a given course
+        If it is a variable unit course, tentatively return maxUnit
+        """
+        matches = Courses.objects.filter(courseName=courseName)
+        course = matches[0]
+        return course.maxUnit
 
 
 class Colleges(models.Model):
@@ -155,8 +290,12 @@ class Colleges(models.Model):
 
     @staticmethod
     def majorToCollege(major):
-        pass
-
+        """
+        * Return college of the corresponding major
+        """
+        matches = Colleges.objects.filter(major=major)
+        college = matches[0]
+        return college
 """
 The functions below are wrappers for the functions above so that others don't need to refer to the Databases directly
 """
@@ -170,8 +309,8 @@ def login(user, password):
 def logout(user):
     return UserLoginInformation.logout(user)
 
-def addUserProfile(username, major, graduationSemester, graduationYear,coursesTaken, unitsCompleted):
-    return UserProfile.addUserProfile(username, major, graduationSemester, graduationYear,coursesTaken, unitsCompleted)
+def addUserProfile(username, major, graduationSemester, graduationYear):
+    return UserProfile.addUserProfile(username, major, graduationSemester, graduationYear)
 
 def changeGraduationSemester(username, semester):
     return UserProfile.changeGraduationSemester(self, username, semester)
@@ -186,13 +325,21 @@ def addCourseTaken(username, coursename):
     return UserProfile.addCoursesTaken(username, coursename)
 
 def addListCoursesTaken(username, courseList):
-    pass
+    """
+    Adds every course in courseList to list of user's courses taken
+    """
+    for i in range(0, len(courseList)):
+        addCourseTaken(username, courseList[i]
 
 def removeCourseTaken(username, coursename):
     return UserProfile.removeCourseTaken(username, coursename)
 
 def removeListCoursesTaken(username, coursename):
-    pass
+    """
+    Remove every course in courseList to list of user's courses taken
+    """
+    for i in range(0, len(courseList)):
+        removeCourseTaken(username, courseList[i]
 
 def addCourseToPlanner(plannerID, index, coursename):
     return Planner.addCourseToPlanner(plannerID, index, coursename)

@@ -23,6 +23,8 @@ ERR_BAD_PASSWORD = -5
 # Invalid E-mail (longer than MAX_EMAIL_LENGTH, or does not have an '@' character)
 ERR_BAD_EMAIL = -6
 
+# Query into a database using a username that is not registered
+ERR_NO_RECORD_FOUND = -7
 
 MAX_USERNAME_LENGTH = 256
 MAX_PASSWORD_LENGTH = 256
