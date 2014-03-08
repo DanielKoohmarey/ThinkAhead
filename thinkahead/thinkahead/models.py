@@ -284,7 +284,7 @@ class Courses(models.Model)
         return course.maxUnit
     
     @staticmethod
-    def load_courses():
+    def loadCourses():
         """ Run this once to populate the database with Courses """
         import pickle
         departments  = pickle.load( open("courses.p", "rb") )
