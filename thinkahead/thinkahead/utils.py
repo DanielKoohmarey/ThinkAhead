@@ -1,5 +1,7 @@
 from statics import *
-from models import UserLoginInformation # Hopefully this doesn't cause infinite loop
+from thinkahead.thinkahead.models import *
+# import models
+#from models import UserLoginInformation # Hopefully this doesn't cause infinite loop
 import re # Allows regex for E-Mail validation
 
 def userExists(username):
@@ -9,6 +11,7 @@ def userExists(username):
     @param userame is a string
     @return Boolean
     """
+    return False
     matches = UserLoginInformation.objects.filter(username=username)
     numMatches = matches.count()
     if numMatches > 0:

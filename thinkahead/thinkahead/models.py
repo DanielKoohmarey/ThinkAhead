@@ -1,4 +1,9 @@
-fafrom django.db import models
+"""
+Classes to represent Databases for our application
+
+The "class Meta" clause under each classes allow us to move this python file anywhere and let Django knows that it is part of the application. Do NOT remove this
+"""
+from django.db import models
 from djorm_pgarray.fields import ArrayField #Postgres package that enables ArrayField
 from utils import * 
 
@@ -8,7 +13,9 @@ class UserLoginInformation(models.Model):
     username = models.CharField(max_length=256)
     email = models.EmailField(max_length=256)
     password = models.CharField(max_length=256)
-
+    class Meta:
+        app_label = 'thinkahead'
+    
     @staticmethod
     def addUser(username, email, password):
         """
@@ -18,11 +25,11 @@ class UserLoginInformation(models.Model):
         * On failure, the result is an error code (< 0) from the list: 
         [ERR_USER_EXISTS, ERR_EMAIL_EXISTS, ERR_BAD_USERNAME, ERR_BAD_PASSWORD, ERR_BAD_EMAIL]
         """
-        if !validUsername(username):
+        if not validUsername(username):
             return ERR_BAD_USERNAME
-        if !validPassword(password):
+        if not validPassword(password):
             return ERR_BAD_PASSWORD
-        if !validEMail(email):
+        if not validEMail(email):
             return ERR_BAD_EMAIL
         if userExists(username):
             return ERR_USER_EXISTS
@@ -40,7 +47,7 @@ class UserLoginInformation(models.Model):
 
     @staticmethod
     def logout(user):
-
+        pass
 
 
 class UserProfile(models.Model):
@@ -51,6 +58,8 @@ class UserProfile(models.Model):
     coursesTaken = ArrayField(dbtype="varchar(255)")
     plannerID = models.IntegerField()
     unitsCompleted = models.IntegerField()
+    class Meta:
+        app_label = 'thinkahead'
 
     @staticmethod
     def addUserProfile(username, major, graduationSemester, graduationYear):
@@ -180,6 +189,8 @@ class Planner(models.Model):
     semester13 = ArrayField(dbtype="varchar(255)")
     semester14 = ArrayField(dbtype="varchar(255)")
     semester15 = ArrayField(dbtype="varchar(255)")
+    class Meta:
+        app_label = 'thinkahead'
 
     @staticmethod
     def addPlanner():
@@ -190,7 +201,7 @@ class Planner(models.Model):
         * Returns the ID of the new planner
         * Initializes all semesters' list of courses to []
         """
-        count = Planner.objects.count()
+        count = Planner.objects.all().count()
         planner = Planner(plannerID=count, semester1=[], semester2=[], semester3=[],
                           semester4=[], semester5=[], semester6=[],
                           semester7=[], semester8=[], semester9=[],
@@ -264,7 +275,7 @@ class Planner(models.Model):
             unitCount += getCourseUnits(courseList[i])
         return unitCount
 
-class Courses(models.Model)
+class Courses(models.Model):
     courseCode = models.IntegerField()
     courseName = models.CharField(max_length=128)
     courseDescription = models.CharField(max_length=128)
@@ -272,6 +283,9 @@ class Courses(models.Model)
     minUnit = models.IntegerField()
     maxUnit = models.IntegerField()
     department = models.CharField(max_length=128)
+    class Meta:
+        app_label = 'thinkahead'
+
 
     @staticmethod
     def getCourseUnits(courseName):
@@ -287,6 +301,8 @@ class Courses(models.Model)
 class Colleges(models.Model):
     major = models.CharField(max_length=128)
     college = models.CharField(max_length=128)
+    class Meta:
+        app_label = 'thinkahead'
 
     @staticmethod
     def majorToCollege(major):
@@ -329,7 +345,7 @@ def addListCoursesTaken(username, courseList):
     Adds every course in courseList to list of user's courses taken
     """
     for i in range(0, len(courseList)):
-        addCourseTaken(username, courseList[i]
+        addCourseTaken(username, courseList[i])
 
 def removeCourseTaken(username, coursename):
     return UserProfile.removeCourseTaken(username, coursename)
@@ -339,7 +355,7 @@ def removeListCoursesTaken(username, coursename):
     Remove every course in courseList to list of user's courses taken
     """
     for i in range(0, len(courseList)):
-        removeCourseTaken(username, courseList[i]
+        removeCourseTaken(username, courseList[i])
 
 def addCourseToPlanner(plannerID, index, coursename):
     return Planner.addCourseToPlanner(plannerID, index, coursename)

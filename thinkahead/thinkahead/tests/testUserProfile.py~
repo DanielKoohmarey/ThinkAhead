@@ -1,0 +1,10 @@
+from django.test import TestCase
+#from thinkahead.models import UserProfile
+import models
+
+class TestAddUserProfile(TestCase):
+    def testAddSimple(self):
+        self.assertEquals(1,1)
+
+    def test2(self):
+        self.assertEquals(1,2)
