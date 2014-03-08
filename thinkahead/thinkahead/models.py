@@ -282,6 +282,20 @@ class Courses(models.Model)
         matches = Courses.objects.filter(courseName=courseName)
         course = matches[0]
         return course.maxUnit
+    
+    @staticmethod
+    def load_courses():
+        """ Run this once to populate the database with Courses """
+        import pickle
+        departments  = pickle.load( open("courses.p", "rb") )
+        for department in courses.keys():
+            for course in department.keys():
+                courseInfo = department[course]
+                units = units.split(" - ")
+                if len(units) == 1:
+                    units = units[0],units[0]
+                newCourse = Course(courseCode = course, CourseName = courseInfo[0], courseDescription = courseInfo[4], courseLevel = courseInfo[3], minUnit = units[0], maxUnit = units[1], department = department)
+                newCourse.save()  
 
 
 class Colleges(models.Model):
