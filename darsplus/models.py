@@ -65,6 +65,18 @@ class UserProfile(models.Model):
         account = matches[0]
         return account.coursesTaken
         
+    @staticmethod
+    def getUnitsCompleted(username):
+        """
+        return number of units taken by username
+        * If username does not exist, return ERR_NO_RECORD_FOUND
+        """
+        matches = UserProfile.objects.filter(username=username)
+        numMatches = matches.count()
+        if numMatches == 0:
+            return ERR_NO_RECORD_FOUND
+        account = matches[0]
+        return account.unitsCompleted
 
     @staticmethod
     def addCourseTaken(username, coursename):
@@ -76,7 +88,7 @@ class UserProfile(models.Model):
         * If username is not registered, return ERR_NO_RECORD_FOUND
         * If course already in list, return ERR_RECORD_EXISTS
         """
-        matches = UserPofile.objects.filter(username=username)
+        matches = UserProfile.objects.filter(username=username)
         numMatches = matches.count()
         if numMatches == 0:
             return ERR_NO_RECORD_FOUND
@@ -377,6 +389,9 @@ def changeMajor(username, newMajor):
 
 def getCoursesTaken(username):
     return UserProfile.getCoursesTaken(username)
+
+def getUnitsTaken(username):
+    return UserProfile.getUnitsTaken(username)
 
 def addCourseTaken(username, coursename):
     return UserProfile.addCoursesTaken(username, coursename)
