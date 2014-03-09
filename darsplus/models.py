@@ -245,6 +245,12 @@ class Courses(models.Model):
     class Meta:
         app_label = 'thinkahead'
 
+    @staticmethod
+    def getCourseInfo(courseName):
+        matches = Courses.objects.filter(courseName=courseName)
+        course = matches[0]
+        return course
+
 
     @staticmethod
     def getCourseUnits(courseName):
@@ -267,6 +273,7 @@ class Courses(models.Model):
                 units = units.split(" - ")
                 if len(units) == 1:
                     units = units[0],units[0]
+                units = [int(unit) for unit in units]
                 newCourse = Course(courseCode = course, CourseName = courseInfo[0], courseDescription = courseInfo[4], courseLevel = courseInfo[3], minUnit = units[0], maxUnit = units[1], department = department)
                 newCourse.save()  
 
