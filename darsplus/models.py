@@ -288,7 +288,7 @@ class Courses(models.Model):
                 units = [int(unit) for unit in units]
                 newCourse = Course(courseCode = course, CourseName = courseInfo[0], courseDescription = courseInfo[4], courseLevel = courseInfo[3], minUnit = units[0], maxUnit = units[1], department = department)
                 newCourse.save()  
-
+        return SUCCESS
 
 class Colleges(models.Model):
     major = models.CharField(max_length=128)
