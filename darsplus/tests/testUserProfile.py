@@ -11,6 +11,7 @@ from darsplus.utils import *
 from darsplus.models import UserProfile
 
 class TestUserProfile(TestCase):
+        
     def testAddSimple(self):
         """
         Tests that you can add 1 user
@@ -66,16 +67,22 @@ class TestUserProfile(TestCase):
         self.assertEquals(SUCCESS, response)
         self.assertEquals(2, UserProfile.objects.count())
 
-    def testCoursesTaken(self):
+
+    def testEmptyCoursesTaken(self):
         """
         Tests that course taken defaults to [] (empty)
         """
         response = UserProfile.addUserProfile("eevee","Computer Science",
                                                      "Fall", 2014)
-        user = UserProfile.objects.filter(username="eevee")[0]
-        self.assertEquals([], user.coursesTaken)
+        self.assertEquals([], UserProfile.getCoursesTaken("eevee"))
 
-    def testUnitsCompleted(self):
+    def testAddCourseTaken(self):
+        response = UserProfile.addUserProfile("eevee", "Computer Science",
+                                              "Fall", 2014)
+        self.assertEquals([], UserProfile.getCoursesTaken("eevee"))
+        
+
+    def testNoUnitsCompleted(self):
         """
         Tests that unitsCompleted deftaults to 0
         """
@@ -110,3 +117,4 @@ class TestUserProfile(TestCase):
             user = UserProfile.objects.filter(username=username)[0]
             id = user.plannerID
             self.assertEquals(i, id)
+

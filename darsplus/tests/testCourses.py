@@ -1,6 +1,7 @@
 """
 Test suite for Courses database in models.py
 Tests all methods defined in the class, but not the wrapper methods
+Tests mainly getCourseUnits and loadCourses but for more comprehensive test in loadCourses, check testLoadCourses.py
 
 To run, type "python manage.py test thinkahead/thinkahead/tests"
 """
@@ -20,17 +21,6 @@ class TestCourses(TestCase):
                                minUnit = 1, maxUnit = 4, department = "Computer Science")
         self.econ = Courses.objects.create(courseCode = "ECON C110", courseName = "Game Theory in the Social Sciences", courseDescription = "Game theory stuff", courseLevel = UPPER_DIVISION,
                                minUnit = 3, maxUnit = 3, department = "Economics")
-
-    def testCoursesFields(self):
-        course = Courses.getCourseInfo("COMPSCI CS169")
-        self.assertEqual(course.courseCode, "COMPSCI CS169")
-        self.assertEqual(course.courseName, "Software Engineering")
-        self.assertEqual(course.courseDescription, "Fall, Spring")
-        self.assertEqual(course.courseLevel, "Undergraduate")
-        self.assertEqual(course.minUnit, 4)
-        self.assertEqual(course.maxUnit, 4)
-        self.assertEqual(course.department, "Computer Science")
-
     def testGetCourseUnits(self):
         units = Courses.getCourseUnits("COMPSCI 61B")
         self.assertEquals(4, units)

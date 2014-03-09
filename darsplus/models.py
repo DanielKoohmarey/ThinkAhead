@@ -53,13 +53,28 @@ class UserProfile(models.Model):
         return SUCCESS
 
     @staticmethod
+    def getCoursesTaken(username):
+        """
+        returns list of courses (as strings) of courses already taken by username
+        if username does not exist, return ERR_NO_RECORD_FOUND
+        """
+        matches = UserProfile.objects.filter(username=username)
+        numMatches = matches.count()
+        if numMatches == 0:
+            return ERR_NO_RECORD_FOUND
+        account = matches[0]
+        return account.coursesTaken
+        
+
+    @staticmethod
     def addCourseTaken(username, coursename):
         """
-        Adds corresponding course into list of courses taken by user. If course already in list, nothing happens
+        Adds corresponding course into list of courses taken by user. 
         Change units completed appropriately
 
         * return SUCCESS
         * If username is not registered, return ERR_NO_RECORD_FOUND
+        * If course already in list, return ERR_RECORD_EXISTS
         """
         matches = UserPofile.objects.filter(username=username)
         numMatches = matches.count()
@@ -70,16 +85,19 @@ class UserProfile(models.Model):
             account.coursesTaken = account.coursesTaken + [coursename]
             account.unitsCompleted += getCourseUnits(coursename)
             account.save()
+        else:
+            return ERR_RECORD_EXISTS
         return SUCCESS
 
     @staticmethod
     def removeCourseTaken(username, coursename):
         """
-        Removes corresponding course from list of courses taken by user. If course is not in list, nothing happens
+        Removes corresponding course from list of courses taken by user. 
         Change units completed appropriately
 
         * If successful, return SUCCESS 
         * If username is not registered, return ERR_NO_RECORD_FOUND
+        * If course is not in list, return ERR_NO_RECORD_FOUND
         """
         matches = UserProfile.objects.filter(username=username)
         numMatches = matches.count()
@@ -90,6 +108,8 @@ class UserProfile(models.Model):
             account.coursesTaken.remove(coursename)
             account.unitsCompleted -= getCourseUnits(coursename)
             account.save()
+        else:
+            return ERR_NO_RECORD_FOUND
         return SUCCESS
     
     @staticmethod
@@ -187,10 +207,11 @@ class Planner(models.Model):
         """
         Adds a new course to the planner's index-th semester. 
         index should be between 1 and 15 inclusive.
-        If the course already is in the list, no change
         
         * Return SUCCESS if successfully added
         * If plannerID does not exist, return ERR_NO_RECORD_FOUND
+        * If the course already is in the list, return ERR_RECORD_EXISTS
+
         """
         matches = Planner.objects.filter(plannerID=plannerID)
         numMatches = matches.count()
@@ -201,6 +222,8 @@ class Planner(models.Model):
         courseList = getattr(account, semester) # Gets the list of courses for corresponding semester
         if coursename not in courseList:
             setattr(account, semester, courseList + [coursename])
+        else:
+            return ERR_RECORD_EXISTS
         return SUCCESS           
         
 
@@ -209,10 +232,11 @@ class Planner(models.Model):
         """
         Adds a new course to the planner's index-th semester. 
         index should be between 1 and 15 inclusive.
-        If the course already is not in the list, no change
         
         * Return SUCCESS if successfully added
         * If plannerID does not exist, return ERR_NO_RECORD_FOUND
+        * If the course already is not in the list, return ERR_NO_RECORD_FOUND
+
         """
         matches = Planner.objects.filter(plannerID=plannerID)
         numMatches = matches.count()
@@ -223,6 +247,8 @@ class Planner(models.Model):
         courseList = getattr(account, semester) # Gets the list of courses for corresponding semester
         if coursename in courseList:
             courseList.remove(coursename)
+        else:
+            return ERR_NO_RECORD_FOUND
         return SUCCESS           
 
     @staticmethod
@@ -294,18 +320,14 @@ class Colleges(models.Model):
     major = models.CharField(max_length=128)
     college = models.CharField(max_length=128)
 
-
     @staticmethod
     def majorToCollege(major):
         """
-        * Return college of the corresponding major
+        * Return college of the corresponding major (in String)
         """
         matches = Colleges.objects.filter(major=major)
         college = matches[0]
         return college
-
-
-
 
 
 
@@ -352,6 +374,9 @@ def changeGraduationYear(username, year):
 
 def changeMajor(username, newMajor):
     return UserProfile.changeMajor(username, newMajor)
+
+def getCoursesTaken(username):
+    return UserProfile.getCoursesTaken(username)
 
 def addCourseTaken(username, coursename):
     return UserProfile.addCoursesTaken(username, coursename)
