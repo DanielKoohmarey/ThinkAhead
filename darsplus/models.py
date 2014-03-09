@@ -319,7 +319,7 @@ class Courses(models.Model):
         departments  = pickle.load( open("courses.p", "rb") )
         for department in departments.keys():
             for course in departments[department].keys():
-                courseInfo = department[course]
+                courseInfo = departments[department][course]
                 units = units.split(" - ")
                 if len(units) == 1:
                     units = units[0],units[0]
