@@ -10,7 +10,7 @@ from django.test import TestCase
 from darsplus.utils import * 
 from darsplus.models import UserProfile
 
-class TestAddUserProfile(TestCase):
+class TestUserProfile(TestCase):
     def testAddSimple(self):
         """
         Tests that you can add 1 user

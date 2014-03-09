@@ -1,0 +1,95 @@
+body{
+	font-family: Arial, sans-serif;
+	color:#000000;
+
+}
+
+
+.sectionHeader{
+	color: #003262;
+	margin-bottom: 4px;
+}
+
+.formLabel{
+	color: #000000;
+
+}
+
+
+ul{
+	list-style-type:none;
+	/*padding: 0px;*/
+	margin-top: 1px;
+	margin-bottom: 1px;
+} 
+li.courseCompleted{
+	color: #C0C0C0;
+	background-image: url();
+}
+.course{
+	/*color: #000000;*/
+}
+.courseNormal{
+	/*color: #000000;*/
+
+}
+.courseUsed{
+	color: #C0C0C0;
+}
+.courseRequired{
+	color: #FF0000;
+
+}
+.courseMaybe{
+	color: #FDB515;
+}
+
+
+.button{
+	/*color: #000000;*/
+	background: #FDB515
+
+}
+
+
+.reqTitle{
+	margin-top: 1px;
+	margin-bottom: 1px;
+
+}
+
+.reqDescription{
+	margin-top: 1px;
+	margin-bottom: 1px;
+}
+
+
+.fontDefault{
+
+}
+
+
+
+/*
+h3.gold{
+	color: #FDB515;
+
+}
+.gold {
+	color: #FDB515;
+}
+#header{
+	text-align:center;
+	background-color: #003262
+}
+
+#header h1{
+	color:#FDB515;
+}
+
+#footer{
+    background: #003262;
+    position: absolute
+	text-align:center;	
+}
+*/

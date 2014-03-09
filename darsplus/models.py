@@ -8,7 +8,8 @@ from djorm_pgarray.fields import ArrayField #Postgres package that enables Array
 from utils import * 
 from statics import * 
 
-# Create your models here.
+# Create your models here
+
 class UserProfile(models.Model):
     username = models.CharField(max_length=256)
     major = models.CharField(max_length=128)
@@ -268,7 +269,7 @@ class Courses(models.Model):
         return course.maxUnit
     
     @staticmethod
-    def load_courses():
+    def loadCourses():
         """ Run this once to populate the database with Courses """
         import pickle
         departments  = pickle.load( open("courses.p", "rb") )

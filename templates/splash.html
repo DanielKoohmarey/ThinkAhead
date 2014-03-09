@@ -1,0 +1,25 @@
+<html>
+
+<head>
+	<title>Think Ahead</title>
+	{% load staticfiles %}
+	<link rel="stylesheet" type="text/css" href="{% static "style.css" %}">
+</head>
+
+<body>
+
+
+<h1 class="sectionHeader">Welcome to</h1>
+<h1>TODO: IMAGE OF LOGO</h1>
+
+<form action="" method="post">
+	<table>
+		{{ form.as_table }}
+	</table>
+	<input class="button" type="submit" name="login" value="Login">
+	<input class="button" type="submit" name="add" value="Add User">
+</form>
+
+
+</body>
+</html>
