@@ -9,14 +9,12 @@ from django.test import TestCase
 from thinkahead.thinkahead.models import UserProfile
 from thinkahead.thinkahead.utils import *
 
-class TestAddUserProfile(TestCase):
+class TestUserProfile(TestCase):
     def testAddSimple(self):
         response = UserProfile.addUserProfile("eevee","Computer Science",
                                                      "Fall", "2014")
         self.assertEquals(SUCCESS, response)
-        """
-        self.assertEquals(1, UserProfile.objects.all().count())
-        """
+
     """
     def testFields(self):
         response = UserProfile.addUserProfile("eevee","Computer Science",
@@ -85,4 +83,20 @@ class TestAddUserProfile(TestCase):
             user = UserProfile.objects.filter(username=username)[0]
             id = user.plannerID
             self.assertEquals(i, id)
+
+    def testAddCourseTaken(self):
+        pass
+
+    def testRemoveCourseTaken(self):
+        pass
+
+    def testChangeGraduationSemester(self):
+        pass
+
+    def testChangeGraduationYear(self):
+        pass
+
+    def testChangeMajor(self):
+        pass
+	
     """

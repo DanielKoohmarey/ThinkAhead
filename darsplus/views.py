@@ -4,23 +4,23 @@ from django.template import RequestContext
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
-def user_login(request):
+def userLogin(request):
     context = {}
     form = LoginForm(request.POST)
     context['form']=form
 
     #Ensure login fields are filled out
     if form.is_valid():
-        current_user = authenticate(username=context['username'],password=request.POST['password'])
+        currentUser = authenticate(username=context['username'],password=request.POST['password'])
         #If user info is correct, retrieve login count
-        if current_user:
+        if currentUser:
             login(request,current_user)
         else:
             return render(request, 'home.html',RequestContext(request,{'errors':"Invalid Username/Password. Please try again."}))
     else:
         return render(request, 'home.html',RequestContext(request,{'errors':form.errors}))
 
-def user_creation(request):
+def userCreation(request):
     context = {}
     form = LoginForm(request.POST)
     context['form']=form
@@ -41,11 +41,11 @@ def user_creation(request):
     return render(request, 'register.html', RequestContext(request,{}))
 
 
-def user_registration(request):
+def userRegistration(request):
     if not request.user.isauthenticated():
         return render(request, 'home.html',RequestContext(request,{'errors':"Username/Password cannot be left blank."}))
 
-def user_logout(request):
+def userLogout(request):
     if request.user.isauthenticated() and 'logout' in request.POST:
         #User was logged in and the logout button was pressed
         logout(request)
