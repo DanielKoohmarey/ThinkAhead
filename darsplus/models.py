@@ -169,6 +169,7 @@ class UserProfile(models.Model):
         * If username is not registered, return ERR_NO_RECORD_FOUND
         """
         matches = UserProfile.objects.filter(username=username)
+        numMatches = matches.count()
         if numMatches == 0:
             return ERR_NO_RECORD_FOUND
         account = matches[0]
@@ -319,7 +320,7 @@ class Courses(models.Model):
         departments  = pickle.load( open("courses.p", "rb") )
         for department in departments.keys():
             for course in departments[department].keys():
-                courseInfo = departments[department][course]
+                courseInfo = department[course]
                 units = units.split(" - ")
                 if len(units) == 1:
                     units = units[0],units[0]
@@ -390,8 +391,8 @@ def changeMajor(username, newMajor):
 def getCoursesTaken(username):
     return UserProfile.getCoursesTaken(username)
 
-def getUnitsTaken(username):
-    return UserProfile.getUnitsTaken(username)
+def getUnitsCompleted(username):
+    return UserProfile.getUnitsCompleted(username)
 
 def addCourseTaken(username, coursename):
     return UserProfile.addCoursesTaken(username, coursename)
