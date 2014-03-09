@@ -7,48 +7,7 @@ from django.db import models
 from djorm_pgarray.fields import ArrayField #Postgres package that enables ArrayField
 from utils import * 
 
-# Create your models here.
-
-class UserLoginInformation(models.Model):
-    username = models.CharField(max_length=256)
-    email = models.EmailField(max_length=256)
-    password = models.CharField(max_length=256)
-    class Meta:
-        app_label = 'thinkahead'
-    
-    @staticmethod
-    def addUser(username, email, password):
-        """
-        This functions check that user does not exists, the username is not empty, the e-mail is valid
-
-        * On success returns SUCCESS and adds entry to the appropriate Database
-        * On failure, the result is an error code (< 0) from the list: 
-        [ERR_USER_EXISTS, ERR_EMAIL_EXISTS, ERR_BAD_USERNAME, ERR_BAD_PASSWORD, ERR_BAD_EMAIL]
-        """
-        if not validUsername(username):
-            return ERR_BAD_USERNAME
-        if not validPassword(password):
-            return ERR_BAD_PASSWORD
-        if not validEMail(email):
-            return ERR_BAD_EMAIL
-        if userExists(username):
-            return ERR_USER_EXISTS
-        if emailExists(email):
-            return ERR_EMAIL_EXISTS
-
-
-        newUser = UserLoginInformation(username=username,email=email, password=password)
-        newUser.save()
-        return SUCCESS
-    
-    @staticmethod
-    def login(user, password):
-        pass
-
-    @staticmethod
-    def logout(user):
-        pass
-
+# Create your models here
 
 class UserProfile(models.Model):
     username = models.CharField(max_length=256)
