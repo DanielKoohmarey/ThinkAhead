@@ -1,55 +1,14 @@
 """
 Classes to represent Databases for our application
 
-The "class Meta" clause under each classes allow us to move this python file anywhere and let Django knows that it is part of the application. Do NOT remove this
 """
 from django.db import models
 from djorm_pgarray.fields import ArrayField #Postgres package that enables ArrayField
+# http://www.craigkerstiens.com/2012/11/06/django-and-arrays/ for reference 
 from utils import * 
+from statics import * 
 
 # Create your models here.
-
-class UserLoginInformation(models.Model):
-    username = models.CharField(max_length=256)
-    email = models.EmailField(max_length=256)
-    password = models.CharField(max_length=256)
-    class Meta:
-        app_label = 'thinkahead'
-    
-    @staticmethod
-    def addUser(username, email, password):
-        """
-        This functions check that user does not exists, the username is not empty, the e-mail is valid
-
-        * On success returns SUCCESS and adds entry to the appropriate Database
-        * On failure, the result is an error code (< 0) from the list: 
-        [ERR_USER_EXISTS, ERR_EMAIL_EXISTS, ERR_BAD_USERNAME, ERR_BAD_PASSWORD, ERR_BAD_EMAIL]
-        """
-        if not validUsername(username):
-            return ERR_BAD_USERNAME
-        if not validPassword(password):
-            return ERR_BAD_PASSWORD
-        if not validEMail(email):
-            return ERR_BAD_EMAIL
-        if userExists(username):
-            return ERR_USER_EXISTS
-        if emailExists(email):
-            return ERR_EMAIL_EXISTS
-
-
-        newUser = UserLoginInformation(username=username,email=email, password=password)
-        newUser.save()
-        return SUCCESS
-    
-    @staticmethod
-    def login(user, password):
-        pass
-
-    @staticmethod
-    def logout(user):
-        pass
-
-
 class UserProfile(models.Model):
     username = models.CharField(max_length=256)
     major = models.CharField(max_length=128)
@@ -58,8 +17,21 @@ class UserProfile(models.Model):
     coursesTaken = ArrayField(dbtype="varchar(255)")
     plannerID = models.IntegerField()
     unitsCompleted = models.IntegerField()
-    class Meta:
-        app_label = 'thinkahead'
+
+    @staticmethod
+    def userExists(username):
+        """
+        Checks if user already exists in UserLoginInformation DB. Is case sensitive
+
+        @param userame is a string
+        @return Boolean
+        """
+        matches = UserProfile.objects.filter(username=username)        
+        numMatches = matches.count()
+        if numMatches > 0:
+            return True
+        else:
+            return False
 
     @staticmethod
     def addUserProfile(username, major, graduationSemester, graduationYear):
@@ -189,8 +161,6 @@ class Planner(models.Model):
     semester13 = ArrayField(dbtype="varchar(255)")
     semester14 = ArrayField(dbtype="varchar(255)")
     semester15 = ArrayField(dbtype="varchar(255)")
-    class Meta:
-        app_label = 'thinkahead'
 
     @staticmethod
     def addPlanner():
@@ -208,6 +178,7 @@ class Planner(models.Model):
                           semester10=[], semester11=[], semester12=[],
                           semester13=[], semester14=[], semester15=[])
         planner.save()
+        
         return count
 
     @staticmethod
@@ -275,25 +246,24 @@ class Planner(models.Model):
             unitCount += getCourseUnits(courseList[i])
         return unitCount
 
+
 class Courses(models.Model):
-    courseCode = models.IntegerField()
+    courseCode = models.CharField(max_length=32)
     courseName = models.CharField(max_length=128)
     courseDescription = models.CharField(max_length=128)
     courseLevel = models.CharField(max_length=32)
     minUnit = models.IntegerField()
     maxUnit = models.IntegerField()
     department = models.CharField(max_length=128)
-    class Meta:
-        app_label = 'thinkahead'
 
 
     @staticmethod
-    def getCourseUnits(courseName):
+    def getCourseUnits(courseCode):
         """
         * Return number of units for a given course
         If it is a variable unit course, tentatively return maxUnit
         """
-        matches = Courses.objects.filter(courseName=courseName)
+        matches = Courses.objects.filter(courseCode=courseCode)
         course = matches[0]
         return course.maxUnit
     
@@ -315,8 +285,7 @@ class Courses(models.Model):
 class Colleges(models.Model):
     major = models.CharField(max_length=128)
     college = models.CharField(max_length=128)
-    class Meta:
-        app_label = 'thinkahead'
+
 
     @staticmethod
     def majorToCollege(major):
@@ -326,9 +295,34 @@ class Colleges(models.Model):
         matches = Colleges.objects.filter(major=major)
         college = matches[0]
         return college
+
+
+
+
+
+
+
 """
 The functions below are wrappers for the functions above so that others don't need to refer to the Databases directly
 """
+
+def userExists(username):
+    return UserProfile.userExists(username)
+
+def emailExists(email):
+    """
+    Checks if an email is already registered under another user
+
+    @param email is a string
+    @return Boolean
+    """
+    matches = UserLoginInformation.objects.filter(email=email)
+    numMatches = matches.count()
+    if numMatches > 0:
+        return True
+    else:
+        return False
+
 
 def addUser(user, email, password):
     return UserLoginInformation.add(user, email, password)
@@ -385,5 +379,4 @@ def getCourseUnits(courseName):
 
 def majorToCollege(major):
     return Colleges.majorToCollege(major)
-
 
