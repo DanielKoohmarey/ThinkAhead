@@ -6,8 +6,8 @@ To run, type "python manage.py test thinkahead/thinkahead/tests"
 """
 
 from django.test import TestCase
-from thinkahead.thinkahead.models import Courses
-from thinkahead.thinkahead.utils import *
+from darsplus.models import Courses
+from darsplus.utils import *
 
 class TestCourses(TestCase):
 

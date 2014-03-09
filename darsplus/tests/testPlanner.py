@@ -18,16 +18,17 @@ class TestPlanner(TestCase):
 
     def testAddPlanner(self):
         response = Planner.addPlanner()
-        self.assertEquals(1, response)
+        self.assertEquals(SUCCESS, response)
         self.assertEquals(2, Planner.objects.all().count())
 
     def testAddMultiplePlanner(self):
         #TODO: Need to change since planners added in setup
+        offset = Planner.objects.all().count()
         allIDs = set()
         for i in range(1,1):
             newID = Planner.addPlanner()
             num = Planner.objects.all().count()        
-            self.assertEquals(i, num)
+            self.assertEquals(i+offset, num)
             self.assertNotIn(newID, allIDs)
             allIDs.add(newID)
 
