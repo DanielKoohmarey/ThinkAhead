@@ -279,7 +279,7 @@ class Courses(models.Model):
         """ Run this once to populate the database with Courses """
         import pickle
         departments  = pickle.load( open("courses.p", "rb") )
-        for department in courses.keys():
+        for department in departments.keys():
             for course in department.keys():
                 courseInfo = department[course]
                 units = units.split(" - ")
