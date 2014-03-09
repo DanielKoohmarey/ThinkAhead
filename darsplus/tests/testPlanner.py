@@ -13,8 +13,8 @@ class TestPlanner(TestCase):
 
     def setUp(self):
         Planner.addPlanner()
-        Planner.addcoursetoPlanner(plannerID=0,0,"COMPSCI 169")
-        Planner.addcoursetoPlanner(plannerID=0,14,"COMPSCI 161")
+        Planner.addCourseToPlanner(0,1,"COMPSCI 169")
+        Planner.addCourseToPlanner(0,15,"COMPSCI 161")
 
     def testAddPlanner(self):
         response = Planner.addPlanner()
@@ -34,18 +34,19 @@ class TestPlanner(TestCase):
 
     def testAddCourseToPlanner(self):
         error = False
-        for semester in range(14):
-            response = Planner.addcoursetoPlanner(plannerID=0,semester,"COMPSCI 169")
+        for semester in range(1,15):
+            response = Planner.addCourseToPlanner(0,semester,"COMPSCI 169")
             self.assertEquals(SUCCESS, response)
+
     def testAddCourseToPlannerError(self):
-        response = Planner.addcoursetoPlanner(1,0, "COMPSCI 169")
+        response = Planner.addCourseToPlanner(1,1, "COMPSCI 169")
 
     def testRemoveCourseFromPlanner(self):
-        response = Planner.removeCourseFromPlanner(0,0,"COMPSCI 169")
+        response = Planner.removeCourseFromPlanner(0,1,"COMPSCI 169")
         self.assertEquals(SUCCESS, response)
-        response = Planner.removeCourseFromPlanner(0,0,"COMPSCI 169")
+        response = Planner.removeCourseFromPlanner(0,1,"COMPSCI 169")
         self.assertEquals(ERR_NO_RECORD_FOUND, response)
 
     def testTotalUnitsPlanner(self):
-        response = Planner.totalUnitsPlanner(0,14)
+        response = Planner.totalUnitsPlanner(0,15)
         self.assertEquals(4,response)

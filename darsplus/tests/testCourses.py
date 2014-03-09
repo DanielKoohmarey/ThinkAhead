@@ -13,12 +13,12 @@ class TestCourses(TestCase):
 
     def setUp(self):
         self.algorithm = Courses.objects.create(courseCode = "COMPSCI 61B", courseName = "Algorithms and Data Structures",
-                               courseDescription = "Super Special Awesome", courseLevel = UNDERGRADUATE,
+                               courseDescription = "Super Special Awesome", courseLevel = LOWER_DIVISION,
                                minUnit = 4, maxUnit = 4, department = "Computer Science")
         self.sicp = Courses.objects.create(courseCode = "COMPSCI 61AS", courseName = "Structures and Interpretation of Computer Programming",
-                               courseDescription = "Special Awesome", courseLevel = UNDERGRADUATE,
+                               courseDescription = "Special Awesome", courseLevel = LOWER_DIVISION,
                                minUnit = 1, maxUnit = 4, department = "Computer Science")
-        self.econ = Courses.objects.create(courseCode = "ECON C110", courseName = "Game Theory in the Social Sciences", courseDescription = "Game theory stuff", courseLevel = UNDERGRADUATE, 
+        self.econ = Courses.objects.create(courseCode = "ECON C110", courseName = "Game Theory in the Social Sciences", courseDescription = "Game theory stuff", courseLevel = UPPER_DIVISION,
                                minUnit = 3, maxUnit = 3, department = "Economics")
 
     def testCoursesFields(self):
