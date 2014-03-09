@@ -317,16 +317,16 @@ class Courses(models.Model):
     def loadCourses():
         """ Run this once to populate the database with Courses """
         import pickle
-        departments  = pickle.load( open("courses.p", "rb") )
+        departments = pickle.load( open("courses.p", "rb") )
         for department in departments.keys():
             for course in departments[department].keys():
-                courseInfo = department[course]
+                courseInfo = departments[department][course]
                 units = units.split(" - ")
                 if len(units) == 1:
                     units = units[0],units[0]
                 units = [int(unit) for unit in units]
                 newCourse = Course(courseCode = course, CourseName = courseInfo[0], courseDescription = courseInfo[4], courseLevel = courseInfo[3], minUnit = units[0], maxUnit = units[1], department = department)
-                newCourse.save()  
+                newCourse.save()
         return SUCCESS
 
 class Colleges(models.Model):
