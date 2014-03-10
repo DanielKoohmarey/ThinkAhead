@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from thinkahead.forms import LoginForm
-from thinkahead.darsplus.models import UserProfile
+from thinkahead.darsplus.forms import LoginForm, RegForm
+from thinkahead.darsplus.models import addUserProfile
 from django.template import RequestContext
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -16,31 +16,26 @@ def home(request):
 def userLogin(request):
     """ View called via post request from button on homepage, attempt to login and load page 
         depending on registration status """
-
-    context = {}
-    form = LoginForm(request.POST)
-    context['form']=form
-
-    #Ensure login fields are filled out
-    if form.is_valid():
-        currentUser = authenticate(username=context['username'],password=request.POST['password'])
-        #If user info is correct, retrieve login count
-        if currentUser:
-            login(request,current_user)
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        #Ensure login fields are filled out
+        if form.is_valid():
+            currentUser = authenticate(username=context['username'],password=request.POST['password'])
+            #If user info is correct, retrieve login count
+            if currentUser:
+                login(request,current_user)
+            else:
+                return render(request, 'home.html',RequestContext(request,{'errors':"Invalid Username/Password. Please try again."}))
         else:
-            return render(request, 'home.html',RequestContext(request,{'errors':"Invalid Username/Password. Please try again."}))
-    else:
-        return render(request, 'dashboard.html',RequestContext(request,{'errors':form.errors})
+            return render(request, 'home.html',RequestContext(request,{'errors':form.errors})
 
 def userRegistration(request):
     """ View called via create user button from homepage, attempts to create user with post data
     Upon sucesful creation redirects to registration page, else returns to home page"""
     if not request.user.isauthenticated():
         return render(request, 'home.html',RequestContext(request,{'errors':"Username/Password cannot be left blank."}))
-context = {}
-    form = LoginForm(request.POST)
-    context['form']=form
-    username, password = request.POST['username'],request.POST['password']
+   
+     form = LoginForm(request.POST)
     
     #Check user/password and ensure meets requirements
     if form.is_valid():
@@ -68,11 +63,24 @@ def dashboard(request):
     if not request.user.isauthenticated():
         return render(request, 'home.html',RequestContext(request,{}))
     elif not checkRegistration(request):
-        return render(request, 'register.html',RequestContext(request,{}))
+        #Attempt to create user profile with data
+        if request.method == 'POST':
+            form = RegForm(response.POST)
+            if form.is_valid():
+                return render(request, 'register.html',RequestContext(request,{'errors':form.errors})) 
+            major = form.major  
+            graduationSemester = form.graduationSemester 
+            graduationYear = form.graduationYear  
+            coursesTaken = form.coursesTaken 
+            newProfile = addUserProfile(response.user.username, major, graduationSemester, graduationYear, coursesTaken)
+            if newProfile == SUCCESS:
+                return render(request, 'dashboard.html',RequestContext(request,dashboardData(request.user.username))
+            else:
+                return return render(request, 'register.html',RequestContext(request,{'errors'::"Error adding user profile to database. Please try again later."}))
+        else:        
+            return render(request, 'register.html',RequestContext(request,{}))
     else:
-        #TODO: Fill the context dict with all the necessary info, many DB interactions happen here
-        #If error creating user profile, render registration.html with errors in context
-        return render(request, 'dashboard.html',RequestContext(request,{}))
+        return render(request, 'dashboard.html',RequestContext(request,dashboardData(request.user.username))
         
 def checkRegistration(request):
     """ Check whether or not a user has completed registration """    
