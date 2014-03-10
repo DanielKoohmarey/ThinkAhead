@@ -22,9 +22,16 @@ class TestLoadCourses(TestCase):
         course = Courses.getCourseInfo("COMPSCI 169")
         self.assertEqual(course.courseCode, "COMPSCI 169")
         self.assertEqual(course.courseName, "Software Engineering")
-        self.assertEqual(course.courseDescription, "Fall, Spring")
+        self.assertEqual(course.courseDescription, "Fall and spring")
         self.assertEqual(course.courseLevel, "Undergraduate")
         self.assertEqual(course.minUnit, 4)
         self.assertEqual(course.maxUnit, 4)
-        self.assertEqual(course.department, "Computer Science")
+        self.assertEqual(course.department, "Computer Science (COMPSCI)")
+
+    def testGetCourseUnits(self):
+        self.assertEquals(4, Courses.getCourseUnits("COMPSCI 169"))
+        self.assertEquals(4, Courses.getCourseUnits("COMPSCI 161"))
+        self.assertEquals(4, Courses.getCourseUnits("COMPSCI 61AS"))
+        self.assertEquals(5, Courses.getCourseUnits("COMPSCI 150"))
+
 

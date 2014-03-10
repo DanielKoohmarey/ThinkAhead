@@ -7,6 +7,7 @@ from djorm_pgarray.fields import ArrayField #Postgres package that enables Array
 # http://www.craigkerstiens.com/2012/11/06/django-and-arrays/ for reference 
 from utils import * 
 from statics import * 
+from decimal import * # Convert float to Decimal to keep it compliant to DecimalField
 
 # Create your models here
 
@@ -17,7 +18,7 @@ class UserProfile(models.Model):
     graduationYear = models.IntegerField()
     coursesTaken = ArrayField(dbtype="varchar(255)")
     plannerID = models.IntegerField()
-    unitsCompleted = models.DecimalField(max_digits=3, decimal_places=1)
+    unitsCompleted = models.DecimalField(max_digits=4, decimal_places=1)
 
     @staticmethod
     def userExists(username):
@@ -235,6 +236,7 @@ class Planner(models.Model):
         courseList = getattr(account, semester) # Gets the list of courses for corresponding semester
         if coursename not in courseList:
             setattr(account, semester, courseList + [coursename])
+            account.save()
         else:
             return ERR_RECORD_EXISTS
         return SUCCESS           
@@ -260,6 +262,7 @@ class Planner(models.Model):
         courseList = getattr(account, semester) # Gets the list of courses for corresponding semester
         if coursename in courseList:
             courseList.remove(coursename)
+            account.save()
         else:
             return ERR_NO_RECORD_FOUND
         return SUCCESS           
@@ -277,13 +280,13 @@ class Planner(models.Model):
         numMatches = matches.count()
         if numMatches == 0:
             return ERR_NO_RECORD_FOUND
-        account = matches[0]
+        account = matches[0] 
         semester = 'semester'+str(index)
         courseList = getattr(account, semester)
-
-        unitCount = 0
+        unitCount = 0.0
         for i in range(0, len(courseList)):
-            unitCount += getCourseUnits(courseList[i])
+            units = float(Courses.getCourseUnits(courseList[i]))
+            unitCount =  unitCount + units
         return unitCount
 
 
@@ -292,13 +295,13 @@ class Courses(models.Model):
     courseName = models.CharField(max_length=256)
     courseDescription = models.CharField(max_length=128)
     courseLevel = models.CharField(max_length=64)
-    minUnit = models.DecimalField(max_digits=3,decimal_places=1)
-    maxUnit = models.DecimalField(max_digits=3, decimal_places=1)
+    minUnit = models.DecimalField(max_digits=4,decimal_places=1)
+    maxUnit = models.DecimalField(max_digits=4, decimal_places=1)
     department = models.CharField(max_length=128)
 
     @staticmethod
-    def getCourseInfo(courseName):
-        matches = Courses.objects.filter(courseCode=courseName)
+    def getCourseInfo(courseCode):
+        matches = Courses.objects.filter(courseCode=courseCode)
         course = matches[0]
         return course
 
@@ -307,9 +310,12 @@ class Courses(models.Model):
     def getCourseUnits(courseCode):
         """
         * Return number of units for a given course
-        If it is a variable unit course, tentatively return maxUnit
+        * If it is a variable unit course, tentatively return maxUnit
+        * If record is not found, return ERR_NO_RECORD_FOUND
         """
         matches = Courses.objects.filter(courseCode=courseCode)
+        if (matches.count() == 0):
+            return ERR_NO_RECORD_FOUND
         course = matches[0]
         return course.maxUnit
     
@@ -332,7 +338,9 @@ class Courses(models.Model):
                 #units = [int(unit) for unit in units] # There are courses with .5 units. I changed the field corresponding to units to Decimals
                 courses = course.split("/") # Some are in "HISTART C196W/HISTORY C196W/MEDIAST C196W/"
                 for similarCourse in courses:
-                    newCourse = Courses(courseCode = similarCourse, courseName = courseInfo[0], courseDescription = courseInfo[4], courseLevel = courseInfo[3], minUnit = units[0], maxUnit = units[1], department = department)
+                    newCourse = Courses(courseCode = similarCourse, courseName = courseInfo[0],
+                                        courseDescription = courseInfo[4], courseLevel = courseInfo[3],
+                                        minUnit = units[0], maxUnit = units[1], department = department)
                     newCourse.save()
         return SUCCESS
 
