@@ -17,7 +17,7 @@ class UserProfile(models.Model):
     graduationYear = models.IntegerField()
     coursesTaken = ArrayField(dbtype="varchar(255)")
     plannerID = models.IntegerField()
-    unitsCompleted = models.IntegerField()
+    unitsCompleted = models.DecimalField(max_digits=3, decimal_places=1)
 
     @staticmethod
     def userExists(username):
@@ -288,17 +288,17 @@ class Planner(models.Model):
 
 
 class Courses(models.Model):
-    courseCode = models.CharField(max_length=32)
-    courseName = models.CharField(max_length=128)
+    courseCode = models.CharField(max_length=64)
+    courseName = models.CharField(max_length=256)
     courseDescription = models.CharField(max_length=128)
-    courseLevel = models.CharField(max_length=32)
-    minUnit = models.IntegerField()
-    maxUnit = models.IntegerField()
+    courseLevel = models.CharField(max_length=64)
+    minUnit = models.DecimalField(max_digits=3,decimal_places=1)
+    maxUnit = models.DecimalField(max_digits=3, decimal_places=1)
     department = models.CharField(max_length=128)
 
     @staticmethod
     def getCourseInfo(courseName):
-        matches = Courses.objects.filter(courseName=courseName)
+        matches = Courses.objects.filter(courseCode=courseName)
         course = matches[0]
         return course
 
@@ -321,12 +321,19 @@ class Courses(models.Model):
         for department in departments.keys():
             for course in departments[department].keys():
                 courseInfo = departments[department][course]
-                units = units.split(" - ")
+                units = courseInfo[1]
+                if 'or' in units: # Some specified their units as '3 or 4'
+                    units = units.split( " or ")
+                else:
+                    units = units.split(" - ")
+
                 if len(units) == 1:
                     units = units[0],units[0]
-                units = [int(unit) for unit in units]
-                newCourse = Course(courseCode = course, CourseName = courseInfo[0], courseDescription = courseInfo[4], courseLevel = courseInfo[3], minUnit = units[0], maxUnit = units[1], department = department)
-                newCourse.save()
+                #units = [int(unit) for unit in units] # There are courses with .5 units. I changed the field corresponding to units to Decimals
+                courses = course.split("/") # Some are in "HISTART C196W/HISTORY C196W/MEDIAST C196W/"
+                for similarCourse in courses:
+                    newCourse = Courses(courseCode = similarCourse, courseName = courseInfo[0], courseDescription = courseInfo[4], courseLevel = courseInfo[3], minUnit = units[0], maxUnit = units[1], department = department)
+                    newCourse.save()
         return SUCCESS
 
 class Colleges(models.Model):

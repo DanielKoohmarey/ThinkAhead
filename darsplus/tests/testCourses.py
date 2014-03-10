@@ -32,5 +32,5 @@ class TestCourses(TestCase):
     def testLoadCourses(self):
         response = Courses.loadCourses()
         self.assertEquals(SUCCESS, response)
-        course = Courses.getcourseInfo("COMPSCI 61A")
-        self.assertEquals(course.courseName, "Structure and Interpretation of Computer Programs")
+        course = Courses.getCourseInfo("COMPSCI 61A")
+        self.assertEquals(course.courseName, "The Structure and Interpretation of Computer Programs")
