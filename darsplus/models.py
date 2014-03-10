@@ -352,10 +352,13 @@ class Colleges(models.Model):
     def majorToCollege(major):
         """
         * Return college of the corresponding major (in String)
+        * If major does not exist, return ERR_RECORD_NOT_FOUND
         """
         matches = Colleges.objects.filter(major=major)
+        if (matches.count() == 0):
+            return ERR_RECORD_NOT_FOUND
         college = matches[0]
-        return college
+        return college.college
 
 
 
