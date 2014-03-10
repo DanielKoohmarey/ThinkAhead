@@ -19,7 +19,6 @@ class TestPlanner(TestCase):
         userID = Planner.addPlanner()
         Planner.addCourseToPlanner(userID, 1,"COMPSCI 169")
         Planner.addCourseToPlanner(userID, 15,"COMPSCI 161")
-        print userID
 
     def testAddPlanner(self):
         response = Planner.addPlanner()
@@ -44,7 +43,6 @@ class TestPlanner(TestCase):
             self.assertEquals(SUCCESS, response)
         for semester in range(1,15):
             planner = Planner.objects.filter(plannerID=newID)[0]
-            print getattr(planner, 'semester'+str(semester))
             response = Planner.totalUnitsPlanner(newID, semester)
             self.assertEquals(4, response)
 
