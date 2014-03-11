@@ -1,0 +1,10 @@
+This directory contains the neccessary python files to generate fixtures (in JSON) and the fixtures themselves.
+
+createCollegesFixtures.py:
+	reads list of colleges and courses from collegemajor file (**"\n" separated) and outputs the fixture of colleges and majors, writing them to "colleges.json")
+
+createCoursesFixtures.py:
+	**Copied from models.Courses.loadCourses()**
+
+createInitialFixtures.py:
+	Merges all fixtures in current directory to "initial_data.json". It is the default file name given to files that we want to load initially in DJANGO
