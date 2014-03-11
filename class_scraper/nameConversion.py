@@ -1,0 +1,16 @@
+#Conversion code for courses.p
+import pickle
+departments = pickle.load(open('courses.p','rb'))
+newDict = {}
+for department in departments.keys():
+	newDict[department]={}
+	for course, courseInfo in departments[department].items():
+		if course.count('/'):
+			course = course.split('/')
+		else:
+			course = [course]
+		for course in course:
+			courseName = course[::-1].replace(' ','.',1)[::-1]        
+			courseName = courseName.replace(' ','')
+			newDict[department][courseName] = courseInfo
+pickle.dump ( newDict, open('courses.p','wb'))
