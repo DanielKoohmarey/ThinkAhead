@@ -338,7 +338,6 @@ class Courses(models.Model):
                 #units = [int(unit) for unit in units] # There are courses with .5 units. I changed the field corresponding to units to Decimals
                 courses = course.split("/") # Some are in "HISTART C196W/HISTORY C196W/MEDIAST C196W/"
                 for similarCourse in courses:
-                    
                     newCourse = Courses(courseCode = similarCourse, courseName = courseInfo[0],
                                         courseDescription = courseInfo[4], courseLevel = courseInfo[3],
                                         minUnit = units[0], maxUnit = units[1], department = department)
@@ -352,15 +351,27 @@ class Colleges(models.Model):
     @staticmethod
     def majorToCollege(major):
         """
-        * Return college of the corresponding major (in String)
+        * Return college(s) of the corresponding major (in String)
         * If major does not exist, return ERR_RECORD_NOT_FOUND
+        
         """
         matches = Colleges.objects.filter(major=major)
-        if (matches.count() == 0):
-            return ERR_RECORD_NOT_FOUND
-        college = matches[0]
-        return college.college
+        numMatches = matches.count()
+        if (numMatches == 0):
+            return ERR_NO_RECORD_FOUND
+        elif (numMatches == 1):
+            college = matches[0]
+            return college.college
+        else:
+            return map(lambda major: major.college, matches)
 
+    def getMajorsInCollege(college):
+        """
+        Returns a list of majors (in strings) that are inside college
+        """
+        matches = Colleges.objects.filter(college=college)
+        majorList = map(lambda match: match.major, matches)
+        return majorList
 
 
 
@@ -421,7 +432,10 @@ def addListCoursesTaken(username, courseList):
     Adds every course in courseList to list of user's courses taken
     """
     for i in range(0, len(courseList)):
-        addCourseTaken(username, courseList[i])
+        response = addCourseTaken(username, courseList[i])
+        if response != SUCCESS:
+            return response
+    return SUCCESS
 
 def removeCourseTaken(username, coursename):
     return UserProfile.removeCourseTaken(username, coursename)
@@ -431,7 +445,10 @@ def removeListCoursesTaken(username, courseList):
     Remove every course in courseList to list of user's courses taken
     """
     for i in range(0, len(courseList)):
-        removeCourseTaken(username, courseList[i])
+        response = removeCourseTaken(username, courseList[i])
+        if response != SUCCESS:
+            return response
+    return SUCCESS
 
 def addCourseToPlanner(plannerID, index, coursename):
     return Planner.addCourseToPlanner(plannerID, index, coursename)
