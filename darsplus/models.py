@@ -338,6 +338,7 @@ class Courses(models.Model):
                 #units = [int(unit) for unit in units] # There are courses with .5 units. I changed the field corresponding to units to Decimals
                 courses = course.split("/") # Some are in "HISTART C196W/HISTORY C196W/MEDIAST C196W/"
                 for similarCourse in courses:
+                    
                     newCourse = Courses(courseCode = similarCourse, courseName = courseInfo[0],
                                         courseDescription = courseInfo[4], courseLevel = courseInfo[3],
                                         minUnit = units[0], maxUnit = units[1], department = department)
@@ -384,7 +385,7 @@ def emailExists(email):
     else:
         return False
 
-
+"""
 def addUser(user, email, password):
     return UserLoginInformation.add(user, email, password)
 
@@ -393,12 +394,12 @@ def login(user, password):
 
 def logout(user):
     return UserLoginInformation.logout(user)
-
+"""
 def addUserProfile(username, major, graduationSemester, graduationYear):
     return UserProfile.addUserProfile(username, major, graduationSemester, graduationYear)
 
 def changeGraduationSemester(username, semester):
-    return UserProfile.changeGraduationSemester(self, username, semester)
+    return UserProfile.changeGraduationSemester(username, semester)
 
 def changeGraduationYear(username, year):
     return UserProfile.changeGraduationYear(username, year)
@@ -413,7 +414,7 @@ def getUnitsCompleted(username):
     return UserProfile.getUnitsCompleted(username)
 
 def addCourseTaken(username, coursename):
-    return UserProfile.addCoursesTaken(username, coursename)
+    return UserProfile.addCourseTaken(username, coursename)
 
 def addListCoursesTaken(username, courseList):
     """
@@ -425,7 +426,7 @@ def addListCoursesTaken(username, courseList):
 def removeCourseTaken(username, coursename):
     return UserProfile.removeCourseTaken(username, coursename)
 
-def removeListCoursesTaken(username, coursename):
+def removeListCoursesTaken(username, courseList):
     """
     Remove every course in courseList to list of user's courses taken
     """
