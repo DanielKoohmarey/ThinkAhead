@@ -55,7 +55,6 @@ WSGI_APPLICATION = 'thinkahead.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -63,6 +62,14 @@ DATABASES = {
         'TEST_NAME': os.path.join(os.path.dirname(__file__), 'db.sqlite3'),
     }
 }
+"""
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'darsplus',
+        }
+}
+"""
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
@@ -89,4 +96,8 @@ STATICFILES_DIRS = (
 
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'templates'),
+)
+
+FIXTURE_DIRS = (
+    os.path.join(BASE_DIR, 'darsplus/fixtures/')
 )
