@@ -365,6 +365,7 @@ class Colleges(models.Model):
         else:
             return map(lambda major: major.college, matches)
 
+    @staticmethod
     def getMajorsInCollege(college):
         """
         Returns a list of majors (in strings) that are inside college
