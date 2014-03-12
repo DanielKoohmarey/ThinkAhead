@@ -1,7 +1,7 @@
 from django import forms
 
 import datetime
-
+""" reminder looking at PasswordChangeForm, PasswordResetForm Built-in forms for future iterations """
 class LoginForm(forms.Form):
 	name = forms.CharField(label='Username')
 	word = forms.CharField(label='Password', widget=forms.PasswordInput(), required=False)

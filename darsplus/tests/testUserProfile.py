@@ -36,6 +36,14 @@ class TestUserProfile(TestCase):
         self.assertEquals("Fall", user.graduationSemester)
         self.assertEquals(2014, user.graduationYear)
 
+    def testGetUserProfile(self):
+        """ Ensure user profile can be retrieved correctly """
+        response = UserProfile.addUserProfile("eevee","Computer Science",
+                                                     "Fall", 2014)
+        self.assertEquals(SUCCESS, response)
+        user = UserProfile.getUserProfile("eevee")
+        self.assertTrue(user)
+
     def testAddDuplicateUser(self):
         """ Ensure that you cannot add two users with the same username """
         response = UserProfile.addUserProfile("eevee","Computer Science",

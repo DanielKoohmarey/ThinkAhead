@@ -21,19 +21,18 @@ class UserProfile(models.Model):
     unitsCompleted = models.DecimalField(max_digits=4, decimal_places=1)
 
     @staticmethod
-    def userExists(username):
+    def getUserProfile(username):
         """
         Checks if user already exists in UserLoginInformation DB. Is case sensitive
 
         @param userame is a string
-        @return Boolean
+        @return UserProfile
         """
-        matches = UserProfile.objects.filter(username=username)        
-        numMatches = matches.count()
-        if numMatches > 0:
-            return True
-        else:
-            return False
+        try:
+            profile = UserProfile.objects.get(username=username)
+            return profile
+        except UserProfile.DoesNotExist:
+            return None
 
     @staticmethod
     def addUserProfile(username, major, graduationSemester, graduationYear):
@@ -45,7 +44,7 @@ class UserProfile(models.Model):
         creates a planner that corresponds with this user
         * If username already exists, return ERR_USER_EXISTS
         """
-        if userExists(username):
+        if getUserProfile(username):
             return ERR_USER_EXISTS
         plannerID = Planner.addPlanner()
         newUser = UserProfile(username=username, major=major, graduationSemester=graduationSemester, 
@@ -381,9 +380,6 @@ class Colleges(models.Model):
 The functions below are wrappers for the functions above so that others don't need to refer to the Databases directly
 """
 
-def userExists(username):
-    return UserProfile.userExists(username)
-
 def emailExists(email):
     """
     Checks if an email is already registered under another user
@@ -410,6 +406,9 @@ def logout(user):
 """
 def addUserProfile(username, major, graduationSemester, graduationYear):
     return UserProfile.addUserProfile(username, major, graduationSemester, graduationYear)
+
+def getUserProfile(username):
+    return UserProfile.getUserProfile(username)
 
 def changeGraduationSemester(username, semester):
     return UserProfile.changeGraduationSemester(username, semester)
