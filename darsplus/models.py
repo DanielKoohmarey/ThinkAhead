@@ -318,7 +318,8 @@ class Courses(models.Model):
             return ERR_NO_RECORD_FOUND
         course = matches[0]
         return course.maxUnit
-    
+    '''
+    #No longer need this method if using fixtures, keeping temporarily incase fixtures error
     @staticmethod
     def loadCourses():
         """ Run this once to populate the database with Courses """
@@ -343,7 +344,7 @@ class Courses(models.Model):
                                         minUnit = units[0], maxUnit = units[1], department = department)
                     newCourse.save()
         return SUCCESS
-
+    '''
 class Colleges(models.Model):
     major = models.CharField(max_length=128)
     college = models.CharField(max_length=128)
