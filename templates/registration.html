@@ -1,0 +1,56 @@
+<html>
+<head>
+	<title>Think Ahead</title>
+	
+	{% load staticfiles %}	
+	<script type="text/javascript" src="{% static "jquery-1.11.0.min.js" %}"></script>
+	<script type="text/javascript" src="{% static "regClient.js" %}"></script>
+</head>
+
+<body>
+
+<h1 class="sectionHeader">Registration Title (NAME PENDING)</h1>
+<p class="fontDefault">Welcome USERNAME! Please complete the registration. (NEW CSS CLASS?)</p>
+
+<form action="" method="post">
+	<p>Intended graduation date</p>
+	<table>{{ form1.as_table }}</table>
+
+	<p>Major</p>
+	<table>{{ form2.as_table }}</table>
+
+	<p>Successfully completed courses</p>
+	{{ form3.management_form }}
+	{% for form in form3.forms %}
+    	<div class='tableForms'>
+    	<table class='no_error'>
+        	{{ form.as_table }}
+    	</table>
+    	</div>
+	{% endfor %}
+	<input id="addMore" type="button" value="Add Course" >
+	<input id="createUser" type="submit" value="Add User">
+</form>
+
+</body>
+
+
+<script type="text/javascript">
+
+// Listener hooking cloneMore() to #addMore to add additional forms.
+$('#addMore').click(function() {
+        cloneMore('div.tableForms:last', 'form');
+
+});
+
+// Dictionary of {college: [majors]} passed from Django views.py
+var majorDict = jQuery.parseJSON('{{ majorDict|safe }}');
+// Dictionary of colleges to populate MajorForm.college dropdown
+var colleges = {};
+// Dictionary of majors dictionaries to popular MajorForm.major dropdown
+var majorsAll = {};
+
+getDropdownOptions();
+
+</script>
+</html>
