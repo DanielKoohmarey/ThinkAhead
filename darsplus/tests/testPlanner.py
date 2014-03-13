@@ -15,8 +15,8 @@ class TestPlanner(TestCase):
 
     def setUp(self):
         """ Create planner objects to test planner functions """
-        response = Courses.loadCourses()
-        self.assertEquals(SUCCESS, response)
+        #response = Courses.loadCourses()
+        #self.assertEquals(SUCCESS, response)
         userID = Planner.addPlanner()
         Planner.addCourseToPlanner(userID, 1,"COMPSCI.169")
         Planner.addCourseToPlanner(userID, 15,"COMPSCI.161")
