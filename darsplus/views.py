@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from thinkahead.darsplus.statics import SUCCESS
-from thinkahead.darsplus.forms import LoginForm, RegForm
+from thinkahead.darsplus.forms import LoginForm, GradForm, MajorForm, CourseFormSet
 from thinkahead.darsplus.models import addUserProfile, getUserProfile, getCoursesTaken, getUnitsCompleted
 from django.template import RequestContext
 from django.contrib.auth.models import User
@@ -23,15 +23,16 @@ def userLogin(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         #Ensure login fields are filled out
-        if form.is_valid():
-            currentUser = authenticate(username=request.POST['username'],password=request.POST['password']) #form.username and form.password?
+        if form.errors:
+            return render(request, 'home.html',RequestContext(request,{'errors':form.errors}))
+        
+        else:            
+            currentUser = authenticate(username=form.username,password=form.password) #form.username and form.password?
             #If user info is correct, retrieve login count
             if currentUser:
                 login(request,currentUser)
             else:
-                return render(request, 'home.html',RequestContext(request,{'errors':"Invalid Username/Password. Please try again."}))
-        else:
-            return render(request, 'home.html',RequestContext(request,{'errors':form.errors}))
+                return render(request, 'home.html',RequestContext(request,{'errors':"Invalid Username/Password. Please try again."}))            
 
 def userRegistration(request):
     """ View called via create user button from homepage, attempts to create user with post data
@@ -42,13 +43,13 @@ def userRegistration(request):
     form = LoginForm(request.POST)
     
     #Check user/password and ensure meets requirements
-    if form.is_valid():
-        return render(request, 'home.html',RequestContext(request,{'errors':"Username/Password cannot be left blank."}))
+    if form.errors:
+        return render(request, 'home.html',RequestContext(request,{'errors':form.errors}))
         
     #Checks whether user already exists    
-    if User.objects.filter(username=request.POST['username']):
+    if getUserProfile(form.username):
         return render(request, 'register.html',RequestContext(request,{'errors':"Username is already taken."}))
-    username,password = request.POST['username'], request.POST['password']
+    username,password = form.username, form.password
     new_user = User.objects.create_user(username=username,password=password)
     new_user.save()
     new_user = authenticate(username=username,password=password) #django requires authentification before logging in
@@ -73,13 +74,22 @@ def dashboard(request):
     elif not dashboardContext:
         #Attempt to create user profile with data
         if request.method == 'POST':
-            form = RegForm(request.POST) #can cast any form class from request.post TODO: do one for each form 
-            if form.is_valid():
-                return render(request, 'register.html',RequestContext(request,{'errors':form.errors})) 
-            major = form.major  
-            graduationSemester = form.graduationSemester 
-            graduationYear = form.graduationYear  
-            coursesTaken = form.coursesTaken 
+            gradInfo = GradForm(request.POST)
+            majorInfo = MajorForm(request.POST)
+            courseInfo = CourseFormSet(request.POST)
+            errors = {}
+            if gradInfo.errors or majorInfo.errors or CourseFormSet.errors:
+                errors.update(gradInfo.errors)
+                errors.update(majorInfo.errors)
+                errors.update(courseInfo.errors)
+                return render(request, 'register.html',RequestContext(request,{'errors':errors})) 
+            major = majorInfo.major  
+            graduationSemester = gradInfo.graduationSemester 
+            graduationYear = gradInfo.graduationYear  
+            coursesTaken = []
+            for form in courseInfo:
+                course = form.cleaned_data.get('name')
+                coursesTaken.append(course)
             newProfile = addUserProfile(request.user.username, major, graduationSemester, graduationYear, coursesTaken)
             if newProfile == SUCCESS:
                 return render(request, 'dashboard.html',RequestContext(request,dashboardContext))
