@@ -1,4 +1,4 @@
-x1"""
+"""
 Django settings for thinkahead project.
 
 For more information on this file, see
