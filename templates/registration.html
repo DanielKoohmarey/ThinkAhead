@@ -13,12 +13,15 @@
 <p class="fontDefault">Welcome USERNAME! Please complete the registration. (NEW CSS CLASS?)</p>
 
 <form action="" method="post">
+	<!-- Expecting GradForm() as form1 -->
 	<p>Intended graduation date</p>
 	<table>{{ form1.as_table }}</table>
 
+	<!-- Expecting MajorForm() as form1 -->
 	<p>Major</p>
 	<table>{{ form2.as_table }}</table>
 
+	<!-- Expecting CourseForm() as form1 -->
 	<p>Successfully completed courses</p>
 	{{ form3.management_form }}
 	{% for form in form3.forms %}
