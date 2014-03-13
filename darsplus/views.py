@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from thinkahead.darsplus.statics import SUCCESS
 from thinkahead.darsplus.forms import LoginForm, GradForm, MajorForm, CourseFormSet
-from thinkahead.darsplus.models import addUserProfile, getUserProfile, getCoursesTaken, getUnitsCompleted
+from thinkahead.darsplus.models import addUserProfile, getUserProfile, getCoursesTaken, getUnitsCompleted, majorToCollege
+from thiankahead.darsplus.requirementscode import remainingRequirements
 from django.template import RequestContext
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -83,7 +84,7 @@ def dashboard(request):
                 errors.update(majorInfo.errors)
                 errors.update(courseInfo.errors)
                 return render(request, 'register.html',RequestContext(request,{'errors':errors})) 
-            major = majorInfo.major  
+            major = majorInfo.major
             graduationSemester = gradInfo.graduationSemester 
             graduationYear = gradInfo.graduationYear  
             coursesTaken = []
@@ -121,6 +122,7 @@ def dashboardData(request):
         userInformation['major'] = userProfile.major
         userInformation['graduationSemester'] = userProfile.graduationSemester
         userInformation['graduationYear'] = userProfile.graduationYear
+        userInformation['remainingRequirements'] = remainingRequirements(userInformation['coursesTaken'], userProfile.college, majorToCollege(userProfile.major))
         return userInformation
     else:
         return False
