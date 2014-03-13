@@ -1,10 +1,10 @@
 from django.test import TestCase
-from logincounter.models import UserModel as User
+#from darsplus.models import UserModel as User
 from django.test.client import Client
 import json
 client=Client()
 
-class UserTestCase(TestCase):
+class TestUserCase(TestCase):
         
     def testHomePage(self):
         """ Expect login page exists at url /home/ """
