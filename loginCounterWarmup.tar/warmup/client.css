@@ -1,0 +1,19 @@
+/* This file contains the style parameters for the sample client. */
+
+
+.box {
+    width: 300px;
+    height: 200px;
+    border: thin black solid;
+    background-color: rgb(243,243,243);
+}
+
+.message {
+    margin: 10px 20px 10px 20px;
+    border: thin black solid;
+}
+
+body {
+	font-family: 'Helvetica Neue Light', HelveticaNeue-Light, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
