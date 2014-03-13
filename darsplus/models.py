@@ -18,7 +18,7 @@ class UserProfile(models.Model):
     graduationYear = models.IntegerField()
     coursesTaken = ArrayField(dbtype="varchar(255)")
     plannerID = models.IntegerField()
-    unitsCompleted = models.DecimalField(max_digits=4, decimal_places=1)
+    unitsCompleted = models.FloatField()
 
     @staticmethod
     def getUserProfile(username):
@@ -294,8 +294,8 @@ class Courses(models.Model):
     courseName = models.CharField(max_length=256)
     courseDescription = models.CharField(max_length=128)
     courseLevel = models.CharField(max_length=64)
-    minUnit = models.DecimalField(max_digits=4,decimal_places=1)
-    maxUnit = models.DecimalField(max_digits=4, decimal_places=1)
+    minUnit = models.FloatField()
+    maxUnit = models.FloatField()
     department = models.CharField(max_length=128)
 
     @staticmethod

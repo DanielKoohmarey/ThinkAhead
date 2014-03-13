@@ -1,6 +1,6 @@
 ## Import the python xUnit framework
-import django.test import TestCase
-import darsplus.requirementscode import *
+from django.test import TestCase
+from darsplus.requirementscode import *
 
 class TestRequirements(unittest.TestCase):
 	def testBasicReq1(self):
@@ -304,6 +304,8 @@ class TestEngineering(unittest.TestCase):
 		ans= remainingRequirements([], 'Engineering', 'MATMECENG')
 		self.assertEqual(5+2+31,len(ans))
 
+
 class TestChem(unittest.TestCase):
 	def testBSCHEM1(self):
 		self.assertEqual(1,1)
+
