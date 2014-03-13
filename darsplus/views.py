@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from thinkahead.darsplus.statics import SUCCESS
-from thinkahead.darsplus.forms import LoginForm, RegForm
-from thinkahead.darsplus.models import addUserProfile, getUserProfile, getCoursesTaken, getUnitsCompleted
+from darsplus.statics import SUCCESS
+from darsplus.forms import LoginForm, RegForm
+from darsplus.models import addUserProfile, getUserProfile, getCoursesTaken, getUnitsCompleted
 from django.template import RequestContext
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
