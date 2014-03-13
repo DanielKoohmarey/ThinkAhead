@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from darsplus.statics import SUCCESS
-from darsplus.forms import LoginForm, RegForm
-from darsplus.models import addUserProfile, getUserProfile, getCoursesTaken, getUnitsCompleted
+from thinkahead.darsplus.statics import SUCCESS
+from thinkahead.darsplus.forms import LoginForm, RegForm
+from thinkahead.darsplus.models import addUserProfile, getUserProfile, getCoursesTaken, getUnitsCompleted
 from django.template import RequestContext
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -11,6 +11,8 @@ def home(request):
     dashboardContext = dashboardData(request)
     if dashboardContext:
         return render(request, 'dashboard.html', RequestContext(request,dashboardContext)) 
+    elif request.user.is_anonymous():
+        return render(request)
     elif request.user.isauthenticated():
         return render(request, 'register.html', {})
     return render(request, 'home.html', {})
@@ -34,8 +36,8 @@ def userLogin(request):
 def userRegistration(request):
     """ View called via create user button from homepage, attempts to create user with post data
     Upon sucesful creation redirects to registration page, else returns to home page"""
-    if not request.user.isauthenticated():
-        return render(request, 'home.html',RequestContext(request,{'errors':"Username/Password cannot be left blank."}))
+    if request.user.is_anonymous() or not request.user.isauthenticated():
+        return render(request, 'home.html',RequestContext(request,{}))
    
     form = LoginForm(request.POST)
     
@@ -55,20 +57,23 @@ def userRegistration(request):
 
 def userLogout(request):
     """ Logs out current user session if one exists, return to homepage"""
-    if request.user.isauthenticated() and 'logout' in request.POST:
+    if request.user.is_anonymous():
+        return render(request, 'home.html', RequestContext(request,{}))        
+    elif request.user.isauthenticated() and 'logout' in request.POST:
         #User was logged in and the logout button was pressed
         logout(request)
-    return render(request, 'home.html', RequestContext(request,{}))
+    else:
+        return render(request, 'home.html', RequestContext(request,{}))
 
 def dashboard(request):
     """ Button from registration page sends a post request to /dashboard. View takes in post data, populates user profile associated with user, then loads dashboard if no errors on registration page """
     dashboardContext = dashboardData(request)    
-    if not request.user.isauthenticated():
+    if request.user.is_anonymous() or not request.user.isauthenticated():
         return render(request, 'home.html',RequestContext(request,{}))
     elif not dashboardContext:
         #Attempt to create user profile with data
         if request.method == 'POST':
-            form = RegForm(request.POST)
+            form = RegForm(request.POST) #can cast any form class from request.post TODO: do one for each form 
             if form.is_valid():
                 return render(request, 'register.html',RequestContext(request,{'errors':form.errors})) 
             major = form.major  
@@ -87,7 +92,7 @@ def dashboard(request):
         
 def checkRegistration(request):
     """ Check whether or not a user has completed registration """    
-    if request.user.isauthenticated():
+    if not request.user.is_anonymous() and request.user.isauthenticated():
         if getUserProfile(request.user.username):
             return True
         else:
