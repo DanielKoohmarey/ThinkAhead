@@ -1,38 +1,89 @@
-====
+=====================================================================================================
+TABLE OF CONTENTS
+-Table of Contents
+-Live Deployment and Repo Links
+-Configuring Database
+-Setting Up: Local vs Heroku
+-Running Tests
+
+Last Update: 13 March 2014
+     	     1:50PM
+
+** If you have any trouble with setting up database/local test/heroku/running tests, contact Marion **
+======================================================================================================
+
+
+
+========================
+LIVE DEPLOYMENT AND REPO
+========================
+
+Public Repo:
+https://github.com/DanielKoohmarey/ThinkAhead.git
+
+Tentative Live Deployment via Heroku:
+http://pacific-basin-7918.herokuapp.com/
+
+
+
+====================
 CONFIGURING DATABASE
-	    
-	    The databases run in Postgres and not Django's default SQLite. 
-	    To run it locally, you have to create the database locally and sync it. 
+====================	    
 
-	    0) Install postgres
-	       a) Download postgres...somehow. should be:
-	          sudo apt-get postgres
-	       b) Download the adaptor, psycopg:
-	       	  sudo apt-get install libpq-dev python-dev
-	       	  or try it manually:
-		  http://initd.org/psycopg/install/
-	       c) Install the library
-	       	  pip install djorm-ext-pgarray
-		  pip install djorm-ext-expressions
-	       d) Change thinkahead/settings.py so that you comment DATABASE that is configured to SQLlite and uncomment DATABASE that is congigured to postgres
+	The databases run in Postgres and not Django's default SQLite. 
+	To run it locally, you have to create the database locally and sync it. 
 
-	    1) Create a user for postgres
-	       a) Type "su - postgres" in the terminal should ask you for authentication. If your password doesnt pass several times, you might have to overwrite your password by typing "sudo passwd postgres"
-	       b) In Postgres' prompt, type "createuser <yourusername>". If it asks if you want to be the superuser, just type yes
-	       c) exit by typing "exit" in Postgres' prompt
-	    2) Create a database
-	       a) In the terminal, type "createdb darsplus"
-	       b) In the project directory, type "python manage.py syncdb". It shouldn't be an issue but you might have to change DATABASE settings like 'host', 'username' and 'password' to fit your database
-	    3) Manually add entries to DB (Just in case)
-	       To manually add the entries, type "python manage.py loaddata darsplus/fixtures/initial_data.json"
-	       If successful, you should see "XXX objects installed out of XXX fixtures"
+	0) Install postgres
+	   a) Download postgres:
+	      sudo apt-get postgres
+	   b) Download the adaptor, psycopg:
+	      sudo apt-get install libpq-dev python-dev
+	      or try it manually:
+	      http://initd.org/psycopg/install/
+	   c) Install the library
+	      pip install djorm-ext-pgarray
+	      pip install djorm-ext-expressions
+	   d) Change thinkahead/settings.py so that you comment DATABASE that is configured to SQLlite and uncomment DATABASE that is congigured to postgres
 
-====
-LOCAL VERSUS HEROKU
+	1) Create a user for postgres
+	   a) Type "su - postgres" in the terminal should ask you for authentication. If your password doesnt pass several times, you might have to overwrite your password by typing "sudo passwd postgres"
+	   b) In Postgres' prompt, type "createuser <yourusername>". If it asks if you want to be the superuser, just type yes
+	   c) exit by typing "exit" in Postgres' prompt
+
+	2) Create a database
+	   a) In the terminal, type "createdb darsplus"
+	   b) In the project directory, type "python manage.py syncdb". It shouldn't be an issue but you might have to change DATABASE settings like 'host', 'username' and 'password' to fit your database
+
+	3) Manually add entries to DB (Just in case)
+	   To manually add the entries, type "python manage.py loaddata darsplus/fixtures/initial_data.json"
+	   If successful, you should see "XXX objects installed out of XXX fixtures"
+
+
+
+==============================
+SETTING UP: LOCAL VERSUS HEROKU
+==============================
 
       By default the settings.py are set to work locally. In the case that it got pushed to a heroku setting, there are two things that you need to change
 
       0) Open thinkahead/wsgi.py. Comment the part that is for Heroku (should have a comment) and uncomment the other one
       
-      1) Go to thinkahead/settings.py. At the very bottom, there shold be a chunk of a code with the header "The lines that follow configure Heroku". Uncomment that
-====
+      1) Go to thinkahead/settings.py. At the very bottom, there shold be a chunk of a code with the header "The lines that follow configure Heroku". Uncomment that (Mainly to change the DATABASES setting)
+
+
+
+=============
+RUNNING TESTS
+=============
+
+	All test files and/or directories should reside within darsplus/tests/
+
+	0) Running the whole test suites:
+	   "python manage.py test"
+
+	1) Running a specific test:
+	   "python manage.py test darsplus.tests.<python file name>"
+	   e.g.
+	   "python manage.py test darsplus.tests.testColleges"
+	   "python manage.py test darsplus.tests.testCourses"
+
