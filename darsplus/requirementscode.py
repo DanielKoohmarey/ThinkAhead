@@ -1,5 +1,5 @@
 __author__ = 'Jessica'
-from thinkahead.darsplus.models import getCourseUnits
+from darsplus.models import getCourseUnits
 import re
 import os, sys
 class MyError(Exception):
