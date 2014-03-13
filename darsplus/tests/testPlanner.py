@@ -57,9 +57,9 @@ class TestPlanner(TestCase):
         """ Ensure courses can be removed from the planner """
         planner = Planner.objects.filter(plannerID = 0)[0]
         plannerID = planner.plannerID
-        response = Planner.removeCourseFromPlanner(plannerID,1,"COMPSCI 169")
+        response = Planner.removeCourseFromPlanner(plannerID,1,"COMPSCI.169")
         self.assertEquals(SUCCESS, response)
-        response = Planner.removeCourseFromPlanner(plannerID,1,"COMPSCI 169")
+        response = Planner.removeCourseFromPlanner(plannerID,1,"COMPSCI.169")
         self.assertEquals(ERR_NO_RECORD_FOUND, response)
 
     def testTotalUnitsPlannerSimple(self):
