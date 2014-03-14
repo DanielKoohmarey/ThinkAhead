@@ -363,7 +363,6 @@ class Colleges(models.Model):
             return college.college
         else:
             return map(lambda major: major.college, matches)
-
  
     @staticmethod
     def allColleges():
