@@ -16,10 +16,10 @@
 <div class="page">
 
 <h1 class="sectionHeader">Registration Title (NAME PENDING)</h1>
-<p>Welcome USERNAME! Please complete the registration. (NEW CSS CLASS?)</p>
+<p>Welcome {{user.username}} ! Please complete the registration. (NEW CSS CLASS?)</p>
 
-<form action="" method="post">
-	{% csrf_token }
+<form action="/dashboard/" method="post">
+	{% csrf_token %}
 	<!-- Expecting GradForm() as form1 -->
 	<div class="formGroup">
 		<label class="formLabel">
