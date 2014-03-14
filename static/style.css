@@ -96,14 +96,23 @@ ul.errorlist {
     padding: 4px 5px;
 }
 
-
-#header h1{
-	color:#FDB515;
+header {
+	height: 100px;
+	padding: 0px;
+	text-align: left;
+	position: relative;
+	background-color: #003262;
+	width: 100%;
+	margin: 0px;
+	display: block;
 }
 
-#footer{
-    background: #003262;
-    position: absolute
-	text-align:center;	
+
+.container {
+	float: left;
+	height: 100%;
+	width: 50%;
+	overflow:scroll;
+	margin: 10px;
+	border: 1px solid red;
 }
-*/
