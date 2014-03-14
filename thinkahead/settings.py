@@ -108,7 +108,7 @@ FIXTURE_DIRS = (
 The lines that follow configure Heroku settings. Comment out if testing locally
 
 """
-
+"""
 # Parse database configuration from $DATABASE_URL
 import dj_database_url
 DATABASES['default'] =  dj_database_url.config()
@@ -121,11 +121,11 @@ ALLOWED_HOSTS = ['*']
 
 # Static asset configuration
 import os
-BASE_DIR = os.path.dirname(os.path.abspath(__file__)) #original from internet. did not work
-BASE_DIR = os.path.dirname(os.path.dirname(__file__)) # original from django. testing
+BASE_DIR = os.path.dirname(os.path.dirname(__file__)) # original from django. Works. The original from herokudev does not
 STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
+"""
