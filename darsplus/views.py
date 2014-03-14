@@ -31,7 +31,7 @@ def splash(request):
                 else:
                     return render(request, 'splash.html',{'errors':"Invalid Username/Password. Please try again.", 'form':LoginForm()}) 
         else:
-            if request.method=='POST':
+            if 'Create User' in request.POST:
                 form = LoginForm(request.POST)
                 
                 #Check user/password and ensure meets requirements
@@ -95,7 +95,7 @@ def userRegistration(request):
             course = course.replace('.','',periods-1)
             coursesTaken.append(course)
         newProfile = addUserProfile(request.user.username, major, graduationSemester, graduationYear, coursesTaken)
-        print('Attempted addUserProfile call: '+str(newProfile))
+
         if newProfile == SUCCESS:
             return HttpResponseRedirect('/dashboard/')
         else:
