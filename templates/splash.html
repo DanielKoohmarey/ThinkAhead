@@ -17,13 +17,13 @@
 	<table>
 	{% if errors %}
 		<tr>
-			<span style="color: red;">{{errors}}</span><br/>
+			<span style="color: red; background-color: red;color: white; display: block;font-size: 10px; margin: 0 0 3px; padding: 4px 5px;">{{errors}}</span><br/>
 		</tr>
 	{% endif %}
 		{{ form.as_table }}
 	</table>
 	<input formaction="/login/" class="button" type="submit" name="login" value="Login">
-	<input formaction="/register/" class="button" type="submit" name="add" value="Registration">
+	<input formaction="/registration/" class="button" type="submit" name="add" value="Create User">
 
 </form>
 
