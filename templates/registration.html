@@ -14,7 +14,8 @@
 <h1 class="sectionHeader">Registration Title (NAME PENDING)</h1>
 <p class="fontDefault">Welcome USERNAME! Please complete the registration. (NEW CSS CLASS?)</p>
 
-<form action="" method="post">{% csrf_token %}
+<form action="" method="post">
+	{% csrf_token %}
 	<!-- Expecting GradForm() as form1 -->
 	<div class="formGroup">
 		<label><span>Intended graduation date</span></label>
@@ -42,11 +43,10 @@
     	</div>
 		{% endfor %}
 
-		<input id="addMore" type="button" value="Add Course" >
+		<input id="addMore" class="buttonLink" type="button" value="+ Add Course" >
 	</div>
 
-	<input id="createUser" type="submit" value="Add User">
-
+	<input id="createUser" class="button" type="submit" value="Complete Registration">
 </form>
 
 </body>

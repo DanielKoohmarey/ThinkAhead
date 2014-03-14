@@ -9,24 +9,30 @@
 
 <body>
 
+<div class="page">
 
 <h1 class="sectionHeader">Welcome to</h1>
 <h1>TODO: IMAGE OF LOGO</h1>
 
 <form action="" method="post">{% csrf_token %}
-	<table>
-	{% if errors %}
-		<tr>
-			<span style="color: red;">{{errors}}</span><br/>
-		</tr>
-	{% endif %}
-		{{ form.as_table }}
-	</table>
+	<div class="formGroup">
+		<label><span>Sign-in or register</span></label>
+		{{ form.username }}
+		<label></label>
+		{{ form.password }}
+
+		{% if errors %}
+		<label></label>
+		<span style="color: red;">{{ errors }}</span>
+		{% endif %}
+	</div>
+	
 	<input formaction="/login/" class="button" type="submit" name="login" value="Login">
 	<input formaction="/register/" class="button" type="submit" name="add" value="Registration">
 
 </form>
 
+</div>
 
 </body>
 </html>
