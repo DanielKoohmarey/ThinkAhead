@@ -1,72 +1,87 @@
-body{
+body {
 	font-family: Arial, sans-serif;
 	color:#000000;
+	margin-left: 50px;
+	margin-right: 50px;
 
 }
 
 
-.sectionHeader{
+label {
+	display: block;
+	margin-bottom: 5px;
+	color: #000000;
+}
+
+.formGroup {
+	margin: 20px 0px 20px;
+}
+
+.addCourseForm {
+	margin-bottom: 3px;
+}
+
+.sectionHeader {
 	color: #003262;
 	margin-bottom: 4px;
 }
 
-.formLabel{
+.formLabel {
 	color: #000000;
-
 }
 
 
-ul{
+ul {
 	list-style-type:none;
 	/*padding: 0px;*/
 	margin-top: 1px;
 	margin-bottom: 1px;
 } 
-li.courseCompleted{
+li.courseCompleted {
 	color: #C0C0C0;
 	background-image: url();
 }
-.course{
+.course {
 	/*color: #000000;*/
 }
-.courseNormal{
+.courseNormal {
 	/*color: #000000;*/
-
 }
-.courseUsed{
+.courseUsed {
 	color: #C0C0C0;
 }
-.courseRequired{
+.courseRequired {
 	color: #FF0000;
 
 }
-.courseMaybe{
+.courseMaybe {
 	color: #FDB515;
 }
 
 
-.button{
+.button {
 	/*color: #000000;*/
 	background: #FDB515
 
 }
 
 
-.reqTitle{
+.reqTitle {
 	margin-top: 1px;
 	margin-bottom: 1px;
 
 }
 
-.reqDescription{
+.reqDescription {
 	margin-top: 1px;
 	margin-bottom: 1px;
 }
 
 
-.fontDefault{
+.fontDefault {
 
 }
+
 
 ul.errorlist {
     margin: 0;
@@ -81,20 +96,6 @@ ul.errorlist {
     padding: 4px 5px;
 }
 
-
-
-/*
-h3.gold{
-	color: #FDB515;
-
-}
-.gold {
-	color: #FDB515;
-}
-#header{
-	text-align:center;
-	background-color: #003262
-}
 
 #header h1{
 	color:#FDB515;

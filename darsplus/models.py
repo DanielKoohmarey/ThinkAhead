@@ -349,11 +349,19 @@ class Colleges(models.Model):
     college = models.CharField(max_length=128)
 
     @staticmethod
+    def allColleges():
+        """
+        Returns a list of all unique college names
+        """
+        matches = Colleges.objects.distinct('college')
+        return [match.college for match in matches]
+        
+
+    @staticmethod
     def majorToCollege(major):
         """
         * Return college(s) of the corresponding major (in String)
-        * If major does not exist, return ERR_RECORD_NOT_FOUND
-        
+        * If major does not exist, return ERR_RECORD_NOT_FOUND        
         """
         matches = Colleges.objects.filter(major=major)
         numMatches = matches.count()
@@ -466,3 +474,19 @@ def getCourseUnits(courseName):
 def majorToCollege(major):
     return Colleges.majorToCollege(major)
 
+
+def getCollegesToMajors():
+    """
+    Returns a dictionary with a key college name, and value list of majors
+
+    Example Output (shortened):
+    {
+		"Engineering College": ["EECS", "MechE"],
+		"L&S": ["CS", "English"],
+     }
+    """
+    colleges = Colleges.allColleges()
+    output = {}
+    for college in colleges:
+        output[college] = Colleges.getMajorsInCollege(college)
+    return output

@@ -19,7 +19,7 @@ function cloneMore(selector, type) {
     $(selector).after(newElement);
 }
 
-
+// Function to prepare possible dropdown options for MajorForm using var majorDict
 function getDropdownOptions(){
     for (var key in majorDict) {
         colleges[key] = key;
@@ -35,8 +35,13 @@ function getDropdownOptions(){
 }
 
 
-$(document).ready(function(){
+// Listener hooking cloneMore() to #addMore to add additional forms.
+$('#addMore').click(function() {
+        cloneMore('div.addCourseForm:last', 'form');
 
+});
+
+// Populates MajorForm.college dropdown with all colleges in DB
 $.each(colleges, function(val, text) {
     $('#id_college').append(
         $('<option></option>').val(val).html(text)
