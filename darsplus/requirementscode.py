@@ -102,7 +102,7 @@ def doSomeManyChoiceReq(takenClasses, requirement, requirements, description, i)
 	return ans
 
 #college is in {Engineering, Chemistry, NaturalResources, LettersAndSciences, Haas, EnvironmentalDesign}
-def abbreviateCollege(college):
+def abbreviateMajor(major):
 	abr = {'EECS':'Electrical Engineering & Computer Sciences',
 	'BIOENG':'Bioengineering', 'CIVENG':'Civil and Environmental Engineering', 'COENG':'Computational Engineering Science',
 	'ENENG':'Energy Engineering', 'ENGMS':'Engineering Math and Statistics', 
@@ -115,6 +115,10 @@ def abbreviateCollege(college):
 	'MATNUCENG':'Materials Science & Engineering and Nuclear Engineering',
 	'MECNUCENG':'Mechanical Engineering and Nuclear Engineering'}
 	abr = dict (zip(abr.values(),abr.keys()))
+	return abr[major]
+
+def abbreviateCollege(college):
+	abr = {"College of Engineering":'Engineering'}
 	return abr[college]
 	
 """
@@ -149,6 +153,7 @@ if college is EnvironmentalDesign then major is in {ARCH:'Architecture', CYPLAN:
 	SENVDES:'Sustainable Environmental Design'}
 """
 def remainingRequirements(takenClasses, college, major):
+	major = abbreviateMajor(major)
 	college = abbreviateCollege(college)
 	ans = [];
 	# University Requirements: Common for everyone
