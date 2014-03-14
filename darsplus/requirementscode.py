@@ -115,7 +115,7 @@ def abbreviateMajor(major):
 	'MATNUCENG':'Materials Science & Engineering and Nuclear Engineering',
 	'MECNUCENG':'Mechanical Engineering and Nuclear Engineering'}
 	abr = dict (zip(abr.values(),abr.keys()))
-	return abr[major]
+	return abr[major.replace('and','&')]
 
 def abbreviateCollege(college):
 	abr = {"College of Engineering":'Engineering'}
