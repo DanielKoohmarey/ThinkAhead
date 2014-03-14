@@ -152,7 +152,7 @@ def dashboardData(request):
         userInformation['graduationSemester'] = userProfile.graduationSemester
         userInformation['graduationYear'] = userProfile.graduationYear
         userInformation['requirements'] = remainingRequirements(getCoursesTaken(username), majorToCollege(userProfile.major), userProfile.major)
-        print userInformation        
+      
         return userInformation
     else:
         return False

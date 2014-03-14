@@ -175,9 +175,9 @@ def remainingRequirements(takenClasses, college, major):
 	else:
 		ans.append({'reqName':'Unit Requirement', 'reqCompleted':False, 'reqDescription':"Complete at least 120 units",'courseDone':[], 'courseLeft':[]})
 	#American Institutions and History
-	ans.append({'reqName':'Residency', 'reqCompleted':True, 'reqDescription':"This requirement is usually satisfied before coming to UC Berkeley. See http://registrar.berkeley.edu/?PageID=ahi.html for more information",'courseDone':[], 'courseLeft':[]})
+	ans.append({'reqName':'American Institutions and History', 'reqCompleted':True, 'reqDescription':"This requirement is usually satisfied before coming to UC Berkeley. See http://registrar.berkeley.edu/?PageID=ahi.html for more information",'courseDone':[], 'courseLeft':[]})
 	#Entry Level Writing
-	ans.append({'reqName':'Residency', 'reqCompleted':True, 'reqDescription':"This requirement is usually satisfied before coming to UC Berkeley but can be fulfilled by taking a placement exam. See http://writing.berkeley.edu/classes-and-awp/awp-exam for more information",'courseDone':[], 'courseLeft':[]})
+	ans.append({'reqName':'Entry Level Writing', 'reqCompleted':True, 'reqDescription':"This requirement is usually satisfied before coming to UC Berkeley but can be fulfilled by taking a placement exam. See http://writing.berkeley.edu/classes-and-awp/awp-exam for more information",'courseDone':[], 'courseLeft':[]})
 	#Residency
 	ans.append({'reqName':'Residency', 'reqCompleted':True, 'reqDescription':"There are residency requirements placed on students but our program is not capabale of checking if they are fulfilled. See http://ls-advise.berkeley.edu/requirement/summary.html for more information",'courseDone':[], 'courseLeft':[]})
 	# College of Engineering
