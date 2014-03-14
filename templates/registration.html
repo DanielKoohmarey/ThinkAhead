@@ -17,9 +17,11 @@
 
 <h1 class="sectionHeader">Registration Title (NAME PENDING)</h1>
 <p>Welcome {{user.username}} ! Please complete the registration. (NEW CSS CLASS?)</p>
-		{% if errors %}
-		<span style="color: red;">{{ errors }}</span>
-		{% endif %}
+
+{% if errors %}
+	<span style="color: red;">{{ errors }}</span>
+{% endif %}
+
 <form action="" method="post">
 	{% csrf_token %}
 	<!-- Expecting GradForm() as form1 -->
@@ -37,7 +39,6 @@
 			<span>Major</span>
 		</label>
 		{{ form2.college }}
-           <br/>
 		{{ form2.major }}
 	</div>
 
