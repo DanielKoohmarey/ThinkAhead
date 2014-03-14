@@ -1,31 +1,31 @@
 from django.shortcuts import render
-from thinkahead.darsplus.statics import SUCCESS
-from thinkahead.darsplus.forms import LoginForm, GradForm, MajorForm, CourseFormSet
-from thinkahead.darsplus.models import addUserProfile, getUserProfile, getCoursesTaken, getUnitsCompleted, majorToCollege
-from thiankahead.darsplus.requirementscode import remainingRequirements
+from darsplus.statics import SUCCESS
+from darsplus.forms import LoginForm, GradForm, MajorForm, CourseFormSet
+from darsplus.models import addUserProfile, getUserProfile, getCoursesTaken, getUnitsCompleted, majorToCollege
+from darsplus.requirementscode import remainingRequirements
 from django.template import RequestContext
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
-def home(request):
-    """ Load the homepage, or appropriate page depending on user status """
+def splash(request):
+    """ Load the splashpage, or appropriate page depending on user status """
     dashboardContext = dashboardData(request)
     if dashboardContext:
         return render(request, 'dashboard.html', RequestContext(request,dashboardContext)) 
     elif request.user.is_anonymous():
-        return render(request)
+        return render(request, 'splash.html', {})
     elif request.user.isauthenticated():
         return render(request, 'register.html', {})
-    return render(request, 'home.html', {})
+    return render(request, 'splash.html', {})
 
 def userLogin(request):
-    """ View called via post request from button on homepage, attempt to login and load page 
+    """ View called via post request from button on splashpage, attempt to login and load page 
         depending on registration status """
     if request.method == 'POST':
         form = LoginForm(request.POST)
         #Ensure login fields are filled out
         if form.errors:
-            return render(request, 'home.html',RequestContext(request,{'errors':form.errors}))
+            return render(request, 'splash.html',RequestContext(request,{'errors':form.errors}))
         
         else:            
             currentUser = authenticate(username=form.username,password=form.password) #form.username and form.password?
@@ -33,19 +33,19 @@ def userLogin(request):
             if currentUser:
                 login(request,currentUser)
             else:
-                return render(request, 'home.html',RequestContext(request,{'errors':"Invalid Username/Password. Please try again."}))            
+                return render(request, 'splash.html',RequestContext(request,{'errors':"Invalid Username/Password. Please try again."}))            
 
 def userRegistration(request):
-    """ View called via create user button from homepage, attempts to create user with post data
-    Upon sucesful creation redirects to registration page, else returns to home page"""
+    """ View called via create user button from splashpage, attempts to create user with post data
+    Upon sucesful creation redirects to registration page, else returns to splash page"""
     if request.user.is_anonymous() or not request.user.isauthenticated():
-        return render(request, 'home.html',RequestContext(request,{}))
+        return render(request, 'splash.html',RequestContext(request,{}))
    
     form = LoginForm(request.POST)
     
     #Check user/password and ensure meets requirements
     if form.errors:
-        return render(request, 'home.html',RequestContext(request,{'errors':form.errors}))
+        return render(request, 'splash.html',RequestContext(request,{'errors':form.errors}))
         
     #Checks whether user already exists    
     if getUserProfile(form.username):
@@ -58,20 +58,20 @@ def userRegistration(request):
     return render(request, 'register.html', RequestContext(request,{}))    
 
 def userLogout(request):
-    """ Logs out current user session if one exists, return to homepage"""
+    """ Logs out current user session if one exists, return to splashpage"""
     if request.user.is_anonymous():
-        return render(request, 'home.html', RequestContext(request,{}))        
+        return render(request, 'splash.html', RequestContext(request,{}))        
     elif request.user.isauthenticated() and 'logout' in request.POST:
         #User was logged in and the logout button was pressed
         logout(request)
     else:
-        return render(request, 'home.html', RequestContext(request,{}))
+        return render(request, 'splash.html', RequestContext(request,{}))
 
 def dashboard(request):
     """ Button from registration page sends a post request to /dashboard. View takes in post data, populates user profile associated with user, then loads dashboard if no errors on registration page """
     dashboardContext = dashboardData(request)    
     if request.user.is_anonymous() or not request.user.isauthenticated():
-        return render(request, 'home.html',RequestContext(request,{}))
+        return render(request, 'splash.html',RequestContext(request,{}))
     elif not dashboardContext:
         #Attempt to create user profile with data
         if request.method == 'POST':
