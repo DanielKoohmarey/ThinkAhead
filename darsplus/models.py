@@ -346,15 +346,7 @@ class Courses(models.Model):
 class Colleges(models.Model):
     major = models.CharField(max_length=128)
     college = models.CharField(max_length=128)
-
-    @staticmethod
-    def allColleges():
-        """
-        Returns a list of all unique college names
-        """
-        matches = Colleges.objects.distinct('college')
-        return [match.college for match in matches]
-        
+       
 
     @staticmethod
     def majorToCollege(major):
@@ -372,7 +364,16 @@ class Colleges(models.Model):
         else:
             return map(lambda major: major.college, matches)
 
+ 
     @staticmethod
+    def allColleges():
+        """
+        Returns a list of all unique college names
+        """
+        matches = Colleges.objects.distinct('college')
+        return [match.college for match in matches]
+ 
+   @staticmethod
     def getMajorsInCollege(college):
         """
         Returns a list of majors (in strings) that are inside college
