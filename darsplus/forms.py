@@ -26,9 +26,17 @@ class GradForm(forms.Form):
 
 # Used in registration.html
 class MajorForm(forms.Form):
-	college = forms.ChoiceField(choices=((0, 'Please select a college'),))
-	major = forms.ChoiceField(choices=((0, 'Please select a college and major'),))
-
+	college = forms.ChoiceField(choices=((0, "Please select a college"),))
+	major = forms.ChoiceField(choices=((0, "Please select a college and major"),))
+ 
+	def validate(self, value):
+		"""Check if value has been updated from default"""
+		college = self.cleaned_data['college']
+  		major = self.cleaned_data['major']
+		if college == "Please select a college":
+			raise forms.ValidationError("College must be selected.")
+		if major == "Please select a college and major":
+			raise forms.ValidationError("Major must be selected.")     
 
 # Used in registration.html
 class CourseForm(forms.Form):

@@ -67,6 +67,9 @@ def userRegistration(request):
     if checkRegistration(request):
         return HttpResponseRedirect('/dashboard/')
     elif request.method == 'POST':
+        if not request.user.is_authenticated():
+            return HttpResponseRedirect('/home/')
+        print('ATTEMPTING TO CREATE PROFILE')
         gradInfo = GradForm(request.POST)
         majorInfo = MajorForm(request.POST)
         courseInfo = CourseFormSet(request.POST)
@@ -76,15 +79,23 @@ def userRegistration(request):
             errors.update(majorInfo.errors)
             for form in courseInfo:
                 errors.update(form.errors)
-            return render(request, 'registration.html',{'errors':errors,'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON}) 
+        # Temporarily ignore errors because ChoiceField must have options populated before hand
+        #if errors:
+        #    return render(request, 'registration.html',{'errors':errors,'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON}) 
         major = request.POST['major']
         graduationSemester = request.POST['semester'] 
         graduationYear = request.POST['year']  
         coursesTaken = []
         for form in courseInfo:
             course = form.cleaned_data.get('name')
+            #Convert course name to our format
+            course = course.upper()
+            course = course.replace(' ','.')
+            periods = course.count('.')
+            course = course.replace('.','',periods-1)
             coursesTaken.append(course)
         newProfile = addUserProfile(request.user.username, major, graduationSemester, graduationYear, coursesTaken)
+        print('Attempted addUserProfile call: '+str(newProfile))
         if newProfile == SUCCESS:
             return HttpResponseRedirect('/dashboard/')
         else:
@@ -138,7 +149,7 @@ def dashboardData(request):
         userInformation['major'] = userProfile.major
         userInformation['graduationSemester'] = userProfile.graduationSemester
         userInformation['graduationYear'] = userProfile.graduationYear
-        userInformation['remainingRequirements'] = remainingRequirements(getCoursesTaken(username), userProfile.college, majorToCollege(userProfile.major))
+        userInformation['remainingRequirements'] = remainingRequirements(getCoursesTaken(username), majorToCollege(userProfile.major), userProfile.major)
         return userInformation
     else:
         return False

@@ -34,7 +34,7 @@ class UserProfile(models.Model):
             return None
 
     @staticmethod
-    def addUserProfile(username, major, graduationSemester, graduationYear):
+    def addUserProfile(username, major, college, graduationSemester, graduationYear, coursesTaken):
         """
         Checks if a username does not exist
 
@@ -47,7 +47,7 @@ class UserProfile(models.Model):
             return ERR_USER_EXISTS
         plannerID = Planner.addPlanner()
         newUser = UserProfile(username=username, major=major, graduationSemester=graduationSemester, 
-                              graduationYear=graduationYear, coursesTaken=[], plannerID=plannerID, unitsCompleted=0)
+                              graduationYear=graduationYear, coursesTaken=coursesTaken, plannerID=plannerID, unitsCompleted=0)
         newUser.save()
         return SUCCESS
 
@@ -411,8 +411,8 @@ def login(user, password):
 def logout(user):
     return UserLoginInformation.logout(user)
 """
-def addUserProfile(username, major, graduationSemester, graduationYear):
-    return UserProfile.addUserProfile(username, major, graduationSemester, graduationYear)
+def addUserProfile(username, major, graduationSemester, graduationYear, coursesTaken):
+    return UserProfile.addUserProfile(username, major, graduationSemester, graduationYear, coursesTaken)
 
 def getUserProfile(username):
     return UserProfile.getUserProfile(username)
