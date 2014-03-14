@@ -11,18 +11,19 @@
 <div class="page">
 
 <h1 class="sectionHeader">Welcome to</h1>
-
 <img src="{% static "logoTmp.png" %}">
 
 <form action="" method="post">
 	<div class="formGroup">
-		<label><span>Sign-in or register</span></label>
+		<label class="formLabel">
+			<span>Sign-in or register</span>
+		</label>
 		{{ form.username }}
-		<label></label>
+		<label class="formLabel"></label>
 		{{ form.password }}
 
 		{% if errors %}
-		<label></label>
+		<label class="formLabel"></label>
 		<span style="color: red;">{{ errors }}</span>
 		{% endif %}
 	</div>
