@@ -5,6 +5,7 @@ TABLE OF CONTENTS
 -Configuring Database
 -Setting Up: Local vs Heroku
 -Running Tests
+-Running Coverage
 
 Last Update: 13 March 2014
      	     1:50PM
@@ -60,9 +61,9 @@ CONFIGURING DATABASE
 
 
 
-==============================
+===============================
 SETTING UP: LOCAL VERSUS HEROKU
-==============================
+===============================
 
       By default the settings.py are set to work locally. In the case that it got pushed to a heroku setting, there are two things that you need to change
 
@@ -87,3 +88,31 @@ RUNNING TESTS
 	   "python manage.py test darsplus.tests.testColleges"
 	   "python manage.py test darsplus.tests.testCourses"
 
+
+
+================
+RUNNING COVERAGE
+================
+	
+	Coverage is a module/package that tests your spread of test (I think). Requried for submission
+
+	0) Check your Django version, should update to 1.6.2
+	   
+	   a) Do the following in Python:
+	      >import django
+	      >django.VERSION
+
+	   b) If you have the latest one, go to next step. Otherwise, do 
+	      "sudo pip install -U Django"
+	      and check your version again. Should be updated
+
+	1) Download coverage.py at
+	   https://pypi.python.org/pypi/coverage
+
+	2) unzip it and in the terminal run "sudo python setup.py install"
+
+	3) To run coverage, do the following on the directory that has manage.py:
+	   coverage run --source='.' manage.py test darsplus
+
+	4) In the terminal, do this to present it in a better way
+	   coverage report
