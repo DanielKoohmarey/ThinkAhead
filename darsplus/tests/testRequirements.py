@@ -193,7 +193,7 @@ class TestEngineering(unittest.TestCase):
 		self.assertTrue(not ans[14]['reqCompleted'])
 		self.assertIn('You have only taken 0',ans[14]['reqDescription'])
 	def testEECS4(self):
-		ans= remainingRequirements(['ELENG.140','ELENG.140','ELENG.140','COMPSCI.161A','COMPSCI.161A','COMPSCI.161A'], 'Engineering', 'EECS')
+		ans= remainingRequirements(['ELENG.140','ELENG.140','ELENG.140','COMPSCI.170','COMPSCI.170','COMPSCI.170'], 'Engineering', 'EECS')
 		self.assertTrue(ans[14]['reqCompleted'])
 	def testBIOENG1(self):
 		ans= remainingRequirements([], 'Engineering', 'BIOENG')
