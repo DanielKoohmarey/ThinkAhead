@@ -7,7 +7,6 @@ from djorm_pgarray.fields import ArrayField #Postgres package that enables Array
 # http://www.craigkerstiens.com/2012/11/06/django-and-arrays/ for reference 
 from utils import * 
 from statics import * 
-from decimal import * # Convert float to Decimal to keep it compliant to DecimalField
 
 # Create your models here
 
