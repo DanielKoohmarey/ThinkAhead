@@ -12,7 +12,7 @@
 <h1 class="sectionHeader">Registration Title (NAME PENDING)</h1>
 <p class="fontDefault">Welcome USERNAME! Please complete the registration. (NEW CSS CLASS?)</p>
 
-<form action="" method="post">
+<form action="" method="post">{% csrf_token %}
 	<!-- Expecting GradForm() as form1 -->
 	<p>Intended graduation date</p>
 	<table>{{ form1.as_table }}</table>
@@ -33,6 +33,7 @@
 	{% endfor %}
 	<input id="addMore" type="button" value="Add Course" >
 	<input id="createUser" type="submit" value="Add User">
+
 </form>
 
 </body>

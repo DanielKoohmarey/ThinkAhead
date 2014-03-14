@@ -4,6 +4,7 @@
 	<title>Think Ahead</title>
 	{% load staticfiles %}
 	<link rel="stylesheet" type="text/css" href="{% static "style.css" %}">
+
 </head>
 
 <body>
@@ -12,12 +13,18 @@
 <h1 class="sectionHeader">Welcome to</h1>
 <h1>TODO: IMAGE OF LOGO</h1>
 
-<form action="" method="post">
+<form action="" method="post">{% csrf_token %}
 	<table>
+	{% if errors %}
+		<tr>
+			<span style="color: red;">{{errors}}</span><br/>
+		</tr>
+	{% endif %}
 		{{ form.as_table }}
 	</table>
-	<input class="button" type="submit" name="login" value="Login">
-	<input class="button" type="submit" name="add" value="Add User">
+	<input formaction="/login/" class="button" type="submit" name="login" value="Login">
+	<input formaction="/register/" class="button" type="submit" name="add" value="Registration">
+
 </form>
 
 

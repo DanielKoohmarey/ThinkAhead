@@ -1,12 +1,11 @@
 from django import forms
-from django.forms.formsets import BaseFormSet
 from django.forms.formsets import formset_factory
 
 import datetime
 """ reminder looking at PasswordChangeForm, PasswordResetForm Built-in forms for future iterations """
 class LoginForm(forms.Form):
-	name = forms.CharField(label='Username', max_length=128)
-	word = forms.CharField(label='Password', widget=forms.PasswordInput(), max_length=128)
+	username = forms.CharField(label='Username', max_length=128)
+	password = forms.CharField(label='Password', widget=forms.PasswordInput(), max_length=128)
 
 
 # Used in registration.html
