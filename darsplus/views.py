@@ -10,9 +10,9 @@ from django.views.decorators.csrf import csrf_exempt
 #from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 import json
-from django.http import HttpResponse
 
-majorJSON = json.dumps(getCollegesToMajors()) 
+majorJSON = json.dumps(getCollegesToMajors())
+
 @csrf_exempt
 def splash(request):
     """ Load the splashpage, or appropriate page depending on user status """
@@ -64,9 +64,10 @@ def splash(request):
 def userRegistration(request):
     """ View called via create user button from splashpage, attempts to create user with post data
     Upon sucesful creation redirects to registration page, else returns to splash page"""
-    
-    return render(request, 'registration.html', {'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})
-
+    if request.user.is_authenticated():
+        return render(request, 'registration.html', {'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})
+    else:
+        return HttpResponseRedirect('/splash/')
 @csrf_exempt
 def userLogout(request):
     """ Logs out current user session if one exists, return to splashpage"""
