@@ -71,3 +71,4 @@ $('#id_college').change(function() {
     }
     $('#id_major').change();
 }).change(); 
+});
