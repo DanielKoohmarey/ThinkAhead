@@ -47,7 +47,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
-
+LOGIN_URL = '/home/'
 ROOT_URLCONF = 'thinkahead.urls'
 
 WSGI_APPLICATION = 'thinkahead.wsgi.application'
