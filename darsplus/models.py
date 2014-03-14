@@ -34,7 +34,7 @@ class UserProfile(models.Model):
             return None
 
     @staticmethod
-    def addUserProfile(username, major, college, graduationSemester, graduationYear, coursesTaken):
+    def addUserProfile(username, major, graduationSemester, graduationYear, coursesTaken):
         """
         Checks if a username does not exist
 
