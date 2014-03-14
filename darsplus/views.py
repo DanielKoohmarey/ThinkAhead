@@ -21,9 +21,10 @@ def splash(request):
             return render(request, 'splash.html',{'errors':form.errors,'form':LoginForm()})
         
         else:            
-            currentUser = authenticate(username=form.fields['username'],password=form.fields['password'])
+            currentUser = authenticate(username=request.POST['username'],password=request.POST['password'])
             if currentUser:
                 login(request,currentUser)
+                return HttpResponseRedirect('/registration/')
             else:
                 return render(request, 'splash.html',{'errors':"Invalid Username/Password. Please try again.", 'form':LoginForm()})   
     else:
@@ -41,26 +42,27 @@ def splash(request):
 def userRegistration(request):
     """ View called via create user button from splashpage, attempts to create user with post data
     Upon sucesful creation redirects to registration page, else returns to splash page"""
-    if request.user.is_anonymous() or not request.user.isauthenticated():
-        return HttpResponseRedirect('/home/')
+
     if request.method=='POST':
         form = LoginForm(request.POST)
         
         #Check user/password and ensure meets requirements
         if form.errors:
             return render(request, 'splash.html', RequestContext(request,{'errors':form.errors, 'form':LoginForm()}))
-            
+        
+        username,password = request.POST['username'], request.POST['password']
+        
         #Checks whether user already exists    
-        if getUserProfile(form.username):
+        if User.objects.get(username=request.POST['username']):
             return render(request, 'splash.html',RequestContext(request,{'errors':"Username is already taken.",'form':LoginForm()}))
-        username,password = form.fields['username'], form.fields['password']
+
         new_user = User.objects.create_user(username=username,password=password)
         new_user.save()
         new_user = authenticate(username=username,password=password) #django requires authentification before logging in
         login(request,new_user)
-        return render(request, 'register.html', {'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})    
+        return render(request, 'registration.html', {'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})    
     else:
-        render(request, 'register.html', {'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})
+        render(request, 'registration.html', {'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})
 
 @csrf_exempt
 def userLogout(request):
@@ -90,10 +92,10 @@ def dashboard(request):
                 errors.update(gradInfo.errors)
                 errors.update(majorInfo.errors)
                 errors.update(courseInfo.errors)
-                return render(request, 'register.html',{'errors':errors,'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON}) 
-            major = majorInfo.field['major']
-            graduationSemester = gradInfo.field['graduationSemester'] 
-            graduationYear = gradInfo.field['graduationYear']  
+                return render(request, 'registration.html',{'errors':errors,'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON}) 
+            major = request.POST['major']
+            graduationSemester = request.POST['semester'] 
+            graduationYear = request.POST['year']  
             coursesTaken = []
             for form in courseInfo:
                 course = form.cleaned_data.get('name')
@@ -102,7 +104,7 @@ def dashboard(request):
             if newProfile == SUCCESS:
                 return render(request, 'dashboard.html',dashboardContext)
             else:
-                return render(request, 'register.html',{'errors':"Error adding user profile to database. Please try again later.", 'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})
+                return render(request, 'registration.html',{'errors':"Error adding user profile to database. Please try again later.", 'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})
         else:        
             return HttpResponseRedirect('/registration/')
     else:
