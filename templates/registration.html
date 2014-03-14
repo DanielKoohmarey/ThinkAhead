@@ -11,11 +11,15 @@
 
 <body>
 
+<header></header>
+
+<div class="page">
+
 <h1 class="sectionHeader">Registration Title (NAME PENDING)</h1>
 <p>Welcome USERNAME! Please complete the registration. (NEW CSS CLASS?)</p>
 
 <form action="" method="post">
-	{% csrf_token %}
+	{% csrf_token }
 	<!-- Expecting GradForm() as form1 -->
 	<div class="formGroup">
 		<label class="formLabel">
@@ -54,6 +58,8 @@
 
 	<input id="createUser" class="button" type="submit" value="Complete Registration">
 </form>
+
+</div>
 
 </body>
 

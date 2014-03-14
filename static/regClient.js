@@ -35,6 +35,8 @@ function getDropdownOptions(){
 }
 
 
+$(document).ready(function(){
+
 // Listener hooking cloneMore() to #addMore to add additional forms.
 $('#addMore').click(function() {
         cloneMore('div.addCourseForm:last', 'form');
@@ -56,6 +58,10 @@ http://stackoverflow.com/questions/16707850/3-dropdown-populate-based-on-selecti
 $('#id_college').change(function() {
     var firstkey = $(this).val();
     $('#id_major').empty();
+
+    $('#id_major').append($("<option>").
+        attr("value", -1).
+        text('Please select a college and major')); 
 
     for (var prop in majorsAll[firstkey]) {
         var second = prop;
