@@ -17,10 +17,10 @@ class GradForm(forms.Form):
 		('Summer', 'Summer'),
 	)
 	now = datetime.datetime.now()
-	year = now.year
+	currYear = now.year
 	
 	semester = forms.ChoiceField(choices=SEMESTERS)
-	years = forms.ChoiceField(choices=[(x, x) for x in range(year, year+5)])
+	year = forms.ChoiceField(choices=[(x, x) for x in range(currYear, currYear+5)])
 
 
 # Used in registration.html

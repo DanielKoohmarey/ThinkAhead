@@ -1,5 +1,4 @@
 from django.test import TestCase
-#from darsplus.models import UserModel as User
 from django.test.client import Client
 import json
 client=Client()
@@ -23,7 +22,7 @@ class TestUserCase(TestCase):
 
     def testLoginNoUser(self):
         """ Expect ERR_BAD_USERNAME, """
-        response = client.post('/register',json.dumps({'user':'','password':'pass'}),content_type="application/json")
+        response = client.post('/register/',json.dumps({'user':'','password':'pass'}),content_type="application/json")
         response = json.loads(response.content)        
         self.assertEqual(response['errors'],'Invalid Username or Password.')
     

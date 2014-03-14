@@ -106,6 +106,7 @@ FIXTURE_DIRS = (
 
 """
 The lines that follow configure Heroku settings
+
 """
 
 """

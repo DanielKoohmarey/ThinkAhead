@@ -5,6 +5,8 @@
 	{% load staticfiles %}	
 	<script type="text/javascript" src="{% static "jquery-1.11.0.min.js" %}"></script>
 	<script type="text/javascript" src="{% static "regClient.js" %}"></script>
+
+	<link rel="stylesheet" type="text/css" href="{% static "style.css" %}">
 </head>
 
 <body>
@@ -14,24 +16,35 @@
 
 <form action="" method="post">
 	<!-- Expecting GradForm() as form1 -->
-	<p>Intended graduation date</p>
-	<table>{{ form1.as_table }}</table>
+	<div class="formGroup">
+		<label><span>Intended graduation date</span></label>
+		{{ form1.semester }}
+		{{ form1.year }}
+	</div>
 
-	<!-- Expecting MajorForm() as form1 -->
-	<p>Major</p>
-	<table>{{ form2.as_table }}</table>
+	<!-- Expecting MajorForm() as form2 -->
+	<div class="formGroup">
+		<label><span>Major</span></label>
+		{{ form2.college }}
+		{{ form2.major }}
+	</div>
 
-	<!-- Expecting CourseForm() as form1 -->
-	<p>Successfully completed courses</p>
-	{{ form3.management_form }}
-	{% for form in form3.forms %}
-    	<div class='tableForms'>
+	<!-- Expecting CourseForm() as form3 -->
+	<div class="formGroup">
+		<label><span>Successfully completed courses</span></label>
+		{{ form3.management_form }}
+		{% for form in form3.forms %}
+
+		<div class='addCourseForm'>
     	<table class='no_error'>
-        	{{ form.as_table }}
+        	{{ form.name }}
     	</table>
     	</div>
-	{% endfor %}
-	<input id="addMore" type="button" value="Add Course" >
+		{% endfor %}
+
+		<input id="addMore" type="button" value="Add Course" >
+	</div>
+
 	<input id="createUser" type="submit" value="Add User">
 </form>
 
@@ -39,12 +52,6 @@
 
 
 <script type="text/javascript">
-
-// Listener hooking cloneMore() to #addMore to add additional forms.
-$('#addMore').click(function() {
-        cloneMore('div.tableForms:last', 'form');
-
-});
 
 // Dictionary of {college: [majors]} passed from Django views.py
 var majorDict = jQuery.parseJSON('{{ majorDict|safe }}');
