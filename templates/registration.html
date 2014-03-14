@@ -12,27 +12,33 @@
 <body>
 
 <h1 class="sectionHeader">Registration Title (NAME PENDING)</h1>
-<p class="fontDefault">Welcome USERNAME! Please complete the registration. (NEW CSS CLASS?)</p>
+<p>Welcome USERNAME! Please complete the registration. (NEW CSS CLASS?)</p>
 
 <form action="" method="post">
 	{% csrf_token %}
 	<!-- Expecting GradForm() as form1 -->
 	<div class="formGroup">
-		<label><span>Intended graduation date</span></label>
+		<label class="formLabel">
+			<span>Intended graduation date</span>
+		</label>
 		{{ form1.semester }}
 		{{ form1.year }}
 	</div>
 
 	<!-- Expecting MajorForm() as form2 -->
 	<div class="formGroup">
-		<label><span>Major</span></label>
+		<label class="formLabel">
+			<span>Major</span>
+		</label>
 		{{ form2.college }}
 		{{ form2.major }}
 	</div>
 
 	<!-- Expecting CourseForm() as form3 -->
 	<div class="formGroup">
-		<label><span>Successfully completed courses</span></label>
+		<label class="formLabel">
+			<span>Successfully completed courses</span>
+		</label>
 		{{ form3.management_form }}
 		{% for form in form3.forms %}
 
