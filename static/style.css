@@ -2,7 +2,7 @@ body {
 	font-family: Arial, sans-serif;
 	color:#000000;
 	margin: : 0px;
-
+	overflow: hidden;
 }
 
 .page {
@@ -124,11 +124,11 @@ header {
 }
 
 
-.container {
+.container{
 	float: left;
 	height: 100%;
-	width: 50%;
+	width: 48%;
 	overflow:scroll;
-	margin: 10px;
-	border: 1px solid red;
+	padding: 1%;
 }
+
