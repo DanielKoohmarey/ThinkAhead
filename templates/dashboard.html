@@ -19,16 +19,16 @@
 	<div class = "container">
 		{% if requirements %}
 
-			{% for x in requirements %}
-				<h3 class="reqTitle">{{x.reqName}}</h3>
-				<p class="reqDescription">Description: {{x.reqDescript}} </p>
-				<p>Requirement Completed: {{x.reqComplete}}</p>
+			{% for r in requirements %}
+				<h3 class="reqTitle">{{ r.reqName }}</h3>
+				<p class="reqDescription">Description: {{ r.reqDescription }} </p>
+				<p>Requirement Completed: {{ r.reqCompleted }}</p>
 
 				<ul>
 					Courses Completed
-					{% if x.courseComplete %}
-						{% for course in x.courseComplete %}
-							<li class=courseCompleted>{{course}}</li>
+					{% if r.courseDone %}
+						{% for course in r.courseDone %}
+							<li class=courseCompleted>{{ course }}</li>
 						{% endfor %}
 					{% else %}
 						<li> No courses completion displayed. </li>
@@ -37,9 +37,9 @@
 				<br>
 				<ul>
 					Courses Left
-					{% if x.courseLeft %}
-						{% for left in x.courseLeft %}
-							<li>{{left}}</li>
+					{% if r.courseLeft %}
+						{% for left in r.courseLeft %}
+							<li>{{ left }}</li>
 						{% endfor %}
 					{% else %}
 						<li> No courses left to display. </li>
