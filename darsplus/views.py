@@ -90,11 +90,12 @@ def userRegistration(request):
         for form in courseInfo:
             course = form.cleaned_data.get('name')
             #Convert course name to our format
-            course = course.upper()
-            course = course.replace(' ','.')
-            periods = course.count('.')
-            course = course.replace('.','',periods-1)
-            coursesTaken.append(course)
+            if course:
+                course = course.upper()
+                course = course.replace(' ','.')
+                periods = course.count('.')
+                course = course.replace('.','',periods-1)
+                coursesTaken.append(course)
         newProfile = addUserProfile(request.user.username, major, graduationSemester, graduationYear, coursesTaken)
 
         if newProfile == SUCCESS:
