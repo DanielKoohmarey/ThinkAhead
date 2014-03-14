@@ -33,7 +33,7 @@ def userLogin(request):
             return render(request, 'splash.html',{'errors':form.errors,'form':LoginForm()})
         
         else:            
-            currentUser = authenticate(username=form.username,password=form.password) #form.username and form.password?
+            currentUser = authenticate(username=form.fields['username'],password=form.fields['password']) #form.username and form.password?
             #If user info is correct, retrieve login count
             if currentUser:
                 login(request,currentUser)
@@ -56,7 +56,7 @@ def userRegistration(request):
     #Checks whether user already exists    
     if getUserProfile(form.username):
         return render(request, 'splash.html',RequestContext(request,{'errors':"Username is already taken.",'form':LoginForm()}))
-    username,password = form.username, form.password
+    username,password = form.fields['username'], form.fields['password']
     new_user = User.objects.create_user(username=username,password=password)
     new_user.save()
     new_user = authenticate(username=username,password=password) #django requires authentification before logging in
@@ -92,9 +92,9 @@ def dashboard(request):
                 errors.update(majorInfo.errors)
                 errors.update(courseInfo.errors)
                 return render(request, 'register.html',{'errors':errors,'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON}) 
-            major = majorInfo.major
-            graduationSemester = gradInfo.graduationSemester 
-            graduationYear = gradInfo.graduationYear  
+            major = majorInfo.field['major']
+            graduationSemester = gradInfo.field['graduationSemester'] 
+            graduationYear = gradInfo.field['graduationYear']  
             coursesTaken = []
             for form in courseInfo:
                 course = form.cleaned_data.get('name')
