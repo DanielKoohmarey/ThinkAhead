@@ -10,12 +10,12 @@ from django.views.decorators.csrf import csrf_exempt
 #from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 import json
+from django.http import HttpResponse
 
 majorJSON = json.dumps(getCollegesToMajors()) 
 @csrf_exempt
 def splash(request):
     """ Load the splashpage, or appropriate page depending on user status """
-
     if request.method == 'POST':
         if 'Login' in request.POST:
             form = LoginForm(request.POST)
@@ -54,7 +54,7 @@ def splash(request):
         dashboardContext = dashboardData(request)
         if dashboardContext:
             return HttpResponseRedirect('/dashboard/')
-        elif request.user.isauthenticated():
+        elif request.user.is_authenticated():
             return HttpResponseRedirect('/registration/')
         else:
             return render(request, 'splash.html', {'form':LoginForm()})
@@ -72,7 +72,7 @@ def userLogout(request):
     """ Logs out current user session if one exists, return to splashpage"""
     if request.user.is_anonymous():
         return HttpResponseRedirect('/home/')       
-    elif request.user.isauthenticated() and 'logout' in request.POST:
+    elif request.user.is_authenticated() and 'logout' in request.POST:
         #User was logged in and the logout button was pressed
         logout(request)
     else:
@@ -82,7 +82,7 @@ def userLogout(request):
 @csrf_exempt
 def dashboard(request):
     """ Button from registration page sends a post request to /dashboard. View takes in post data, populates user profile associated with user, then loads dashboard if no errors on registration page """
-    if not request.user.isauthenticated():
+    if not request.user.is_authenticated():
         return HttpResponseRedirect('/home/')
     dashboardContext = dashboardData(request)    
 
@@ -117,7 +117,7 @@ def dashboard(request):
         
 def checkRegistration(request):
     """ Check whether or not a user has completed registration """    
-    if request.user.isauthenticated():
+    if request.user.is_authenticated():
         if getUserProfile(request.user.username):
             return True
         else:
