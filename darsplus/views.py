@@ -16,8 +16,9 @@ majorJSON = json.dumps(getCollegesToMajors())
 @csrf_exempt
 def splash(request):
     """ Load the splashpage, or appropriate page depending on user status """
+    print(request.POST)
     if request.method == 'POST':
-        if 'Login' in request.POST:
+        if 'login' in request.POST:
             form = LoginForm(request.POST)
             #Ensure login fields are filled out
             if form.errors:
@@ -31,7 +32,7 @@ def splash(request):
                 else:
                     return render(request, 'splash.html',{'errors':"Invalid Username/Password. Please try again.", 'form':LoginForm()}) 
         else:
-            if 'Create User' in request.POST:
+            if 'add' in request.POST:
                 form = LoginForm(request.POST)
                 
                 #Check user/password and ensure meets requirements
@@ -41,14 +42,14 @@ def splash(request):
                 username,password = request.POST['username'], request.POST['password']
                 
                 #Checks whether user already exists    
-                if User.objects.get(username=request.POST['username']):
+                if User.objects.filter(username=request.POST['username']):
                     return render(request, 'splash.html',RequestContext(request,{'errors':"Username is already taken.",'form':LoginForm()}))
         
                 new_user = User.objects.create_user(username=username,password=password)
                 new_user.save()
                 new_user = authenticate(username=username,password=password) #django requires authentification before logging in
                 login(request,new_user)
-                return render(request, 'registration.html', {'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})    
+                return HttpResponseRedirect('/registration/')
     
     else:
         dashboardContext = dashboardData(request)
@@ -58,7 +59,7 @@ def splash(request):
             return HttpResponseRedirect('/registration/')
         else:
             return render(request, 'splash.html', {'form':LoginForm()})
-            
+    return render(request, 'splash.html',{'form':LoginForm()})
 #@login_required
 @csrf_exempt
 def userRegistration(request):
@@ -109,9 +110,10 @@ def userLogout(request):
     """ Logs out current user session if one exists, return to splashpage"""
     if request.user.is_anonymous():
         return HttpResponseRedirect('/home/')       
-    elif request.user.is_authenticated() and 'logout' in request.POST:
+    elif request.user.is_authenticated():# and 'logout' in request.POST:
         #User was logged in and the logout button was pressed
         logout(request)
+        return HttpResponseRedirect('/home/')
     else:
         return HttpResponseRedirect('/home/')
 
