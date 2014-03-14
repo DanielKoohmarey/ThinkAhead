@@ -1,0 +1,81 @@
+<html>
+
+<head>
+	<title> Django - Testing Dashboard page</title>
+	{% load staticfiles %}
+	<link rel="stylesheet" type="text/css" href="{% static "style.css" %}">
+</head>
+
+
+
+<body>
+	
+	<header >
+
+	</header>
+
+	<!--<div id= "header" class="header">
+	</div>-->
+
+
+	<div class = "container">	
+		<!--<iframe src="tmpContent.html"></iframe> -->
+	</div>
+
+
+
+	<div class = "container">
+		{% if requirements %}
+
+			<p> I have stuff in my {{requirements}} section </p>
+
+			{% for x in requirements %}
+				<p> I have accessed the dictionary </p>
+				<h3 class="reqTitle">{{x.reqName}}</h3>
+				<p class="reqDescription">Description: {{x.reqDescript}} </p>
+				<p>Requirement Completed: {{x.reqComplete}}</p>
+
+				<ul>
+					Courses Completed
+					{% if x.courseComplete %}
+						{% for course in x.courseComplete %}
+							<li class=courseCompleted>{{course}}</li>
+						{% endfor %}
+					{% else %}
+						<li> No courses completion displayed. </li>
+					{% endif %}
+				</ul>
+				<br>
+				<ul>
+					Courses Left
+					{% if x.courseLeft %}
+						{% for left in x.courseLeft %}
+							<li>{{left}}</li>
+						{% endfor %}
+					{% else %}
+						<li> No courses left to display. </li>
+					{% endif %}
+				</ul>
+						
+			{% endfor %}
+		{% else %}
+			<p> No requirements were given.</p>
+		{% endif %}
+
+		<ul>
+			<!--{% for reqs in list %}-->
+				<li> {{reqComplete}} </li>
+				<!--<li> {{reqs.reqComplete}} </li>
+				<li> {{reqs.Descript}} </li>
+				<li> {{reqs.courseComplete}} </li>
+				<li> {{reqs.courseLeft}} </li>-->
+			
+
+			{% endfor %}
+		</ul>
+
+	</div>
+</body>
+
+
+</html>
