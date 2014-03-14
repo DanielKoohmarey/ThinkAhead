@@ -100,19 +100,24 @@ def doSomeManyChoiceReq(takenClasses, requirement, requirements, description, i)
 	else:
 		return {'reqName':requirement, 'reqCompleted':True, 'reqDescription':description,'courseDone':listOfClassesTaken, 'courseLeft':listOfClassesNotTaken}
 	return ans
+
+#college is in {Engineering, Chemistry, NaturalResources, LettersAndSciences, Haas, EnvironmentalDesign}
+def abbreviateCollege(college):
+	abr = {'EECS':'Electrical Engineering & Computer Sciences',
+	'BIOENG':'Bioengineering', 'CIVENG':'Civil and Environmental Engineering', 'COENG':'Computational Engineering Science',
+	'ENENG':'Energy Engineering', 'ENGMS':'Engineering Math and Statistics', 
+	'ENGP':'Engineering Physics','INDENG':'Industrial Engineering & Operations Research',
+	'MATSCI':'Materials Science & Engineering', 'MECENG':'Mechanical Engineering',
+	'NUCENG':'Nuclear Engineering', 'BIOMATSCI':'Bioengineering and Materials Science & Engineering',
+	'EECSMATSCI':'Electrical Engineering & Computer Sciences and Materials Science & Engineering',
+	'EECSNUCENG':'Electrical Engineering & Computer Sciences and Nuclear Engineering',
+	'MATMECENG':'Materials Science & Engineering and Mechanical Engineering',
+	'MATNUCENG':'Materials Science & Engineering and Nuclear Engineering',
+	'MECNUCENG':'Mechanical Engineering and Nuclear Engineering'}
+	abr = dict (zip(abr.values(),abr.keys()))
+	return abr[college]
+	
 """
-college is in {Engineering, Chemistry, NaturalResources, LettersAndSciences, Haas, EnvironmentalDesign}
-if college is Engineering then major is in {EECS:'Electrical Engineering & Computer Sciences',
-	BIOENG:'Bioengineering', CIVENG:'Civil and Environmental Engineering', COENG:'Computational Engineering Science',
-	ENENG:'Energy Engineering', ENGMS:'Engineering Math and Statistics', 
-	ENGP:'Engineering Physics',INDENG:'Industrial Engineering & Operations Research',
-	MATSCI:'Materials Science & Engineering', MECENG:'Mechanical Engineering',
-	NUCENG:'Nuclear Engineering', BIOMATSCI:'Bioengineering and Materials Science & Engineering',
-	EECSMATSCI:'Electrical Engineering & Computer Sciences and Materials Science & Engineering',
-	EECSNUCENG:'Electrical Engineering & Computer Sciences and Nuclear Engineering',
-	MATMECENG:'Materials Science & Engineering and Mechanical Engineering',
-	MATNUCENG:'Materials Science & Engineering and Nuclear Engineering',
-	MECNUCENG:'Mechanical Engineering and Nuclear Engineering'}
 if college is Chemistry then major is in {BSCHEM:'Bachelor of Science Degree in Chemistry',
 	CHEMENG:'Chemical Engineering', CHEMBIO:'Chemical Biology', BACHEM:'Bachelor of Arts Degree in Chemistry'
 	CHEMMATSCI:'Chemical Engineering and Materials Science and Engineering',
@@ -144,6 +149,7 @@ if college is EnvironmentalDesign then major is in {ARCH:'Architecture', CYPLAN:
 	SENVDES:'Sustainable Environmental Design'}
 """
 def remainingRequirements(takenClasses, college, major):
+	college = abbreviateCollege(college)
 	ans = [];
 	# University Requirements: Common for everyone
 	#American Cultures
