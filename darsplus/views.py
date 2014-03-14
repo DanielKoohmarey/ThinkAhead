@@ -117,12 +117,11 @@ def dashboardData(request):
         username = request.user.username
         userProfile = getUserProfile(username)
         userInformation = {}
-        userInformation['coursesTaken'] = getCoursesTaken(username)
         userInformation['unitsCompleted'] = getUnitsCompleted(username)
         userInformation['major'] = userProfile.major
         userInformation['graduationSemester'] = userProfile.graduationSemester
         userInformation['graduationYear'] = userProfile.graduationYear
-        userInformation['remainingRequirements'] = remainingRequirements(userInformation['coursesTaken'], userProfile.college, majorToCollege(userProfile.major))
+        userInformation['remainingRequirements'] = remainingRequirements(getCoursesTaken(username), userProfile.college, majorToCollege(userProfile.major))
         return userInformation
     else:
         return False
