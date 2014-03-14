@@ -6,17 +6,20 @@ from darsplus.requirementscode import remainingRequirements
 from django.template import RequestContext
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+import json
 
+collegeToMajors = {'Engineering': ['EECS','BIOENG','CIVENG', 'COENG', 'ENENG', 'ENGMS', 'ENGP', 'MATSCI','NUCENG','EECSMATSCI', 'EECSNUCENG', 'MATMECENG', 'MATNUCENG', 'MECNUCENG']} #TODO: College database needs to be populated, perhaps convert names to these abreviations
+majorJSON = json.dumps(collegeToMajors) 
 def splash(request):
     """ Load the splashpage, or appropriate page depending on user status """
     dashboardContext = dashboardData(request)
     if dashboardContext:
         return render(request, 'dashboard.html', RequestContext(request,dashboardContext)) 
     elif request.user.is_anonymous():
-        return render(request, 'splash.html', {})
+        return render(request, 'splash.html', {'form':LoginForm()})
     elif request.user.isauthenticated():
-        return render(request, 'register.html', {})
-    return render(request, 'splash.html', {})
+        return render(request, 'register.html', {'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})
+    return render(request, 'splash.html', {'form':LoginForm()})
 
 def userLogin(request):
     """ View called via post request from button on splashpage, attempt to login and load page 
@@ -39,13 +42,13 @@ def userRegistration(request):
     """ View called via create user button from splashpage, attempts to create user with post data
     Upon sucesful creation redirects to registration page, else returns to splash page"""
     if request.user.is_anonymous() or not request.user.isauthenticated():
-        return render(request, 'splash.html',RequestContext(request,{}))
+        return render(request, 'splash.html', {'form':LoginForm()})
    
     form = LoginForm(request.POST)
     
     #Check user/password and ensure meets requirements
     if form.errors:
-        return render(request, 'splash.html',RequestContext(request,{'errors':form.errors}))
+        return render(request, 'splash.html', RequestContext(request,{'errors':form.errors}))
         
     #Checks whether user already exists    
     if getUserProfile(form.username):
@@ -60,18 +63,18 @@ def userRegistration(request):
 def userLogout(request):
     """ Logs out current user session if one exists, return to splashpage"""
     if request.user.is_anonymous():
-        return render(request, 'splash.html', RequestContext(request,{}))        
+        return render(request, 'splash.html', {'form':LoginForm()})        
     elif request.user.isauthenticated() and 'logout' in request.POST:
         #User was logged in and the logout button was pressed
         logout(request)
     else:
-        return render(request, 'splash.html', RequestContext(request,{}))
+        return render(request, 'splash.html', {'form':LoginForm()})
 
 def dashboard(request):
     """ Button from registration page sends a post request to /dashboard. View takes in post data, populates user profile associated with user, then loads dashboard if no errors on registration page """
     dashboardContext = dashboardData(request)    
     if request.user.is_anonymous() or not request.user.isauthenticated():
-        return render(request, 'splash.html',RequestContext(request,{}))
+        return render(request, 'splash.html',{'form':LoginForm()})
     elif not dashboardContext:
         #Attempt to create user profile with data
         if request.method == 'POST':
