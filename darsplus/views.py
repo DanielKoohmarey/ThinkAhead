@@ -64,10 +64,35 @@ def splash(request):
 def userRegistration(request):
     """ View called via create user button from splashpage, attempts to create user with post data
     Upon sucesful creation redirects to registration page, else returns to splash page"""
+    if checkRegistration(request.user.username):
+        return HttpResponseRedirect('/dashboard/')
+    elif request.method == 'POST':
+        gradInfo = GradForm(request.POST)
+        majorInfo = MajorForm(request.POST)
+        courseInfo = CourseFormSet(request.POST)
+        errors = {}
+        if gradInfo.errors or majorInfo.errors or CourseFormSet.errors:
+            errors.update(gradInfo.errors)
+            errors.update(majorInfo.errors)
+            for form in courseInfo:
+                errors.update(form.errors)
+            return render(request, 'registration.html',{'errors':errors,'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON}) 
+        major = request.POST['major']
+        graduationSemester = request.POST['semester'] 
+        graduationYear = request.POST['year']  
+        coursesTaken = []
+        for form in courseInfo:
+            course = form.cleaned_data.get('name')
+            coursesTaken.append(course)
+        newProfile = addUserProfile(request.user.username, major, graduationSemester, graduationYear, coursesTaken)
+        if newProfile == SUCCESS:
+            return HttpResponseRedirect('/dashboard/')
+        else:
+            return render(request, 'registration.html',{'errors':"Error adding user profile to database. Please try again later.", 'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})
     if request.user.is_authenticated():
         return render(request, 'registration.html', {'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})
     else:
-        return HttpResponseRedirect('/splash/')
+        return HttpResponseRedirect('/home/')
 @csrf_exempt
 def userLogout(request):
     """ Logs out current user session if one exists, return to splashpage"""
@@ -88,31 +113,8 @@ def dashboard(request):
     dashboardContext = dashboardData(request)    
 
     if not dashboardContext:
-        #Attempt to create user profile with data
-        if request.method == 'POST':
-            gradInfo = GradForm(request.POST)
-            majorInfo = MajorForm(request.POST)
-            courseInfo = CourseFormSet(request.POST)
-            errors = {}
-            if gradInfo.errors or majorInfo.errors or CourseFormSet.errors:
-                errors.update(gradInfo.errors)
-                errors.update(majorInfo.errors)
-                errors.update(courseInfo.errors)
-                return render(request, 'registration.html',{'errors':errors,'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON}) 
-            major = request.POST['major']
-            graduationSemester = request.POST['semester'] 
-            graduationYear = request.POST['year']  
-            coursesTaken = []
-            for form in courseInfo:
-                course = form.cleaned_data.get('name')
-                coursesTaken.append(course)
-            newProfile = addUserProfile(request.user.username, major, graduationSemester, graduationYear, coursesTaken)
-            if newProfile == SUCCESS:
-                return render(request, 'dashboard.html',dashboardContext)
-            else:
-                return render(request, 'registration.html',{'errors':"Error adding user profile to database. Please try again later.", 'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})
-        else:        
-            return HttpResponseRedirect('/registration/') #GET request and user profile is not yet created
+        #Attempt to create user profile with data     
+        return HttpResponseRedirect('/registration/') #GET request and user profile is not yet created
     else:
         return render(request, 'dashboard.html',dashboardContext)
         
