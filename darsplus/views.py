@@ -64,7 +64,7 @@ def splash(request):
 def userRegistration(request):
     """ View called via create user button from splashpage, attempts to create user with post data
     Upon sucesful creation redirects to registration page, else returns to splash page"""
-    if checkRegistration(request.user.username):
+    if checkRegistration(request):
         return HttpResponseRedirect('/dashboard/')
     elif request.method == 'POST':
         gradInfo = GradForm(request.POST)
