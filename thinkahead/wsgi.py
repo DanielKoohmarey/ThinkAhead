@@ -1,4 +1,3 @@
-"""
 # Uncomment Top row for Heroku
 
 from django.core.wsgi import get_wsgi_application
@@ -13,3 +12,4 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "thinkahead.settings")
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
 
+""""
