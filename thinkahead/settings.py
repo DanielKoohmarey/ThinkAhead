@@ -121,7 +121,8 @@ ALLOWED_HOSTS = ['*']
 
 # Static asset configuration
 import os
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__)) #original from internet. did not work
+BASE_DIR = os.path.dirname(os.path.dirname(__file__)) # original from django. testing
 STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
 
