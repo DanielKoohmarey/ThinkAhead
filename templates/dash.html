@@ -7,30 +7,19 @@
 </head>
 
 
-
 <body>
 	
-	<header >
+	<header>
 
 	</header>
 
-	<!--<div id= "header" class="header">
-	</div>-->
-
-
 	<div class = "container">	
-		<!--<iframe src="tmpContent.html"></iframe> -->
 	</div>
-
-
 
 	<div class = "container">
 		{% if requirements %}
 
-			<p> I have stuff in my {{requirements}} section </p>
-
 			{% for x in requirements %}
-				<p> I have accessed the dictionary </p>
 				<h3 class="reqTitle">{{x.reqName}}</h3>
 				<p class="reqDescription">Description: {{x.reqDescript}} </p>
 				<p>Requirement Completed: {{x.reqComplete}}</p>
@@ -61,19 +50,6 @@
 		{% else %}
 			<p> No requirements were given.</p>
 		{% endif %}
-
-		<ul>
-			<!--{% for reqs in list %}-->
-				<li> {{reqComplete}} </li>
-				<!--<li> {{reqs.reqComplete}} </li>
-				<li> {{reqs.Descript}} </li>
-				<li> {{reqs.courseComplete}} </li>
-				<li> {{reqs.courseLeft}} </li>-->
-			
-
-			{% endfor %}
-		</ul>
-
 	</div>
 </body>
 

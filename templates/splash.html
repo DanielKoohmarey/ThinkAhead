@@ -4,7 +4,6 @@
 	<title>Think Ahead</title>
 	{% load staticfiles %}
 	<link rel="stylesheet" type="text/css" href="{% static "style.css" %}">
-
 </head>
 
 <body>
@@ -12,9 +11,10 @@
 <div class="page">
 
 <h1 class="sectionHeader">Welcome to</h1>
-<h1>TODO: IMAGE OF LOGO</h1>
 
-<form action="" method="post">{% csrf_token %}
+<img src="{% static "logoTmp.png" %}">
+
+<form action="" method="post">
 	<div class="formGroup">
 		<label><span>Sign-in or register</span></label>
 		{{ form.username }}
