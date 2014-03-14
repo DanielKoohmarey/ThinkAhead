@@ -373,7 +373,7 @@ class Colleges(models.Model):
         return [match.college for match in matches]
  
    @staticmethod
-    def getMajorsInCollege(college):
+   def getMajorsInCollege(college):
         """
         Returns a list of majors (in strings) that are inside college
         """
