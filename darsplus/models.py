@@ -372,8 +372,8 @@ class Colleges(models.Model):
         matches = Colleges.objects.distinct('college')
         return [match.college for match in matches]
  
-   @staticmethod
-   def getMajorsInCollege(college):
+    @staticmethod
+    def getMajorsInCollege(college):
         """
         Returns a list of majors (in strings) that are inside college
         """
