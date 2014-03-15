@@ -105,15 +105,16 @@ def doSomeManyChoiceReq(takenClasses, requirement, requirements, description, i)
 def abbreviateMajor(major):
 	abr = {'EECS':'Electrical Engineering & Computer Sciences',
 	'BIOENG':'Bioengineering', 'CIVENG':'Civil & Environmental Engineering', 'COENG':'Computational Engineering Science',
-	'ENENG':'Energy Engineering', 'ENGMS':'Engineering Math & Statistics',
+	'ENENG':'Energy Engineering', 'ENGMS':'Engineering Mathematics & Statistics',
+	'ENVENG':'Environmental Engineering Science',
 	'ENGP':'Engineering Physics','INDENG':'Industrial Engineering & Operations Research',
 	'MATSCI':'Materials Science & Engineering', 'MECENG':'Mechanical Engineering',
-	'NUCENG':'Nuclear Engineering', 'BIOMATSCI':'Bioengineering & Materials Science & Engineering',
-	'EECSMATSCI':'Electrical Engineering & Computer Sciences & Materials Science & Engineering',
-	'EECSNUCENG':'Electrical Engineering & Computer Sciences & Nuclear Engineering',
-	'MATMECENG':'Materials Science & Engineering & Mechanical Engineering',
-	'MATNUCENG':'Materials Science & Engineering & Nuclear Engineering',
-	'MECNUCENG':'Mechanical Engineering & Nuclear Engineering'}
+	'NUCENG':'Nuclear Engineering', 'BIOMATSCI':'Bioengineering/Materials Science & Engineering',
+	'EECSMATSCI':'Materials Science & Engineering/Electrical Engineering & Computer Sciences',
+	'EECSNUCENG':'Nuclear Engineering/Electrical Engineering & Computer Sciences',
+	'MATMECENG':'Materials Science & Engineering/Mechanical Engineering',
+	'MATNUCENG':'Materials Science & Engineering/Nuclear Engineering',
+	'MECNUCENG':'Nuclear Engineering/Mechanical Engineering'}
 	abr = dict (zip(abr.values(),abr.keys()))
 	return abr[major.replace('and','&')]
 
