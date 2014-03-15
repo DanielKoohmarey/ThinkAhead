@@ -795,7 +795,7 @@ def remainingRequirements(takenClasses, college, major):
 			"""advancement"""
 			if('ENGIN.177' in takenClasses) and ('COMPSCI.61B' in takenClasses):
 				techTaken.append('E 177')
-			print len(techTaken)
+			#print len(techTaken)
 			if((len(techTaken)>=4)or (((not csone)or (not cstwo))and (len(techTaken)>=3)) or ((not csone) and (not cstwo) and (len(techTaken)>=2))):
 				ans.append({'reqName':'Lower Division Technical Electives', 'reqCompleted':True, 'reqDescription':"Part of the freshman and sophmore year Technical elective requirement of two classes **Can be other cclasses agreed upon with advisor**",'courseDone':techTaken, 'courseLeft':techNotTaken})
 			else:

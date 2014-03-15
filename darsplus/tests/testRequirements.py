@@ -2,7 +2,7 @@
 from django.test import TestCase
 from darsplus.requirementscode import *
 
-class TestRequirements(unittest.TestCase):
+class TestRequirements(TestCase):
 	def testBasicReq1(self):
 		ans=basicReq([],'ELENG.20','EE 20',"Engineering class")
 		self.assertTrue(type(ans) is dict)
@@ -149,7 +149,7 @@ class TestRequirements(unittest.TestCase):
 		self.assertEqual('Electronics',ans['reqName'])
 		self.assertEqual("Engineering class",ans['reqDescription'])
 
-class TestUniversity(unittest.TestCase):
+class TestUniversity(TestCase):
 	def testAC1(self):
 		ans= remainingRequirements([], "College of Engineering", 'Electrical Engineering & Computer Sciences')
 		self.assertTrue( not ans[0]['reqCompleted'])
@@ -166,7 +166,7 @@ class TestUniversity(unittest.TestCase):
 		ans= remainingRequirements(['ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20'], "College of Engineering", 'Electrical Engineering & Computer Sciences')
 		self.assertTrue(ans[1]['reqCompleted'])
 
-class TestEngineering(unittest.TestCase):
+class TestEngineering(TestCase):
 	def testReadComp1(self):
 		ans= remainingRequirements([], "College of Engineering", 'Electrical Engineering & Computer Sciences')
 		self.assertTrue( not ans[5]['reqCompleted'])
@@ -305,6 +305,6 @@ class TestEngineering(unittest.TestCase):
 		self.assertEqual(5+2+31,len(ans))
 
 
-class TestChem(unittest.TestCase):
+class TestChem(TestCase):
 	def testBSCHEM1(self):
 		self.assertEqual(1,1)
