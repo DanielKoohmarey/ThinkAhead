@@ -102,6 +102,7 @@ def doSomeManyChoiceReq(takenClasses, requirement, requirements, description, i)
 	return ans
 
 #college is in {Engineering, Chemistry, NaturalResources, LettersAndSciences, Haas, EnvironmentalDesign}
+	
 def abbreviateMajor(major):
 	abr = {'EECS':'Electrical Engineering & Computer Sciences',
 	'BIOENG':'Bioengineering', 'CIVENG':'Civil & Environmental Engineering', 'COENG':'Computational Engineering Science',
@@ -114,12 +115,55 @@ def abbreviateMajor(major):
 	'EECSNUCENG':'Nuclear Engineering/Electrical Engineering & Computer Sciences',
 	'MATMECENG':'Materials Science & Engineering/Mechanical Engineering',
 	'MATNUCENG':'Materials Science & Engineering/Nuclear Engineering',
-	'MECNUCENG':'Nuclear Engineering/Mechanical Engineering'}
+	'MECNUCENG':'Nuclear Engineering/Mechanical Engineering',
+	
+	'CRS':'Conservation & Resource Studies', 'ES':'Environmental Sciences',
+	'FNR':'Forestry & Natural Resources','GPB': 'Genetics & Plant Biology',
+	'MB':'Microbial Biology','MEB':'Molecular & Environmental Biology', 
+	'MT':'Molecular Toxicology','NSPM':'Nutritional Science: Physiology & Metabolism', 
+	'NSD':'Nutritional Science - Dietetics', 'SE':'Society & Environment',
+	
+	'BSCHEM':'B.S. Chemistry','BACHEM':'B.A. Chemistry',
+	'CHEMENG':'Chemical Engineering', 'CHEMBIO':'Chemical Biology', 
+	'CHEMMATSCI':'Chemical Engineering/Materials Science & Engineering',
+	'CHEMNUCENG':'Chemical Engineering/Nuclear Engineering',
+	
+	'ARCH':'Architecture', 'LDARCH':'Landscape Architecture',
+	'URDES':'Urban Studies', 'SENVDES':'Sustainable Environmental Design',
+	
+	'UGBA':'Business Administration',
+	
+	'AMERSTD':'American Studies','AENEAA':'Ancient Egyptian & Near Eastern Art & Archaeology',
+	'ASIANST': 'Asian Studies', 'COGSCI': 'Cognitive Science', 'DEVSTD':'Development Studies',
+	'ISF': 'Interdisciplinary Studies', 'LATAMST':'Latin American Studies', 'LEGALST':'Legal Studies',
+	'MEDIAST': 'Media Studies', 'MESTU':'Middle Eastern Studies', 'PACS':'Peace & Conflict Studies',
+	'POLECON':'Political Economy','RELIGST':'Religious Studies', 'AFRICAM':'African American Studies',
+	'ANTHRO':'Anthropology', 'ASAMDST':'Asian American & Asian Diaspora Studies',
+	'CHICANO': 'Chicano Studies','ECON':'Economics', 'EEP':'Environmental Economics & Policy',
+	'ETHSTD':'Ethnic Studies', 'GWS':"Gender & Women's Studies", 'GEOG':'Geography', 'HISTORY':'History',
+	'LINGUIS':'Linguistics', 'NATAMS':'Native American Studies', 'POLSCI':'Political Science',
+	'PSYCH':'Psychology', 'SOCWEL':'Social Welfare', 'SOCIOL':'Sociology', 'ASTRON':'Astronomy',
+	'CHEM':'Chemistry', 'COMPSCI':'Computer Science', 'EPS':'Earth & Planetary Science',
+	'AMATH':'Mathematics, Applied', 'MATH':'Mathematics', 'OPER':'Operations Research & Management Science',
+	'PHYSSCI':'Physical Sciences', 'PHYSICS':'Physics', 'STAT':'Statistics', 'INTEGBI':'Integrative Biology',
+	'MCELLBI':'Molecular & Cell Biology', 'PBHLTH':'Public Health', 'HISTART':'Art, History of',
+	'ART':'Art, Practice of', 'CELTIC':'Celtic Studies', 'CLASSCIV':'Classical Civilizations',
+	'COMLIT':'Comparative Literature','CLASSLANG':'Classical Languages',
+	'EALANG':'East Asian Languages & Cultures', 'ENGLISH':'English', 'FILM':'Film & Media',
+	'FRENCH':'French', 'GERMAN':'German', 'ITALIAN':'Italian Studies','MUSIC':'Music',
+	'NECIV':'Near Eastern Civilizations','PHILOS':'Philosophy', 'RHETOR':'Rhetoric', 'SCANDIN':'Scandinavian',
+	'SLAVIC':'Slavic Languages & Literatures', 'SEASN':'South & Southeast Asian Studies',
+	'SPANISH':'Spanish & Spanish American', 'DANCE':'Dance & Performance Studies',
+	'ASTRO':'Astrophysics','BMBIO':'Biochemistry & Molecular Biology','CDBIO':'Cell & Developmental Biology',
+	'CHIN':'Chinese','DUTCH':'Dutch Studies','GGD':'Genetics, Genomics & Development',
+	'GREEK':'Greek','HLBI':'Hispanic Languages & Bilingual Issues','ILAL':'Iberian or Latin American Literatures',
+	'IMMPATH':'Immunology & Pathology','NEURO':'Neurobiology','THEATER':'Theater & Performance Studies',
+	'JAP':'Japanese','LATIN':'Latin','LB':'Luso-Brazilian','NELL':'Near Eastern Languages & Literature'}
 	abr = dict (zip(abr.values(),abr.keys()))
 	return abr[major.replace('and','&')]
 
 def abbreviateCollege(college):
-	abr = {"College of Engineering":'Engineering'}
+	abr = {"College of Engineering":'Engineering',"College of Chemistry":'Chemistry',"NaturalResources":'College of Natural Resources',"LettersAndSciences":'College of Letters and Science',"Haas":'Haas School of Business',"EnvironmentalDesign":'College of Environmental Design'}
 	return abr[college]
 	
 """
