@@ -148,164 +148,163 @@ class TestRequirements(unittest.TestCase):
 		self.assertTrue(not ans['reqCompleted'])
 		self.assertEqual('Electronics',ans['reqName'])
 		self.assertEqual("Engineering class",ans['reqDescription'])
-		
+
 class TestUniversity(unittest.TestCase):
 	def testAC1(self):
-		ans= remainingRequirements([], 'Engineering', 'EECS')
+		ans= remainingRequirements([], "College of Engineering", 'Electrical Engineering & Computer Sciences')
 		self.assertTrue( not ans[0]['reqCompleted'])
 	def testAC2(self):
-		ans= remainingRequirements(['GWS.100AC'], 'Engineering', 'EECS')
+		ans= remainingRequirements(['GWS.100AC'], "College of Engineering", 'Electrical Engineering & Computer Sciences')
 		self.assertTrue( ans[0]['reqCompleted'])
 	def testAC3(self):
-		ans= remainingRequirements(['ELENG.40','GWS.100AC'], 'Engineering', 'EECS')
+		ans= remainingRequirements(['ELENG.40','GWS.100AC'], "College of Engineering", 'Electrical Engineering & Computer Sciences')
 		self.assertTrue( ans[0]['reqCompleted'])
 	def testUnits1(self):
-		ans= remainingRequirements([], 'Engineering', 'EECS')
+		ans= remainingRequirements([], "College of Engineering", 'Electrical Engineering & Computer Sciences')
 		self.assertTrue( not ans[1]['reqCompleted'])
 	def testUnits1(self):
-		ans= remainingRequirements(['ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20'], 'Engineering', 'EECS')
+		ans= remainingRequirements(['ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20'], "College of Engineering", 'Electrical Engineering & Computer Sciences')
 		self.assertTrue(ans[1]['reqCompleted'])
 
 class TestEngineering(unittest.TestCase):
 	def testReadComp1(self):
-		ans= remainingRequirements([], 'Engineering', 'EECS')
+		ans= remainingRequirements([], "College of Engineering", 'Electrical Engineering & Computer Sciences')
 		self.assertTrue( not ans[5]['reqCompleted'])
 	def testReadComp2(self):
-		ans= remainingRequirements(['ENGLISH.R1A'], 'Engineering', 'EECS')
+		ans= remainingRequirements(['ENGLISH.R1A'], "College of Engineering", 'Electrical Engineering & Computer Sciences')
 		self.assertTrue( not ans[5]['reqCompleted'])
 		self.assertIn('You have completed R1A',ans[5]['reqDescription'])
 	def testReadComp3(self):
-		ans= remainingRequirements(['ENGLISH.R1B'], 'Engineering', 'EECS')
+		ans= remainingRequirements(['ENGLISH.R1B'], "College of Engineering", 'Electrical Engineering & Computer Sciences')
 		self.assertTrue( not ans[5]['reqCompleted'])
 		self.assertIn('You have completed R1B',ans[5]['reqDescription'])
 	def testReadComp4(self):
-		ans= remainingRequirements(['ENGLISH.R1B','ENGLISH.R1A'], 'Engineering', 'EECS')
+		ans= remainingRequirements(['ENGLISH.R1B','ENGLISH.R1A'], "College of Engineering", 'Electrical Engineering & Computer Sciences')
 		self.assertTrue(ans[5]['reqCompleted'])
 	def testEECS1(self):
-		ans= remainingRequirements([], 'Engineering', 'EECS')
+		ans= remainingRequirements([], "College of Engineering", 'Electrical Engineering & Computer Sciences')
 		self.assertEqual(23,len(ans))
 	def testEECS2(self):
-		ans= remainingRequirements([], 'Engineering', 'EECS')
+		ans= remainingRequirements([], "College of Engineering", 'Electrical Engineering & Computer Sciences')
 		self.assertTrue( not ans[14]['reqCompleted'])
 		self.assertIn('You have only taken 0',ans[14]['reqDescription'])
 	def testEECS3(self):
-		ans= remainingRequirements(['ELENG.40','ELENG.40','ELENG.40','COMPSCI.61A','COMPSCI.61A','COMPSCI.61A'], 'Engineering', 'EECS')
+		ans= remainingRequirements(['ELENG.40','ELENG.40','ELENG.40','COMPSCI.61A','COMPSCI.61A','COMPSCI.61A'], "College of Engineering", 'Electrical Engineering & Computer Sciences')
 		self.assertTrue(not ans[14]['reqCompleted'])
 		self.assertIn('You have only taken 0',ans[14]['reqDescription'])
 	def testEECS4(self):
-		ans= remainingRequirements(['ELENG.140','ELENG.140','ELENG.140','COMPSCI.170','COMPSCI.170','COMPSCI.170'], 'Engineering', 'EECS')
+		ans= remainingRequirements(['ELENG.140','ELENG.140','ELENG.140','COMPSCI.170','COMPSCI.170','COMPSCI.170'], "College of Engineering", 'Electrical Engineering & Computer Sciences')
 		self.assertTrue(ans[14]['reqCompleted'])
 	def testBIOENG1(self):
-		ans= remainingRequirements([], 'Engineering', 'BIOENG')
+		ans= remainingRequirements([], "College of Engineering", 'Bioengineering')
 		self.assertEqual(5+2+20,len(ans))
 	def testBIOENG2(self):
-		ans= remainingRequirements([], 'Engineering', 'BIOENG')
+		ans= remainingRequirements([], "College of Engineering", 'Bioengineering')
 		self.assertTrue(not ans[9]['reqCompleted'])
 	def testBIOENG3(self):
-		ans= remainingRequirements(['CHEM.1A'], 'Engineering', 'BIOENG')
+		ans= remainingRequirements(['CHEM.1A'], "College of Engineering", 'Bioengineering')
 		self.assertTrue(not ans[9]['reqCompleted'])
 	def testBIOENG4(self):
-		ans= remainingRequirements(['CHEM.1AL'], 'Engineering', 'BIOENG')
+		ans= remainingRequirements(['CHEM.1AL'], "College of Engineering", 'Bioengineering')
 		self.assertTrue(not ans[9]['reqCompleted'])
 	def testBIOENG5(self):
-		ans= remainingRequirements(['CHEM.1AL', 'CHEM.1A'], 'Engineering', 'BIOENG')
+		ans= remainingRequirements(['CHEM.1AL', 'CHEM.1A'], "College of Engineering", 'Bioengineering')
 		self.assertTrue(ans[9]['reqCompleted'])
 	def testBIOENG6(self):
-		ans= remainingRequirements(['CHEM.4A'], 'Engineering', 'BIOENG')
+		ans= remainingRequirements(['CHEM.4A'], "College of Engineering", 'Bioengineering')
 		self.assertTrue(ans[9]['reqCompleted'])
 	def testBIOENG7(self):
-		ans= remainingRequirements([], 'Engineering', 'BIOENG')
+		ans= remainingRequirements([], "College of Engineering", 'Bioengineering')
 		self.assertTrue(not ans[10]['reqCompleted'])
 	def testBIOENG8(self):
-		ans= remainingRequirements(['CHEM.3A'], 'Engineering', 'BIOENG')
+		ans= remainingRequirements(['CHEM.3A'], "College of Engineering", 'Bioengineering')
 		self.assertTrue(not ans[10]['reqCompleted'])
 	def testBIOENG9(self):
-		ans= remainingRequirements(['CHEM.3AL'], 'Engineering', 'BIOENG')
+		ans= remainingRequirements(['CHEM.3AL'], "College of Engineering", 'Bioengineering')
 		self.assertTrue(not ans[10]['reqCompleted'])
 	def testBIOENG10(self):
-		ans= remainingRequirements(['CHEM.3AL', 'CHEM.3A'], 'Engineering', 'BIOENG')
+		ans= remainingRequirements(['CHEM.3AL', 'CHEM.3A'], "College of Engineering", 'Bioengineering')
 		self.assertTrue(ans[10]['reqCompleted'])
 	def testBIOENG11(self):
-		ans= remainingRequirements(['CHEM.112A'], 'Engineering', 'BIOENG')
+		ans= remainingRequirements(['CHEM.112A'], "College of Engineering", 'Bioengineering')
 		self.assertTrue(ans[10]['reqCompleted'])
 	def testCIVENG1(self):
-		ans= remainingRequirements([], 'Engineering', 'CIVENG')
+		ans= remainingRequirements([], "College of Engineering", 'Civil and Environmental Engineering')
 		self.assertEqual(5+2+21,len(ans))
 	def testCOENG1(self):
-		ans= remainingRequirements([], 'Engineering', 'COENG')
+		ans= remainingRequirements([], "College of Engineering", 'Computational Engineering Science')
 		self.assertEqual(5+2+20,len(ans))
 	def testCOENG2(self):
-		ans= remainingRequirements(['BIOENG.153', 'ELENG.100','PHYSICS.110A','ENGIN.120'], 'Engineering', 'COENG')
+		ans= remainingRequirements(['BIOENG.153', 'ELENG.100','PHYSICS.110A','ENGIN.120'], "College of Engineering", 'Computational Engineering Science')
 		self.assertTrue(ans[21]['reqCompleted'])
 	def testCOENG3(self):
-		ans= remainingRequirements(['BIOENG.153', 'ELENG.100','PHYSICS.110A'], 'Engineering', 'COENG')
+		ans= remainingRequirements(['BIOENG.153', 'ELENG.100','PHYSICS.110A'], "College of Engineering", 'Computational Engineering Science')
 		self.assertTrue(not ans[21]['reqCompleted'])
 	def testCOENG4(self):
-		ans= remainingRequirements(['BIOENG.153', 'ELENG.100','PHYSICS.110A','ELENG.120'], 'Engineering', 'COENG')
+		ans= remainingRequirements(['BIOENG.153', 'ELENG.100','PHYSICS.110A','ELENG.120'], "College of Engineering", 'Computational Engineering Science')
 		self.assertTrue(not ans[21]['reqCompleted'])
 	def testENENG1(self):
-		ans= remainingRequirements([], 'Engineering', 'ENENG')
+		ans= remainingRequirements([], "College of Engineering", 'Energy Engineering')
 		self.assertEqual(5+2+24,len(ans))
 	def testENENG2(self):
-		ans= remainingRequirements(['CIVENG.11','CIVENG.70'], 'Engineering', 'ENENG')
+		ans= remainingRequirements(['CIVENG.11','CIVENG.70'], "College of Engineering", 'Energy Engineering')
 		self.assertTrue(not ans[15]['reqCompleted'])
 	def testENENG3(self):
-		ans= remainingRequirements(['ELENG.40','CIVENG.70'], 'Engineering', 'ENENG')
+		ans= remainingRequirements(['ELENG.40','CIVENG.70'], "College of Engineering", 'Energy Engineering')
 		self.assertTrue(ans[15]['reqCompleted'])
 	def testENENG4(self):
-		ans= remainingRequirements(['ELENG.40','ENGIN.45'], 'Engineering', 'ENENG')
+		ans= remainingRequirements(['ELENG.40','ENGIN.45'], "College of Engineering", 'Energy Engineering')
 		self.assertTrue(ans[15]['reqCompleted'])
 	def testENGMS1(self):
-		ans= remainingRequirements([], 'Engineering', 'ENGMS')
+		ans= remainingRequirements([], "College of Engineering", 'Engineering Math and Statistics')
 		self.assertEqual(5+2+16,len(ans))
 	def testENGMS2(self):
-		ans= remainingRequirements(['COMPSCI.61A','ENGIN.7','ENGIN.177','COMPSCI.61B'], 'Engineering', 'ENGMS')
+		ans= remainingRequirements(['COMPSCI.61A','ENGIN.7','ENGIN.177','COMPSCI.61B'], "College of Engineering", 'Engineering Math and Statistics')
 		self.assertTrue(ans[12]['reqCompleted'])
 	def testENGMS3(self):
-		ans= remainingRequirements(['COMPSCI.61A','ENGIN.7','COMPSCI.61B'], 'Engineering', 'ENGMS')
+		ans= remainingRequirements(['COMPSCI.61A','ENGIN.7','COMPSCI.61B'], "College of Engineering", 'Engineering Math and Statistics')
 		self.assertTrue(not ans[12]['reqCompleted'])
 	def testENGMS4(self):
-		ans= remainingRequirements(['COMPSCI.61A','ENGIN.177','COMPSCI.61B'], 'Engineering', 'ENGMS')
+		ans= remainingRequirements(['COMPSCI.61A','ENGIN.177','COMPSCI.61B'], "College of Engineering", 'Engineering Math and Statistics')
 		self.assertTrue(not ans[12]['reqCompleted'])
 	def testENGMS5(self):
-		ans= remainingRequirements(['COMPSCI.61C','COMPSCI.70'], 'Engineering', 'ENGMS')
+		ans= remainingRequirements(['COMPSCI.61C','COMPSCI.70'], "College of Engineering", 'Engineering Math and Statistics')
 		self.assertTrue(ans[12]['reqCompleted'])
 	def testENGP1(self):
-		ans= remainingRequirements([], 'Engineering', 'ENGP')
+		ans= remainingRequirements([], "College of Engineering", 'Engineering Physics')
 		self.assertEqual(5+2+21,len(ans))
 	def testINDENG1(self):
-		ans= remainingRequirements([], 'Engineering', 'INDENG')
+		ans= remainingRequirements([], "College of Engineering", 'Industrial Engineering & Operations Research')
 		self.assertEqual(5+2+18,len(ans))
 	def testMATSCI1(self):
-		ans= remainingRequirements([], 'Engineering', 'MATSCI')
+		ans= remainingRequirements([], "College of Engineering", 'Materials Science & Engineering')
 		self.assertEqual(5+2+23,len(ans))
 	def testMECENG1(self):
-		ans= remainingRequirements([], 'Engineering', 'MECENG')
+		ans= remainingRequirements([],"College of Engineering", 'Mechanical Engineering')
 		self.assertEqual(5+2+24,len(ans))
 	def testNUCENG1(self):
-		ans= remainingRequirements([], 'Engineering', 'NUCENG')
+		ans= remainingRequirements([], "College of Engineering", 'Nuclear Engineering')
 		self.assertEqual(5+2+19,len(ans))
 	def testBIOMATSCI1(self):
-		ans= remainingRequirements([], 'Engineering', 'BIOMATSCI')
+		ans= remainingRequirements([], "College of Engineering", 'Bioengineering and Materials Science & Engineering')
 		self.assertEqual(5+2+28,len(ans))
 	def testEECSMATSCI1(self):
-		ans= remainingRequirements([], 'Engineering', 'EECSMATSCI')
+		ans= remainingRequirements([], "College of Engineering", 'Electrical Engineering & Computer Sciences and Materials Science & Engineering')
 		self.assertEqual(5+2+26,len(ans))
 	def testEECSNUCENG1(self):
-		ans= remainingRequirements([], 'Engineering', 'EECSNUCENG')
+		ans= remainingRequirements([], "College of Engineering", 'Electrical Engineering & Computer Sciences and Nuclear Engineering')
 		self.assertEqual(5+2+24,len(ans))
 	def testMATNUCENG1(self):
-		ans= remainingRequirements([], 'Engineering', 'MATNUCENG')
+		ans= remainingRequirements([], "College of Engineering", 'Materials Science & Engineering and Nuclear Engineering')
 		self.assertEqual(5+2+27,len(ans))
 	def testMECNUCENG1(self):
-		ans= remainingRequirements([], 'Engineering', 'MECNUCENG')
+		ans= remainingRequirements([], "College of Engineering", 'Mechanical Engineering and Nuclear Engineering')
 		self.assertEqual(5+2+27,len(ans))
 	def testMATMECENG1(self):
-		ans= remainingRequirements([], 'Engineering', 'MATMECENG')
+		ans= remainingRequirements([], "College of Engineering", 'Materials Science & Engineering and Mechanical Engineering')
 		self.assertEqual(5+2+31,len(ans))
 
 
 class TestChem(unittest.TestCase):
 	def testBSCHEM1(self):
 		self.assertEqual(1,1)
-
