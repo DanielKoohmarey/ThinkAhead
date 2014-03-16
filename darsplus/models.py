@@ -12,6 +12,7 @@ from statics import *
 
 class UserProfile(models.Model):
     username = models.CharField(max_length=256)
+    college = models.CharField(max_length=128)
     major = models.CharField(max_length=128)
     graduationSemester = models.CharField(max_length=8)
     graduationYear = models.IntegerField()
@@ -34,7 +35,7 @@ class UserProfile(models.Model):
             return None
 
     @staticmethod
-    def addUserProfile(username, major, graduationSemester, graduationYear, coursesTaken):
+    def addUserProfile(username, major, college, graduationSemester, graduationYear, coursesTaken):
         """
         Checks if a username does not exist
 
@@ -46,7 +47,7 @@ class UserProfile(models.Model):
         if getUserProfile(username):
             return ERR_USER_EXISTS
         plannerID = Planner.addPlanner()
-        newUser = UserProfile(username=username, major=major, graduationSemester=graduationSemester, 
+        newUser = UserProfile(username=username, major=major, college=college, graduationSemester=graduationSemester, 
                               graduationYear=graduationYear, coursesTaken=coursesTaken, plannerID=plannerID, unitsCompleted=0)
         newUser.save()
         return SUCCESS
@@ -411,8 +412,8 @@ def login(user, password):
 def logout(user):
     return UserLoginInformation.logout(user)
 """
-def addUserProfile(username, major, graduationSemester, graduationYear, coursesTaken):
-    return UserProfile.addUserProfile(username, major, graduationSemester, graduationYear, coursesTaken)
+def addUserProfile(username, major,college, graduationSemester, graduationYear, coursesTaken):
+    return UserProfile.addUserProfile(username, major, college, graduationSemester, graduationYear, coursesTaken)
 
 def getUserProfile(username):
     return UserProfile.getUserProfile(username)

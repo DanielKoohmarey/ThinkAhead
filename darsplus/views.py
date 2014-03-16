@@ -16,7 +16,6 @@ majorJSON = json.dumps(getCollegesToMajors())
 @csrf_exempt
 def splash(request):
     """ Load the splashpage, or appropriate page depending on user status """
-    print(request.POST)
     if request.method == 'POST':
         if 'login' in request.POST:
             form = LoginForm(request.POST)
@@ -84,6 +83,7 @@ def userRegistration(request):
         #if errors:
         #    return render(request, 'registration.html',{'errors':errors,'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON}) 
         major = request.POST['major']
+        college = request.POST['college']
         graduationSemester = request.POST['semester'] 
         graduationYear = request.POST['year']  
         coursesTaken = []
@@ -96,7 +96,7 @@ def userRegistration(request):
                 periods = course.count('.')
                 course = course.replace('.','',periods-1)
                 coursesTaken.append(course)
-        newProfile = addUserProfile(request.user.username, major, graduationSemester, graduationYear, coursesTaken)
+        newProfile = addUserProfile(request.user.username, major, college, graduationSemester, graduationYear, coursesTaken)
 
         if newProfile == SUCCESS:
             return HttpResponseRedirect('/dashboard/')

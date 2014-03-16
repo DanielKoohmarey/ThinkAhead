@@ -20,15 +20,15 @@ class TestUserProfile(TestCase):
  
     def testAddSimple(self):
         """ Ensure that you can add 1 user """
-        response = UserProfile.addUserProfile("eevee","Computer Science",
-                                                     "Fall", "2014")
+        response = UserProfile.addUserProfile("eevee","Computer Science",'College of Engineering',
+                                                     "Fall", "2014",[])
         self.assertEquals(SUCCESS, response)        
         self.assertEquals(1, UserProfile.objects.all().count())
 
     def testFields(self):
         """ Ensure that fields are stored correctly """
-        response = UserProfile.addUserProfile("eevee","Computer Science",
-                                                     "Fall", 2014)
+        response = UserProfile.addUserProfile("eevee","Computer Science", 'College of Engineering',
+                                                     "Fall", 2014,[])
         self.assertEquals(SUCCESS, response)
         user = UserProfile.objects.filter(username="eevee")[0]
         self.assertEquals("eevee", user.username)
@@ -38,45 +38,46 @@ class TestUserProfile(TestCase):
 
     def testGetUserProfile(self):
         """ Ensure user profile can be retrieved correctly """
-        response = UserProfile.addUserProfile("eevee","Computer Science",
-                                                     "Fall", 2014)
+        response = UserProfile.addUserProfile("eevee","Computer Science",'College of Engineering',
+                                                     "Fall", 2014,[])
         self.assertEquals(SUCCESS, response)
         user = UserProfile.getUserProfile("eevee")
         self.assertTrue(user)
 
     def testAddDuplicateUser(self):
         """ Ensure that you cannot add two users with the same username """
-        response = UserProfile.addUserProfile("eevee","Computer Science",
-                                              "Fall", 2014)
-        response = UserProfile.addUserProfile("eevee","Computer Science",
-                                              "Fall", 2014)
+        response = UserProfile.addUserProfile("eevee","Computer Science",'College of Engineering',
+                                              "Fall", 2014,[])
+        response = UserProfile.addUserProfile("eevee","Computer Science", 'College of Engineering',
+                                              "Fall", 2014,[])
         self.assertEquals(ERR_USER_EXISTS, response)        
         self.assertEquals(1, UserProfile.objects.count())
     
     def testAddMultipleUsers(self):
         """ Ensure that you can add an arbitary number of users """
         for i in range(1,10):
-            response = UserProfile.addUserProfile("John Smith "+str(i), "Computer Science", "Fall", 2014)
+            response = UserProfile.addUserProfile("John Smith "+str(i), "Computer Science", 'College of Engineering',
+                                                  "Fall", 2014,[])
             self.assertEquals(SUCCESS, response)
             self.assertEquals(i, UserProfile.objects.count())
     
     def testAddCaseSensitive(self):
         """ Ensure that adding username is case sensitive """
-        response = UserProfile.addUserProfile("eevee","Computer Science",
-                                                     "Fall", 2014)
+        response = UserProfile.addUserProfile("eevee","Computer Science",'College of Engineering',
+                                                     "Fall", 2014,[])
         self.assertEquals(SUCCESS, response)
         self.assertEquals(1, UserProfile.objects.count())
 
-        response = UserProfile.addUserProfile("Eevee","Computer Science",
-                                                     "Fall", 2014)
+        response = UserProfile.addUserProfile("Eevee","Computer Science",'College of Engineering',
+                                                     "Fall", 2014,[])
         self.assertEquals(SUCCESS, response)
         self.assertEquals(2, UserProfile.objects.count())
 
 
     def testEmptyCoursesTaken(self):
         """ Ensure that course taken defaults to [] (empty) """
-        response = UserProfile.addUserProfile("eevee","Computer Science",
-                                                     "Fall", 2014)
+        response = UserProfile.addUserProfile("eevee","Computer Science",'College of Engineering',
+                                                     "Fall", 2014,[])
         self.assertEquals(SUCCESS, response)        
         self.assertEquals([], UserProfile.getCoursesTaken("eevee"))
 
@@ -127,8 +128,8 @@ class TestUserProfile(TestCase):
     """
     def testChangeGraduationSemester(self):
         """ Ensure changeGraduationSemester changes user graduation semester correctly """
-        response = UserProfile.addUserProfile("eevee", "Computer Science",
-                                              "Fall", 2014)
+        response = UserProfile.addUserProfile("eevee", "Computer Science", 'College of Engineering',
+                                              "Fall", 2014,[])
         account = UserProfile.objects.filter(username="eevee")[0]
         self.assertEquals("Fall", account.graduationSemester)
         response = UserProfile.changeGraduationSemester('eevee', 'Spring')
@@ -138,8 +139,8 @@ class TestUserProfile(TestCase):
 
     def testChangeGraduationYear(self):
         """ Ensure changeGraduationSemester changes user graduation year correctly """
-        response = UserProfile.addUserProfile("eevee", "Computer Science",
-                                              "Fall", 2014)
+        response = UserProfile.addUserProfile("eevee", "Computer Science",'College of Engineering',
+                                              "Fall", 2014,[])
         account = UserProfile.objects.filter(username="eevee")[0]
         self.assertEquals(2014, account.graduationYear)
         response = UserProfile.changeGraduationYear('eevee', 2015)
@@ -149,8 +150,8 @@ class TestUserProfile(TestCase):
 
     def testChangeMajor(self):
         """ Ensure changeGraduationSemester changes user graduation semester correctly """
-        response = UserProfile.addUserProfile("eevee", "Computer Science",
-                                              "Fall", 2014)
+        response = UserProfile.addUserProfile("eevee", "Computer Science",'College of Engineering',
+                                              "Fall", 2014,[])
         account = UserProfile.objects.filter(username="eevee")[0]
         self.assertEquals(2014, account.graduationYear)
         response = UserProfile.changeMajor('eevee', 'Economics')
@@ -160,8 +161,8 @@ class TestUserProfile(TestCase):
 
     def testNoUnitsCompleted(self):
         """ Ensure unitsCompleted defaults to 0 """
-        response = UserProfile.addUserProfile("eevee","Computer Science",
-                                                     "Fall", 2014)
+        response = UserProfile.addUserProfile("eevee","Computer Science",'College of Engineering',
+                                                     "Fall", 2014,[])
         self.assertEquals(SUCCESS, response)
         user = UserProfile.objects.filter(username="eevee")[0]
         self.assertEquals(0, user.unitsCompleted)
@@ -171,7 +172,7 @@ class TestUserProfile(TestCase):
         IDs = []
         for i in range(1,10):
             username = "John Smith " + str(i)
-            response = UserProfile.addUserProfile(username, "Computer Science", "Fall", 2014)
+            response = UserProfile.addUserProfile(username, "Computer Science", 'College of Engineering',"Fall", 2014,[])
             self.assertEquals(SUCCESS, response)
             user = UserProfile.objects.filter(username=username)[0]
             id = user.plannerID
@@ -187,7 +188,7 @@ class TestUserProfile(TestCase):
         """
         for i in range(0,10):
             username = "John Smith " + str(i)
-            response = UserProfile.addUserProfile(username, "Computer Science", "Fall", 2014)
+            response = UserProfile.addUserProfile(username, "Computer Science", 'College of Engineering',"Fall", 2014,[])
             self.assertEquals(SUCCESS, response)
             user = UserProfile.objects.filter(username=username)[0]
             id = user.plannerID

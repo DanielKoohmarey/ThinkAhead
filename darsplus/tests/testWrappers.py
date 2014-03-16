@@ -13,7 +13,7 @@ class TestCourses(TestCase):
     fixtures = ['courses.json', 'colleges.json']
     def setUp(self):
         """ Load courses and create user profiles for testing """
-        response = addUserProfile('magikarp', 'EECS', SUMMER_SEMESTER, 2017)
+        response = addUserProfile('magikarp', 'EECS', 'College of Engineering',SUMMER_SEMESTER, 2017,[])
         self.assertEquals(SUCCESS, response)
         numAccounts = UserProfile.objects.all().count()
         self.assertEquals(1, numAccounts)
@@ -25,7 +25,7 @@ class TestCourses(TestCase):
         
     def testAddUserProfileWrapper(self):
         """ Ensure addUserProfile creates profile correctly """
-        response = addUserProfile('eevee', 'COMPSCI', FALL_SEMESTER, 2015)
+        response = addUserProfile('eevee', 'COMPSCI', 'College of Engineering',FALL_SEMESTER, 2015,[])
         self.assertEquals(SUCCESS, response)
         account = UserProfile.objects.filter(username='eevee')[0]
         self.assertEquals('eevee', account.username)
