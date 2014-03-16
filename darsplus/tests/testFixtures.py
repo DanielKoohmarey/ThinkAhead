@@ -19,9 +19,9 @@ class TestFixtures(TestCase):
     
     def testCollegeToMajorMultiple(self):
         """ Ensures that you get a list of all the colleges that has that major"""
-        colleges = Colleges.majorToCollege('Chemistry')
+        colleges = Colleges.majorToCollege('Environmental Economics and Policy')
         self.assertEquals(2, len(colleges))
-        self.assertIn('College of Chemistry', colleges)
+        self.assertIn('College of Natural Resources', colleges)
         self.assertIn('College of Letters and Science', colleges)
         
     def testCollegeToMajorNotExist(self):
@@ -32,7 +32,7 @@ class TestFixtures(TestCase):
     def testMajorsInCollege(self):
         """ Ensures that given a college, we can get list of majors inside that college """
         majors = Colleges.getMajorsInCollege('College of Chemistry')
-        chemistry = ['Chemistry', 'Chemical Biology', 'Chemical Engineering',
+        chemistry = ['Chemistry B.A.', 'Chemistry B.S.', 'Chemical Biology', 'Chemical Engineering',
                      'Chemical Engineering/Materials Science and Engineering',
                      'Chemical Engineering/Nuclear Engineering']
         self.assertEquals(len(chemistry), len(majors))
