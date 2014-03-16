@@ -6,6 +6,7 @@ TABLE OF CONTENTS
 -Setting Up: Local vs Heroku
 -Running Tests
 -Running Coverage
+-Local Database
 
 Last Update: 13 March 2014
      	     1:50PM
@@ -116,3 +117,45 @@ RUNNING COVERAGE
 
 	4) In the terminal, do this to present it in a better way
 	   coverage report
+
+
+
+==============
+LOCAL DATABASE
+==============
+
+	If you run the webapp locally (i.e. via "python manage.py runserver"), all of the records and databases are saved in your local database.
+	Here are the steps (and example commands) if you want to observe your DB
+
+	0) In your terminal, type "python manage.py dbshell". This should bring you to Postgres' prompt
+
+	1) Example commands:
+
+	   a) '\dt'
+	      lists the databases that you have. Note that the name is usually "<app name>_<model name>"
+
+	   b) '\d darsplus_courses'
+	      lists the field names AND field type of the given database. 
+	      If you made an update to models, this is what you should do to check if the DBs are updated
+	      If DB is not up to date, lookat step 3
+
+	   c) 'select * from darsplus_userprofile;'
+	      returns all entries in userprofile
+
+	   d) 'select * from darsplus_courses where "minUnit" > 3;'
+	      returns all entries where some fields satisfy some condition
+	      note that since our fields have capital letters,we HAVE TO PUT THE FIELD WITH DOUBLE QUOTES
+
+	   e) 'select * from darsplus_courses where "minUnit" > 3 and "maxUnit" < 10;'
+	      example of multiple conditions
+	      
+	2) To exit the Postgres prompt, type "\q"
+
+	3) Updating Database. 
+	   Right now, the only way to update the database is to remove it, and recreate it
+
+	   a) To remove database, type "dropdb 'darsplus'" in the terminal
+
+	   b) To recreate database, type "createdb 'darsplus'" in the terminal
+	   
+	   c) To sync the database with Django app, type "python manage.py syncdb" in the terminal
