@@ -5,11 +5,11 @@ from darsplus.models import *
 from darsplus.utils import *
 import json
 client=Client()
+managementForm = {'form-TOTAL_FORMS': u'1','form-INITIAL_FORMS': u'0','form-MAX_NUM_FORMS': u''} # Default Dictionary for management form validation. has ONE form by default
 
 class TestUserCase(TestCase):
-        
     def testHomePage(self):
-        """ Expect login page exists at url /home/ """
+        # Expect login page exists at url /home/
         response = client.get('/home/')
         self.assertEqual(response.status_code, 200)
 
@@ -21,13 +21,13 @@ class TestUserCase(TestCase):
 
     
     def testRegisterPage(self):
-        """ Expect login page exists at url /registration/. Redicrects to home if not logged in """
+        # Expect login page exists at url /registration/. Redicrects to home if not logged in
         response = client.get('/registration/')
         self.assertEqual(response.status_code, 302)
         self.assertIn('/home/', response.url)
         
     def testDashboardPage(self):
-        """ Expect login page exists at url /dashboard/. Redirects to home if not logged in """
+        # Expect login page exists at url /dashboard/. Redirects to home if not logged in
         response = client.get('/dashboard/')
         self.assertEqual(response.status_code, 302)
         self.assertIn('/home', response.url)
@@ -56,7 +56,7 @@ class TestUserCase(TestCase):
 
 
     def testLogin(self):
-        """ Logins in a user correctly """
+        # Logins in a user correctly
         response = client.post('',{'username':'john', 'password':'pass','add':"Create User"})
         response = client.post('',{'username':'john', 'password':'pass', 'login':'Login'})
         self.assertEquals(302, response.status_code)
@@ -67,68 +67,123 @@ class TestUserCase(TestCase):
         
 
     def testInvalidLogin(self):
-        """ If password does not match, return error message  """
+        # If password does not match, return error message
         response = client.post('',{'username':'john', 'password':'pass','add':"Create User"})
         response = client.post('',{'username':'john', 'password':'otherpass', 'login':'Login'})
         self.assertEquals(200, response.status_code)
         user = User.objects.filter(username='john')[0]
         self.assertIn('Invalid Username/Password. Please try again', response.context['errors'])
     
-    """
-    def testDasboardLoggedIn(self):
-        client = Client()
-        response = client.post('',{'username':'smith', 'password':'pass','add':"Create User"})
-        #response = client.post('',{'username':'smith', 'password':'pass', 'login':'Login'})
-        response = client.login(username='smith', password='pass')
-        print ">>>>>>>>>>>>>>>>>>"
-        print response
-        user = User.objects.filter(username='smith')[0]
-        print user.is_active
-        print user.is_authenticated()
-        print client
-        print (dir (client))
-        response = client.post('/dashboard',{})
-        print "<<<<<<<<<<<<<<<"
-        self.assertTrue(response)
+
+    def testProfileNotLoggedIn(self):
+        # If going to registration without logging in, redirect to home
+        response = client.post('',{'username':'john', 'password':'pass','add':"Create User"})
+        request = {'major':['Bioengineering'],'college':['College of Engineering'],
+                   'semester':['Summer'], 'year':[2015],'form-0-name':['CS 61A'],}
+        request.update(managementForm)
+        client.logout()
+        response = client.post('/registration/', request)
         self.assertEquals(302, response.status_code)
-        response = client.post('/dashboard', json.dumps({'username':'test', 'password':'pass'}))
-        self.assertNotEquals(False, response)
+        self.assertIn('/home/', response.url)
+        profiles = UserProfile.objects.filter(username='john')
+        self.assertEquals(0, profiles.count())
+
+    def testProfileRegisterSuccess(self):
+        # If going to register and logged in, should add to User Profile and Planner
+        response = client.post('',{'username':'john', 'password':'pass','add':"Create User"})
+        request = {'major':['Bioengineering'],'college':['College of Engineering'],
+                   'semester':['Summer'], 'year':[2015],'form-0-name':['CS 61A'],}
+        request.update(managementForm)
+        response = client.post('/registration/', request)
+        self.assertEquals(302, response.status_code)
+        self.assertIn('/dashboard/', response.url)
+        profiles = UserProfile.objects.filter(username='john')
+        self.assertEquals(1, profiles.count())
+        profile = profiles[0]
+        self.assertEquals('Bioengineering', profile.major)
+        self.assertEquals('College of Engineering', profile.college)
+        self.assertEquals('Summer', profile.graduationSemester)
+        self.assertEquals(2015, profile.graduationYear)
+        self.assertIn('CS.61A', profile.coursesTaken)
+        plannerID = profile.plannerID
+        planner = Planner.objects.filter(plannerID=plannerID)
+        self.assertEquals(1, planner.count())
+
+    def testProfileNoCourse(self):
+        # Test registering with no course taken. list of courses taken should be empty
+        response = client.post('',{'username':'john', 'password':'pass','add':"Create User"})
+        request = {'major':['Bioengineering'],'college':['College of Engineering'],
+                   'semester':['Summer'], 'year':[2015],'form-0-name':[],}
+        request.update(managementForm)
+        response = client.post('/registration/', request)
+        self.assertEquals(302, response.status_code)
+        self.assertIn('/dashboard/', response.url)
+        profiles = UserProfile.objects.filter(username='john')
+        self.assertEquals(1, profiles.count())
+        profile = profiles[0]
+        self.assertEquals([], profile.coursesTaken)
+
+    def testProfileMultipleCourses(self):
+        # Test registering with multiple courses taken.All of the courses taken should be added to list of courses Taken
+        response = client.post('',{'username':'john', 'password':'pass','add':"Create User"})
+        request = {'major':['Bioengineering'],'college':['College of Engineering'],
+                   'semester':['Summer'], 'year':[2015],'form-0-name':['CS 61A'],'form-1-name':['EE 42'], 'form-2-name':['BIO 1A']}
+        request.update(managementForm)
+        request['form-TOTAL_FORMS']=3
+        response = client.post('/registration/', request)
+        self.assertEquals(302, response.status_code)
+        self.assertIn('/dashboard/', response.url)
+        profiles = UserProfile.objects.filter(username='john')
+        self.assertEquals(1, profiles.count())
+        profile = profiles[0]
+        self.assertIn('CS.61A', profile.coursesTaken)
+        self.assertIn('EE.42', profile.coursesTaken)
+        self.assertIn('BIO.1A', profile.coursesTaken)
+
+
+    def testDashboardNotLoggedIn(self):
+        # If trying to see dashboard without logging in, redirect to home
+        response = client.post('/dashboard/',{})
+        self.assertEquals(302, response.status_code)
+        self.assertIn('/home/', response.url)
+        
+
+    def testDasboardLoggedInNotRegister(self):
+        # If trying to see dashbaord, logged in, but not registered, sent to registration page to putin user profile
+        response = client.post('',{'username':'smith', 'password':'pass','add':"Create User"})
+        response = client.post('/dashboard/', {})
+        self.assertEquals(302, response.status_code)
+        self.assertIn('/registration/', response.url)
+
+    def testDashboardLoggedInRegistered(self):
+        # If logged in and registed, display dashboard
+        response = client.post('',{'username':'smith', 'password':'pass','add':"Create User"})
+        request = {'major':['Bioengineering'],'college':['College of Engineering'],
+                   'semester':['Summer'], 'year':[2015],'form-0-name':['CS 61A'],}
+        request.update(managementForm)
+        response = client.post('/registration/', request)
+        response = client.post('/dashboard/', {})
+        self.assertEquals(200, response.status_code)
 
     def testDasboardBadLogin(self):
+        # If logged in with bad combination, redirects to home when accessing dashbaord
+        response = client.post('',{'username':'smith', 'password':'pass','add':"Create User"})
+        request = {'major':['Bioengineering'],'college':['College of Engineering'],
+                   'semester':['Summer'], 'year':[2015],'form-0-name':['CS 61A'],}
+        request.update(managementForm)
+        response = client.post('/registration/', request)
+        client.logout()
         c = Client()
-        response = c.post('/register',json.dumps({'user':'test','password':'pass'}),content_type="application/json")
-        response = c.login(username='test', password='fakepass')
-        self.assertFalse(response)
+        x = c.login(username='smith',password='otherpass')
+        response = c.post('/dashboard/',{})
+        self.assertEquals(302, response.status_code)
+        self.assertIn('/home/', response.url)
 
+    def testMultipleLogin(self):
+        # TODO: Create 2 accounts, different registration info. able to login and see corresponding dashboard
+        pass
 
-    def testUserProfile(self):
-        #Tests that upon user creatoin, the corresponding entry in UserProfile are added
-        response = client.post('/register',json.dumps({'username':'john','college': 'College of Engineering', 'major':'Chemistry','year':2014,'semester':'Fall'}),content_type="application/json")
-        self.assertEquals(1, UserProfile.objects.all().count())
-        courseInfo = UserProfile.getCourseInfo('john')
-        self.assertEquals('Chemistry', courseInfo.major)
-        self.assertEquals(2014, courseInfo.graduationYear)
-        self.assertEquals('Fall', courseInfo.graduationSemester)
+    def testGenerateRequirement(self):
+        # TODO: Given different variationos of courses taken, generate the correct webpage content
+        pass
 
-    def testPlanner(self):
-        # Tests that upon user creatoin, the corresponding entry in Planner are added 
-        response = client.post('/register',json.dumps({'username':'john','college': 'College of Engineering', 'major':'Chemistry','year':2014,'semester':'Fall'}),content_type="application/json")
-        self.assertEquals(1, Planner.objects.all().count())
-   
-
-   
-   def testChange(self):
-        # Tests that upon user creation, you can alter the database
-        response = client.post('/register',json.dumps({'username':'john','college': 'College of Engineering', 'major':'Chemistry','year':2014,'semester':'Fall'}),content_type="application/json")
-        self.assertEquals(1, UserProfile.objects.all().count())
-        response = changeGraduationSemester('john','Summer')
-        self.assertEquals(SUCCESS, response)
-        response = changeGraduationYear('john',2016)
-        self.assertEquals(SUCCESS, response)
-        response = changeMajor('john','Economics')
-        self.assertEquals(SUCCESS, response)                
-        courseInfo = UserProfile.getCourseInfo('john')
-        self.assertEquals('Summer', courseInfo.graduationSemester)
-        self.assertEquals(2016, courseInfo.graduationYear)
-        self.assertEquals('Economics', courseInfo.major) 
-    """

@@ -21,8 +21,7 @@ def splash(request):
             form = LoginForm(request.POST)
             #Ensure login fields are filled out
             if form.errors:
-                return render(request, 'splash.html',{'errors':form.errors,'form':LoginForm()})
-            
+                return render(request, 'splash.html',{'errors':form.errors,'form':LoginForm()})            
             else:            
                 currentUser = authenticate(username=request.POST['username'],password=request.POST['password'])
                 if currentUser:
@@ -43,7 +42,7 @@ def splash(request):
                 #Checks whether user already exists    
                 if User.objects.filter(username=request.POST['username']):
                     return render(request, 'splash.html',RequestContext(request,{'errors':"Username is already taken.",'form':LoginForm()}))
-        
+
                 new_user = User.objects.create_user(username=username,password=password)
                 new_user.save()
                 new_user = authenticate(username=username,password=password) #django requires authentification before logging in
@@ -52,13 +51,14 @@ def splash(request):
     
     else:
         dashboardContext = dashboardData(request)
-        if dashboardContext:
+        if dashboardContext: # If user has a profile
             return HttpResponseRedirect('/dashboard/')
-        elif request.user.is_authenticated():
+        elif request.user.is_authenticated(): # If a user is not registered/logged-in
             return HttpResponseRedirect('/registration/')
-        else:
+        else: # If a user is not logged in 
             return render(request, 'splash.html', {'form':LoginForm()})
     return render(request, 'splash.html',{'form':LoginForm()})
+
 #@login_required
 @csrf_exempt
 def userRegistration(request):
@@ -69,7 +69,6 @@ def userRegistration(request):
     elif request.method == 'POST':
         if not request.user.is_authenticated():
             return HttpResponseRedirect('/home/')
-        print('ATTEMPTING TO CREATE PROFILE')
         gradInfo = GradForm(request.POST)
         majorInfo = MajorForm(request.POST)
         courseInfo = CourseFormSet(request.POST)
