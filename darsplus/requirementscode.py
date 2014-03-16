@@ -102,25 +102,70 @@ def doSomeManyChoiceReq(takenClasses, requirement, requirements, description, i)
 	return ans
 
 #college is in {Engineering, Chemistry, NaturalResources, LettersAndSciences, Haas, EnvironmentalDesign}
+
 def abbreviateMajor(major):
 	abr = {'EECS':'Electrical Engineering & Computer Sciences',
 	'BIOENG':'Bioengineering', 'CIVENG':'Civil & Environmental Engineering', 'COENG':'Computational Engineering Science',
-	'ENENG':'Energy Engineering', 'ENGMS':'Engineering Math & Statistics',
+	'ENENG':'Energy Engineering', 'ENGMS':'Engineering Mathematics & Statistics',
+	'ENVENG':'Environmental Engineering Science',
 	'ENGP':'Engineering Physics','INDENG':'Industrial Engineering & Operations Research',
 	'MATSCI':'Materials Science & Engineering', 'MECENG':'Mechanical Engineering',
-	'NUCENG':'Nuclear Engineering', 'BIOMATSCI':'Bioengineering & Materials Science & Engineering',
-	'EECSMATSCI':'Electrical Engineering & Computer Sciences & Materials Science & Engineering',
-	'EECSNUCENG':'Electrical Engineering & Computer Sciences & Nuclear Engineering',
-	'MATMECENG':'Materials Science & Engineering & Mechanical Engineering',
-	'MATNUCENG':'Materials Science & Engineering & Nuclear Engineering',
-	'MECNUCENG':'Mechanical Engineering & Nuclear Engineering'}
+	'NUCENG':'Nuclear Engineering', 'BIOMATSCI':'Bioengineering/Materials Science & Engineering',
+	'EECSMATSCI':'Materials Science & Engineering/Electrical Engineering & Computer Sciences',
+	'EECSNUCENG':'Nuclear Engineering/Electrical Engineering & Computer Sciences',
+	'MATMECENG':'Materials Science & Engineering/Mechanical Engineering',
+	'MATNUCENG':'Materials Science & Engineering/Nuclear Engineering',
+	'MECNUCENG':'Nuclear Engineering/Mechanical Engineering',
+
+	'CRS':'Conservation & Resource Studies', 'ES':'Environmental Sciences',
+	'FNR':'Forestry & Natural Resources','GPB': 'Genetics & Plant Biology',
+	'MB':'Microbial Biology','MEB':'Molecular & Environmental Biology',
+	'MT':'Molecular Toxicology','NSPM':'Nutritional Science: Physiology & Metabolism',
+	'NSD':'Nutritional Science - Dietetics', 'SE':'Society & Environment',
+
+	'BSCHEM':'B.S. Chemistry','BACHEM':'B.A. Chemistry',
+	'CHEMENG':'Chemical Engineering', 'CHEMBIO':'Chemical Biology',
+	'CHEMMATSCI':'Chemical Engineering/Materials Science & Engineering',
+	'CHEMNUCENG':'Chemical Engineering/Nuclear Engineering',
+
+	'ARCH':'Architecture', 'LDARCH':'Landscape Architecture',
+	'URDES':'Urban Studies', 'SENVDES':'Sustainable Environmental Design',
+
+	'UGBA':'Business Administration',
+
+	'AMERSTD':'American Studies','AENEAA':'Ancient Egyptian & Near Eastern Art & Archaeology',
+	'ASIANST': 'Asian Studies', 'COGSCI': 'Cognitive Science', 'DEVSTD':'Development Studies',
+	'ISF': 'Interdisciplinary Studies', 'LATAMST':'Latin American Studies', 'LEGALST':'Legal Studies',
+	'MEDIAST': 'Media Studies', 'MESTU':'Middle Eastern Studies', 'PACS':'Peace & Conflict Studies',
+	'POLECON':'Political Economy','RELIGST':'Religious Studies', 'AFRICAM':'African American Studies',
+	'ANTHRO':'Anthropology', 'ASAMDST':'Asian American & Asian Diaspora Studies',
+	'CHICANO': 'Chicano Studies','ECON':'Economics', 'EEP':'Environmental Economics & Policy',
+	'ETHSTD':'Ethnic Studies', 'GWS':"Gender & Women's Studies", 'GEOG':'Geography', 'HISTORY':'History',
+	'LINGUIS':'Linguistics', 'NATAMS':'Native American Studies', 'POLSCI':'Political Science',
+	'PSYCH':'Psychology', 'SOCWEL':'Social Welfare', 'SOCIOL':'Sociology', 'ASTRON':'Astronomy',
+	'CHEM':'Chemistry', 'COMPSCI':'Computer Science', 'EPS':'Earth & Planetary Science',
+	'AMATH':'Mathematics, Applied', 'MATH':'Mathematics', 'OPER':'Operations Research & Management Science',
+	'PHYSSCI':'Physical Sciences', 'PHYSICS':'Physics', 'STAT':'Statistics', 'INTEGBI':'Integrative Biology',
+	'MCELLBI':'Molecular & Cell Biology', 'PBHLTH':'Public Health', 'HISTART':'Art, History of',
+	'ART':'Art, Practice of', 'CELTIC':'Celtic Studies', 'CLASSCIV':'Classical Civilizations',
+	'COMLIT':'Comparative Literature','CLASSLANG':'Classical Languages',
+	'EALANG':'East Asian Languages & Cultures', 'ENGLISH':'English', 'FILM':'Film & Media',
+	'FRENCH':'French', 'GERMAN':'German', 'ITALIAN':'Italian Studies','MUSIC':'Music',
+	'NECIV':'Near Eastern Civilizations','PHILOS':'Philosophy', 'RHETOR':'Rhetoric', 'SCANDIN':'Scandinavian',
+	'SLAVIC':'Slavic Languages & Literatures', 'SEASN':'South & Southeast Asian Studies',
+	'SPANISH':'Spanish & Spanish American', 'DANCE':'Dance & Performance Studies',
+	'ASTRO':'Astrophysics','BMBIO':'Biochemistry & Molecular Biology','CDBIO':'Cell & Developmental Biology',
+	'CHIN':'Chinese','DUTCH':'Dutch Studies','GGD':'Genetics, Genomics & Development',
+	'GREEK':'Greek','HLBI':'Hispanic Languages & Bilingual Issues','ILAL':'Iberian or Latin American Literatures',
+	'IMMPATH':'Immunology & Pathology','NEURO':'Neurobiology','THEATER':'Theater & Performance Studies',
+	'JAP':'Japanese','LATIN':'Latin','LB':'Luso-Brazilian','NELL':'Near Eastern Languages & Literature'}
 	abr = dict (zip(abr.values(),abr.keys()))
 	return abr[major.replace('and','&')]
 
 def abbreviateCollege(college):
-	abr = {"College of Engineering":'Engineering'}
+	abr = {"College of Engineering":'Engineering',"College of Chemistry":'Chemistry',"NaturalResources":'College of Natural Resources',"LettersAndSciences":'College of Letters and Science',"Haas":'Haas School of Business',"EnvironmentalDesign":'College of Environmental Design'}
 	return abr[college]
-	
+
 """
 if college is Chemistry then major is in {BSCHEM:'Bachelor of Science Degree in Chemistry',
 	CHEMENG:'Chemical Engineering', CHEMBIO:'Chemical Biology', BACHEM:'Bachelor of Arts Degree in Chemistry'
@@ -200,11 +245,11 @@ def remainingRequirements(takenClasses, college, major):
 		else:
 			ans.append({'reqName':'Reading and Composition', 'reqCompleted':False, 'reqDescription':"Take at least one course labeled R1A and R1B",'courseDone':[], 'courseLeft':[]})
 		#Electives: Humanities / Social Studies
-		#A minimum of six courses from the approved Humanities/Social Sciences (H/SS) lists. 
-		#At least two of the courses must be upper division (courses numbered 100--196.) 
-		#At  least two of the courses must be from the same department and at least one of  the two must be upper division. (*Series) 
-		#No courses offered by an Engineering  department (IEOR, CE, etc.) other than BIOE 100, COMPSCI C79,  ENGIN 125, ENGIN 130AC,  and ME 191AC may be used to complete H/SS requirements. 
-			ans.append({'reqName':'Electives: Humanities / Social Studies', 'reqCompleted':True, 'reqDescription':"A minimum of six courses from the approved Humanities/Social Sciences (H/SS) lists. At least two of the courses must be upper division (courses numbered 100--196.) At  least two of the courses must be from the same department and at least one of  the two must be upper division.",'courseDone':[], 'courseLeft':[]})
+		#A minimum of six courses from the approved Humanities/Social Sciences (H/SS) lists.
+		#At least two of the courses must be upper division (courses numbered 100--196.)
+		#At  least two of the courses must be from the same department and at least one of  the two must be upper division. (*Series)
+		#No courses offered by an Engineering  department (IEOR, CE, etc.) other than BIOE 100, COMPSCI C79,  ENGIN 125, ENGIN 130AC,  and ME 191AC may be used to complete H/SS requirements.
+		ans.append({'reqName':'Electives: Humanities / Social Studies', 'reqCompleted':True, 'reqDescription':"A minimum of six courses from the approved Humanities/Social Sciences (H/SS) lists. At least two of the courses must be upper division (courses numbered 100--196.) At  least two of the courses must be from the same department and at least one of  the two must be upper division.",'courseDone':[], 'courseLeft':[]})
 		# Electrical Engineering & Computer Sciences
 		if(major=='EECS'):
 			#Math 1A
@@ -231,7 +276,7 @@ def remainingRequirements(takenClasses, college, major):
 				ans.append({'reqName':'Technical Elective', 'reqCompleted':True, 'reqDescription':"At least 20 units of upper-division EECS courses",'courseDone':[], 'courseLeft':[]})
 			else:
 				ans.append({'reqName':'Technical Elective', 'reqCompleted':False, 'reqDescription':"At least 20 units of upper-division EECS courses. "+"You have only taken "+str(num),'courseDone':[], 'courseLeft':[]})
-			
+
 			#Not courses numbered 24, 39, 84; BioE 100; CS C79, CS 195, CSH195; Engin 125, 130AC, 140; IEOR 172, IEOR 190 series; IEOR 191; ME 191AC, 190K; 191K
 			#15 units of upper division courses in engineering.  Not courses numbered 24, 39, 84; BioE 100; CS C79, CS 195, CS H195, Engin 125; 130 AC, 140, IEOR 172, IEOR 190 series; IEOR 191; and ME 191AC, 190K; 191K.
 			num=0
@@ -328,7 +373,7 @@ def remainingRequirements(takenClasses, college, major):
 			simple=('BIOENG.22L'in takenClasses)
 			for key in biolab:
 				if key in takenClasses:
-					lab+=1	
+					lab+=1
 			if((not overlap) and (lab>=1))or(overlap and (lab>=2)):
 				ans.append({'reqName':'Bioengineering Lab', 'reqCompleted':True, 'reqDescription':"One lab course from the given list",'courseDone':[], 'courseLeft':[]})
 			else:
@@ -470,7 +515,7 @@ def remainingRequirements(takenClasses, college, major):
 			ans.append(basicReq(takenClasses, 'COMPSCI.61B', 'CS 61B', "The sophomore year Programming Data Structures requirement"))
 			#Math 128A, 128B, Numerical Analysis3
 			ans.append(twoReq(takenClasses,'Numerical Analysis', 'MATH.128A', 'Math 128A','MATH.128B', 'Math 128B', "The junior year Numerical Analysis requirement of both Math 128A and 128B"))
-			#Core Course 1-4: One course from each of four of the following eleven groups: 
+			#Core Course 1-4: One course from each of four of the following eleven groups:
 			#	Bioengineering: Bio Eng 153
 			#	Electrical Engineering: El Eng 100, El Eng 120, El Eng 105, El Eng 130
 			#	Electromagnetics: EECS 117A, Phys 110A
@@ -1044,12 +1089,12 @@ def remainingRequirements(takenClasses, college, major):
 			else:
 				ans.append({'reqName':'Technical Elective', 'reqCompleted':False, 'reqDescription':"21 units of upperdivision courses cannot include: BioE 100; CS 195, H195; Engin 125; IEOR 190 series; ME 191AC, 191K **Approved by Advisor"+"You have only taken"+str(num),'courseDone':[], 'courseLeft':[]})
 			"""advancement"""
-			#must include at least one (1) MSE 120 series course. 
+			#must include at least one (1) MSE 120 series course.
 			techtwo={'MATSCI.120':'MatSci 120','MATSCI.121':'MatSci 121','MATSCI.122':'MatSci 122','MATSCI.123':'MatSci 123','MATSCI.125':'MatSci 125'}
 			ans.append(manyChoiceReq(takenClasses, 'Technical Elective Two', techtwo, "The senior year Technical Elective requirement of 3 units from the MSE 120 series course"))
-			#E 115-Engineering Thermodynamics	
+			#E 115-Engineering Thermodynamics
 			ans.append(basicReq(takenClasses, 'ENGIN.115', 'E 115', "The junior year Engineering Thermodynamics requirement"))
-			#MSE 102-Bonding Crystallography and Crystal Defects	
+			#MSE 102-Bonding Crystallography and Crystal Defects
 			ans.append(basicReq(takenClasses, 'MATSCI.102', 'MatSci 102', "The junior year Bonding Crystallography and Crystal Defects requirement"))
 			#MSE 103-Phase Transformation and Kinetics
 			ans.append(basicReq(takenClasses, 'MATSCI.103', 'MatSci 103', "The junior year Phase Transformation and Kinetics requirement"))
@@ -1059,7 +1104,7 @@ def remainingRequirements(takenClasses, college, major):
 			ans.append(basicReq(takenClasses, 'ENGIN.117', 'E 117', "The junior year Methods of Engineering Analysis requirement"))
 			#MSE 111-Properties of Electronic Materials
 			ans.append(basicReq(takenClasses, 'MATSCI.111', 'MatSci 111', "The senior year Properties of Electronic Materials requirement"))
-			#MSE 130-Experimental Materials Science	
+			#MSE 130-Experimental Materials Science
 			ans.append(basicReq(takenClasses, 'MATSCI.130', 'MatSci 130', "The senior year Experimental Materials Science requirement"))
 			#MSE 112-Corrosion
 			ans.append(basicReq(takenClasses, 'MATSCI.112', 'MatSci 112', "The senior year Corrosion requirement"))
@@ -1178,7 +1223,7 @@ def remainingRequirements(takenClasses, college, major):
 			ans.append(basicReq(takenClasses, 'PHYSICS.7C', 'Physics 7C', "The sophomore year Physics for Scientists and Engineers requirement"))
 			#E 45-Properties of Materials
 			ans.append(basicReq(takenClasses, 'ENGIN.45', 'E 45', "The sophomore year Properties of Materials requirement"))
-			#E 115-Engineering Thermodynamics	
+			#E 115-Engineering Thermodynamics
 			ans.append(basicReq(takenClasses, 'ENGIN.115', 'E 115', "The junior year Engineering Thermodynamics requirement"))
 			#E 117
 			ans.append(basicReq(takenClasses, 'ENGIN.117', 'E 117', "The junior year Methods of Engineering Analysis requirement"))
@@ -1190,7 +1235,7 @@ def remainingRequirements(takenClasses, college, major):
 			ans.append(basicReq(takenClasses, 'NUCENG.104', 'NucEng 104', "The junior year Radiation Detection Lab requirement"))
 			#NE 170-Nuclear Engineering Design
 			ans.append(basicReq(takenClasses, 'NUCENG.170', 'NucEng 170', "The senior year Nuclear Engineering Design requirement"))
-			#32 technical elective units must include at least 17 units of upper division Nuc. Eng.Courses. 
+			#32 technical elective units must include at least 17 units of upper division Nuc. Eng.Courses.
 			nereq={'NUCENG.101','NUCENG.104','NUCENG.150','NUCENG.170'}
 			num=0
 			for item in takenClasses:
@@ -1260,7 +1305,7 @@ def remainingRequirements(takenClasses, college, major):
 			ans.append(twoChoiceReq(takenClasses, 'Biomedical Technology', 'BIOENG.110', 'BioE 110', 'BIOENG.113', 'BioE 113', "The junior year Biomedical Technology requirement of BioE 110 or 113"))
 			#Molecular and Cell Biology C100A Biophysical Chemistry OR MCB 102 - Survey of the Principles of Biochemistry and Molecular Biology
 			ans.append(twoChoiceReq(takenClasses, 'Biochemistry', 'MCELLBI.C100A', 'MCB C100A', 'MCELLBI.102', 'MCB 102', "The junior year Biochemistry requirement of MCB C100A or 102"))
-			#MSE 102-Bonding Crystallography and Crystal Defects	
+			#MSE 102-Bonding Crystallography and Crystal Defects
 			ans.append(basicReq(takenClasses, 'MATSCI.102', 'MatSci 102', "The junior year Bonding Crystallography and Crystal Defects requirement"))
 			#MSE 104-Characterization of Materials
 			ans.append(basicReq(takenClasses, 'MATSCI.104', 'MatSci 104', "The junior year Characterization of Materials requirement"))
@@ -1269,9 +1314,9 @@ def remainingRequirements(takenClasses, college, major):
 			#BioE 116-Cell and Tissue Engineering, BioE C117-Structural Aspects of Biomaterials or BioE 111-Functional Biomaterials
 			biomat={'BIOENG.116':'BioE 116','BIOENG.C117':'BioE C117','BIOENG.111':'BioE 111'}
 			ans.append(manyChoiceReq(takenClasses, 'BioMaterials', biomat, "The senior year BioMaterials requirement of one class"))
-			#BioE C118-Biological Performance of Materials	
+			#BioE C118-Biological Performance of Materials
 			ans.append(basicReq(takenClasses, 'BIOENG.C118', 'BioE C118', "The senior year Biological Performance of Materials requirement"))
-			#MSE 111-Properties of Electronic Materials,MSE 112-Corrosion, OR MSE 113-Mechanical Behavior of Engineering Materials, BioE 121-Introduction to Micro and Nanobiotechnology: BioMEMS OR BioE 150-Introduction to Bionanoscience and Bionanotechnology	
+			#MSE 111-Properties of Electronic Materials,MSE 112-Corrosion, OR MSE 113-Mechanical Behavior of Engineering Materials, BioE 121-Introduction to Micro and Nanobiotechnology: BioMEMS OR BioE 150-Introduction to Bionanoscience and Bionanotechnology
 			matsci={'MATSCI.111':'MatSci 111','MATSCI.112':'MatSci 112','MATSCI.113':'MatSci 113'}
 			ans.append(manyChoiceReq(takenClasses, 'Materials', matsci, "The senior year Materials requirement of one class"))
 			ans.append(twoChoiceReq(takenClasses, 'Nanoteachnology', 'BIOENG.121', 'BioE 121', 'BIOENG.150', 'BioE 150', "The senior year Lab requirement of BioE 121 or BioE 150"))
@@ -1342,7 +1387,7 @@ def remainingRequirements(takenClasses, college, major):
 			#EE 126-Probability and Random Processes, Statistics 25-Introduction to Probability and Statistics for Engineers, or Statistics 134-Concepts of Probability
 			probs={'ELENG.126':'EE 126','STAT.25':'Stats 25','STAT.134':'Stats 134'}
 			ans.append(manyChoiceReq(takenClasses, 'Probability', probs , "The junior year Probability requirement of one of the given classes"))
-			#MSE 102-Bonding Crystallography and Crystal Defects	
+			#MSE 102-Bonding Crystallography and Crystal Defects
 			ans.append(basicReq(takenClasses, 'MATSCI.102', 'MatSci 102', "The junior year Bonding Crystallography and Crystal Defects requirement"))
 			#MSE 103-Phase Transformation and Kinetics
 			ans.append(basicReq(takenClasses, 'MATSCI.103', 'MatSci 103', "The junior year Phase Transformation and Kinetics requirement"))
@@ -1356,7 +1401,7 @@ def remainingRequirements(takenClasses, college, major):
 			ans.append(twoChoiceReq(takenClasses, 'Integrated Circuits', 'ELENG.140', 'EE 140', 'ELENG.141', 'EE 141', "The senior year Integrated Circuits requirement of EE 140 or 141"))
 			#MSE 111-Properties of Electronic Materials
 			ans.append(basicReq(takenClasses, 'MATSCI.111', 'MatSci 111', "The senior year Properties of Electronic Materials requirement"))
-			#MSE 130-Experimental Materials Science	
+			#MSE 130-Experimental Materials Science
 			ans.append(basicReq(takenClasses, 'MATSCI.130', 'MatSci 130', "The senior year Experimental Materials Science requirement"))
 			#Physics 141A-Solid State Physics
 			ans.append(basicReq(takenClasses, 'PHYSICS.141A', 'Physics 141A', "The senior year Solid State Physics requirement of Physics 141A"))
@@ -1492,7 +1537,7 @@ def remainingRequirements(takenClasses, college, major):
 			ans.append(basicReq(takenClasses, 'MECENG.109', 'MecEng 109', "The junior year Heat Transfer requirement"))
 			#ME 132-Dynamic Systems and Feedback
 			ans.append(basicReq(takenClasses, 'MECENG.132', 'MecEng 132', "The junior year Dynamic Systems and Feedback requirement"))
-			#MSE 102-Bonding Crystallography and Crystal Defects	
+			#MSE 102-Bonding Crystallography and Crystal Defects
 			ans.append(basicReq(takenClasses, 'MATSCI.102', 'MatSci 102', "The junior year Bonding Crystallography and Crystal Defects requirement"))
 			#MSE 103-Phase Transformation and Kinetics
 			ans.append(basicReq(takenClasses, 'MATSCI.103', 'MatSci 103', "The junior year Phase Transformation and Kinetics requirement"))
@@ -1506,9 +1551,9 @@ def remainingRequirements(takenClasses, college, major):
 			ans.append(basicReq(takenClasses, 'MECENG.107', 'MecEng 107', "The senior year Mechanical Engineering Laboratory requirement"))
 			#MSE 112-Corrosion
 			ans.append(basicReq(takenClasses, 'MATSCI.112', 'MatSci 112', "The senior year Corrosion requirement"))
-			#MSE 130-Experimental Materials Science	
+			#MSE 130-Experimental Materials Science
 			ans.append(basicReq(takenClasses, 'MATSCI.130', 'MatSci 130', "The senior year Experimental Materials Science requirement"))
-			#A total of 12 upper division technical elective units are required. 
+			#A total of 12 upper division technical elective units are required.
 			num=0
 			req={'MECENG.104','MECENG.106','MECENG.107','MECENG.108','MECENG.109', 'MECENG.132', 'MECENG.102A','MECENG.102B','MATSCI.102','MATSCI.103','MATSCI.104','MATSCI.112','MATSCI.130'}
 			for item in takenClasses:
@@ -1519,7 +1564,7 @@ def remainingRequirements(takenClasses, college, major):
 			else:
 				ans.append({'reqName':'Technical Elective', 'reqCompleted':False, 'reqDescription':"At least 12 units of approved upper division technical subjects (mathematics, statistics, science, and engineering)"+"You have only taken"+str(num),'courseDone':[], 'courseLeft':[]})
 			"""advancement"""
-			#These must include 6 units of upper-division Mechanical Engineering courses, one of which must be from the following list: ME 101,110,C117,119,128,130,135,146,165,C176 or Engin 128.  
+			#These must include 6 units of upper-division Mechanical Engineering courses, one of which must be from the following list: ME 101,110,C117,119,128,130,135,146,165,C176 or Engin 128.
 			mereq={'MECENG.104','MECENG.106','MECENG.107','MECENG.108','MECENG.109', 'MECENG.132', 'MECENG.102A','MECENG.102B'}
 			metech={'MECENG.101':'MecEng 101','MECENG.110':'MecEng 110','MECENG.C117':'MecEng C117','MECENG.119':'MecEng 119','MECENG.128':'MecEng 128','MECENG.130':'MecEng 130','MECENG.135':'MecEng 135','MECENG.146':'MecEng 146','MECENG.165':'MecEng 165','MECENG.C176':'MecEng C176','ENGIN.128':'E 128'}
 			ans.append(manyChoiceReq(takenClasses, 'Technical Elective', metech, "Technical electives must include one class from the list"))
@@ -1576,9 +1621,9 @@ def remainingRequirements(takenClasses, college, major):
 			ans.append(basicReq(takenClasses, 'NUCENG.150', 'NucEng 150', "The junior year Nuclear Reactor Theory requirement"))
 			#NE 104-Radiation Detection Lab
 			ans.append(basicReq(takenClasses, 'NUCENG.104', 'NucEng 104', "The junior year Radiation Detection Lab requirement"))
-			#E 115-Engineering Thermodynamics	
+			#E 115-Engineering Thermodynamics
 			ans.append(basicReq(takenClasses, 'ENGIN.115', 'E 115', "The junior year Engineering Thermodynamics requirement"))
-			#MSE 102-Bonding Crystallography and Crystal Defects	
+			#MSE 102-Bonding Crystallography and Crystal Defects
 			ans.append(basicReq(takenClasses, 'MATSCI.102', 'MatSci 102', "The junior year Bonding Crystallography and Crystal Defects requirement"))
 			#MSE 103-Phase Transformation and Kinetics
 			ans.append(basicReq(takenClasses, 'MATSCI.103', 'MatSci 103', "The junior year Phase Transformation and Kinetics requirement"))
@@ -1602,7 +1647,7 @@ def remainingRequirements(takenClasses, college, major):
 			ans.append(basicReq(takenClasses, 'MATSCI.112', 'MatSci 112', "The senior year Corrosion requirement"))
 			#MSE 113-Mechanical Behavior of Materials
 			ans.append(basicReq(takenClasses, 'MATSCI.113', 'MatSci 113', "The senior year Mechanical Behavior of Materials requirement"))
-			#MSE 130-Experimental Materials Science	
+			#MSE 130-Experimental Materials Science
 			ans.append(basicReq(takenClasses, 'MATSCI.130', 'MatSci 130', "The senior year Experimental Materials Science requirement"))
 			#NE 120-Nuclear Materials
 			ans.append(basicReq(takenClasses, 'NUCENG.120', 'NucEng 120', "The senior year Nuclear Materials requirement"))
@@ -1666,7 +1711,7 @@ def remainingRequirements(takenClasses, college, major):
 			ans.append(basicReq(takenClasses, 'NUCENG.104', 'NucEng 104', "The senior year Radiation Detection Lab requirement"))
 			#NE 170A-Nuclear Engineering Design
 			ans.append(basicReq(takenClasses, 'NUCENG.170A', 'NucEng 170A', "The senior year Nuclear Engineering Design requirement"))
-			#Technical elective units include at least 6 units of upper-division elective Mechanical Engineering courses and 
+			#Technical elective units include at least 6 units of upper-division elective Mechanical Engineering courses and
 			#6 units of upper division Nuclear Engineering courses
 			#Not ME(104,106,108,109,132,102A,102B,107) NE(101,150,104,170A)
 			nereq={'NUCENG.101','NUCENG.104','NUCENG.150','NUCENG.170A'}
@@ -1687,7 +1732,114 @@ def remainingRequirements(takenClasses, college, major):
 				ans.append({'reqName':'Technical Elective', 'reqCompleted':True, 'reqDescription':"At least 6 units of upper-division Mechanical Engineering courses",'courseDone':[], 'courseLeft':[]})
 			else:
 				ans.append({'reqName':'Technical Elective', 'reqCompleted':False, 'reqDescription':"6 units of upper-division Mechanical Engineering courses"+"You have only taken"+str(num),'courseDone':[], 'courseLeft':[]})
-			
+
+			return ans
+		# Environmental Engineering Science
+		elif(major=='ENVENG'):
+			#Math 1A
+			ans.append(basicReq(takenClasses, 'MATH.1A', 'Math 1A', "Part of the freshman year Calculus requirement of Math 1A"))
+			#Math 1B
+			ans.append(basicReq(takenClasses, 'MATH.1B', 'Math 1B', "Part of the freshman year Calculus requirement of Math 1B"))
+			#Physics 7A
+			ans.append(basicReq(takenClasses, 'PHYSICS.7A', 'Physics 7A', "The freshman year Physics for Scientists and Engineers requirement"))
+			#Math 53 -54 , Multivariable Calculus, Linear Algebra, Diff. Eqns.
+			ans.append(twoReq(takenClasses,'Multivariable Calculus, Linear Algebra, Differential Equations', 'MATH.53', 'Math 53', 'MATH.54', 'Math 54', "The sophomore year mathematics requirement of both Math 53 and 54"))
+			#Physics 7B , Physics for Scientists and Engineers
+			ans.append(basicReq(takenClasses, 'PHYSICS.7B', 'Physics 7B', "The sophomore year Physics for Scientists and Engineers requirement"))
+			#Chemistry 1A and 1AL or 4A
+			if(('CHEM.1A' in takenClasses) and ('CHEM.1AL' in takenClasses)):
+				ans.append({'reqName':'Chemistry', 'reqCompleted':True, 'reqDescription':"Part of the freshman year Chemistry requirement",'courseDone':['Chem 1A', 'Chem 1AL'], 'courseLeft':['Chem 4A']})
+			elif('CHEM.4A' in takenClasses):
+				ans.append({'reqName':'Chemistry', 'reqCompleted':True, 'reqDescription':"Part of the freshman year Chemistry requirement",'courseDone':['Chem 4A'], 'courseLeft':['Chem 1A', 'Chem 1AL']})
+			else:
+				ans.append({'reqName':'Chemistry', 'reqCompleted':False, 'reqDescription':"Part of the freshman year Chemistry requirement",'courseDone':[], 'courseLeft':['Chem 1A', 'Chem 1AL','Chem 4A']})
+			#E 7 , Introduction to Applied Computing
+			ans.append(basicReq(takenClasses, 'ENGIN.7', 'E 7', "The freshman year Introduction to Applied Computing requirement of E 7"))
+			#Engineering Elective CE 11
+			ans.append(basicReq(takenClasses, 'CIVENG.11', 'CivEng 11',"The sophomore year requirement of CE 11"))
+			#CE C30/ME C85-Introduction to Solid Mechanics
+			ans.append(twoChoiceReq(takenClasses,"Introduction to Solid Mechanics", 'CHMENG.C30', 'CE C30', 'MECENG.C85', 'ME C85', "The sophomore year Introduction to Solid Mechanics requirement of either CE C30 or ME C85"))
+			#Complete three courses from the following list: Biology 1A/1AL; Biology 1b; Chemistry 1B; 3A/3AL, 4B; Physics 7C; Earth and Planetary Science 50. Note: Approved scores on Biology AP, IB or A-Level Exams can satisfy 2 of the 3 basic science electives.
+			science={'BIOLOGY.1A':'Bio 1A','Biology.1B':'Bio 1B','CHEM.1B':'Chem 1B','CHEM.3A':'Chem 3A','CHEM.4B':'Chem 4B','PHYSICS.7C':'Physics 7C','EPS.50':'EPS 50'}
+			ans.append(doSomeManyChoiceReq(takenClasses,'Basic Science Electives',science,"You must complete 3 of the classes in the following list",3))
+			#Fluid Mechanics: CE 100, ME 106, or Chem E 150A
+			fluid={'CIVENG.100':'CE 100', 'MECENG.106':'ME 106','CHMENG.150A':'ChemE 150A'}
+			ans.append(manyChoiceReq(takenClasses,'Fluid Mechanics',fluid,"You must complete one of the following three choices of fluid mechanics courses"))
+			#Thermodynamics: ME 40, E 115, or ChemE 141
+			thermo={'ENGIN.115':'E 115', 'MECENG.40':'ME 40','CHMENG.141':'ChemE 141'}
+			ans.append(manyChoiceReq(takenClasses,'Thermodynamics',thermo,"You must complete one of the following three choices of thermodynamics courses"))
+			#CE 111-Environmental Engineering
+			ans.append(basicReq(takenClasses,'CHMENG.111', 'CE 111',"The senior year Air Pollutant Emissions and Control or Environmental Engineering requirement"))
+			#CE 103-Hydrology or CE 115-Water Chemistry
+			ans.append(twoChoiceReq(takenClasses,'Hydrology','CIVENG.103','CE 103','CIVENG.115','CE 115',"You are reqquired to take one of the two following Hydrology courses"))
+			#Math/Computing Elective: any one of E 117, E177; Math 104, 110, 126, 128A, 170, 185; Stat 133, 134
+			compute={'ENGIN.117':'E 117','MATH.104':'Math 104','MATH.110':'Math 110','MATH.126':'Math 126','MATH.128A':'Math 128A','MATH.170':'Math 170','MATH.185':'Math 185','STAT.133':'Stats 133','STAT.134':'Stats 134'}
+			ans.append(manyChoiceReq(takenClasses,'Math/Computing Elective',compute,"You must complete one of the following choices of math or computing courses"))
+			#The 12 units of cluster courses are in addition to engineering and science courses used to fulfill other requirements of the program. See approved cluster course list for options.
+			#Air Pollution and Climate Change: Architecture 140; BioE C181; CE C106, 107, 108; EE 134, 137A; MSE 136; ME 109, 140, 146; NE 161
+			#Biotechnology: BioE C181; ChemE 140, 142, 170A, 170B, 170L; CE 112, 114; MCB C112 and C112L, 113, C116; Plant and Microbial Biology 120, 120L, 122, 180
+			#Ecosystems and Ecological Engineering: CE 113, 114; ESPM C103, C104; Integrative Biology C149, 151, 151L, 152, 153, 153LF, 154
+			#Environmental Fluid Mechanics: CE 101, 103, 105, 173; Earth and Planetary Science 117, C129
+			#Geoengineering:CE 171, 172, 173, 175, 176, C178, 281; Earth and Planetary Science 117
+			#Water Quality : CE 112, 113, 114, 115, C116, 173; Integrative Biology 152; ESPM 120.
+			cluster={'ARCH.140':'Architecture 140','BIOENG.C181':'BioE C181','CIVENG.C106':'CE C106','CIVENG.107':'CE 107','CIVENG.108':'CE 108',
+				'ELENG.134':'EE 134','ELENG.137A':'EE 137A','MATSCI.136':'MSE 136','MECENG.109':'ME 109','MECENG.140':'ME 140','MECENG.146':'ME 146',
+				'NUCENG.161':'NE 161','CHMENG.140':'ChemE 140','CHMENG.142':'ChemE 142','CHMENG.170A':'ChemE 170A','CHMENG.170B':'ChemE 170B','CHMENG.170L':'ChemE 170L',
+				'CIVENG.112':'CE 112','CIVENG.114':'CE 114','ESPM.C103':'ESPM C103','ESPM.C104':'ESPM C104','MCELLBI.C112':'MCB C112','MCELLBI.113':'MCB 113','MCELLBI.C116':'MCB C116',
+				'PLANTBI.120':'Plant and Microbial Biology 120','PLANTBI.120L':'Plant and Microbial Biology 120L','PLANTBI.122':'Plant and Microbial Biology 122','PLANTBI.180':'Plant and Microbial Biology 180',
+				'CIVENG.113':'CE 113','INTEGBI.C149':'IB C149','INTEGBI.151':'IB 151','INTEGBI.151L':'IB 151L','INTEGBI.152':'IB 152','INTEGBI.153':'IB 153','INTEGBI.153LF':'IB 153LF','INTEGBI.154':'IB 154',
+				'CIVENG.101':'CE 101','CIVENG.103':'CE 103','CIVENG.105':'CE 105','CIVENG.173':'CE 173','CIVENG.171':'CE 171','CIVENG.172':'CE 172','CIVENG.175':'CE 175','CIVENG.176':'CE 176','CIVENG.C178':'CE C178',
+				'CIVENG.281':'CE 281','CIVENG.115':'CE 115','CIVENG.C116':'CE C116','EPS.117':'EPS 117','EPS.C129':'EPS C129','ESPM.120':'ESPM 120'}
+			c=0
+			takenCluster=[]
+			notTakenCluster=[]
+			for key in cluster:
+				if key in takenClasses:
+					takenCluster.append(cluster[key])
+					c+=units(key)
+				else:
+					notTakenCluster.append(cluster[key])
+			if c>=12:
+				ans.append({'reqName':'Cluster Electives', 'reqCompleted':True, 'reqDescription':"A required 12 units of cluster electives",'courseDone':takenCluster, 'courseLeft':notTakenCluster})
+			else:
+				ans.append({'reqName':'Cluster Electives', 'reqCompleted':False, 'reqDescription':"A required 12 units of cluster electives. You have completed "+str(c),'courseDone':takenCluster, 'courseLeft':notTakenCluster})
+			#See Advanced Science Course Sequence. Choose one of the sequences of eight to 10 units:
+			#Chemistry 112A, 112B, Organic Chemistry
+			#Chemistry 120A, 120B, 125
+			#Earth and Planetary Science 101, 108, 116, 117, 124, C146
+			#Earth and Planetary Science C180, C181, C182; Geography 142
+			#ESPM 102A, C103, 111, 112, 120, C128, 131
+			#MCB 102, 112/112L
+			takenSequence=[]
+			notTakenSequence=[]
+			sequence={'CHEM.112A':'Chem 112A','CHEM.112B':'Chem 112B','CHEM.120A':'Chem 120A','CHEM.120B':'Chem 120B','CHEM.125':'Chem 125',
+				'EPS.101':'EPS 101','EPS.108':'EPS 108','EPS.116':'EPS 116','EPS.117':'EPS 117','EPS.124':'EPS 124','EPS.C146':'EPS C146','EPS.C180':'EPS C180','EPS.C181':'EPS C181','EPS.C182':'EPS C182',
+				'GEOG.142':'Geography 142','ESPM.102A':'ESPM 102A','ESPM.C103':'ESPM C103','ESPM.111':'ESPM 111','ESPM.112':'ESPM 112','ESPM.120':'ESPM 120','ESPM.C128':'ESPM C128','ESPM.131':'ESPM 131',
+				'MCELLBI.102':'MCB 102','MCELLBI.112':'MCB 112','MCELLBI.112L':'MCB 112L'}
+			for key in sequence:
+				if key in takenClasses:
+					takenSequence.append(sequence[key])
+				else:
+					notTakenSequence.append(sequence[key])
+			tempA={'EPS.101':'EPS 101','EPS.108':'EPS 108','EPS.116':'EPS 116','EPS.117':'EPS 117','EPS.124':'EPS 124','EPS.C146':'EPS C146'}
+			unitA=0
+			tempB={'EPS.C180':'EPS C180','EPS.C181':'EPS C181','EPS.C182':'EPS C182','GEOG.142':'Geography 142'}
+			unitB=0
+			tempC={'ESPM.102A':'ESPM 102A','ESPM.C103':'ESPM C103','ESPM.111':'ESPM 111','ESPM.112':'ESPM 112','ESPM.120':'ESPM 120','ESPM.C128':'ESPM C128','ESPM.131':'ESPM 131'}
+			unitC=0
+			for key in tempA:
+				if key in takenClasses:
+					unitA+=units(key)
+			for key in tempB:
+				if key in takenClasses:
+					unitB+=units(key)
+			for key in tempC:
+				if key in takenClasses:
+					unitC+=units(key)
+			if ((unitA>=8)or(unitB>=8)or(unitC>=8)or(('CHEM.120A' in takenClasses)and('CHEM.120B' in takenClasses)and('CHEM.125' in takenClasses))or(('CHEM.112A' in takenClasses)and('CHEM.112B' in takenClasses))or(('MCELLBI.102' in takenClasses)and('MCELLBI.112' in takenClasses)and('MCELLBI.112L' in takenClasses))):
+				ans.append({'reqName':'Advanced Science Course Sequence', 'reqCompleted':True, 'reqDescription':"Choose classes from one of the sequences for a total of eight to 10 units:Chemistry 112A, 112B; Chemistry 120A, 120B, 125;Earth and Planetary Science 101, 108, 116, 117, 124, C146;Earth and Planetary Science C180, C181, C182; Geography 142;ESPM 102A, C103, 111, 112, 120, C128, 131;MCB 102, 112/112L",'courseDone':takenSequence, 'courseLeft':notTakenSequence})
+			else:
+				ans.append({'reqName':'Advanced Science Course Sequence', 'reqCompleted':False, 'reqDescription':"Choose classes from one of the sequences for a total of eight to 10 units:Chemistry 112A, 112B; Chemistry 120A, 120B, 125;Earth and Planetary Science 101, 108, 116, 117, 124, C146;Earth and Planetary Science C180, C181, C182; Geography 142;ESPM 102A, C103, 111, 112, 120, C128, 131;MCB 102, 112/112L",'courseDone':takenCluster, 'courseLeft':notTakenSequence})
 			return ans
 		#Should not occur but in the case that the major given does not match
 		else:
@@ -1729,7 +1881,7 @@ def remainingRequirements(takenClasses, college, major):
 			return ans
 		# Chemical Engineering and Nuclear Engineering
 		elif(major=='CHEMNUCENG'):
-			
+
 
 
 			return ans
