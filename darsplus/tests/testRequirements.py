@@ -303,6 +303,25 @@ class TestEngineering(TestCase):
 	def testMATMECENG1(self):
 		ans= remainingRequirements([], "College of Engineering", 'Materials Science & Engineering/Mechanical Engineering')
 		self.assertEqual(5+2+31,len(ans))
+    	def testENVENG1(self):
+		ans= remainingRequirements([], "College of Engineering", 'Environmental Engineering Science')
+		self.assertEqual(24,len(ans))
+	def testENVENG2(self):
+		ans= remainingRequirements(['ARCH.140', 'BIOENG.C181'], "College of Engineering", 'Environmental Engineering Science')
+		self.assertTrue( not ans[22]['reqCompleted'])
+		self.assertIn('You have completed ',ans[22]['reqDescription'])
+	def testENVENG3(self):
+		ans= remainingRequirements(['ARCH.140', 'BIOENG.C181','CHMENG.140','CHMENG.142'], "College of Engineering", 'Environmental Engineering Science')
+		self.assertTrue( ans[22]['reqCompleted'])
+	def testENVENG4(self):
+		ans= remainingRequirements(['CHEM.112A','CHEM.112B'], "College of Engineering", 'Environmental Engineering Science')
+		self.assertTrue( ans[23]['reqCompleted'])
+	def testENVENG5(self):
+		ans= remainingRequirements(['EPS.101','EPS.108','EPS.116'], "College of Engineering", 'Environmental Engineering Science')
+		self.assertTrue( ans[23]['reqCompleted'])
+	def testENVENG6(self):
+		ans= remainingRequirements(['EPS.101','EPS.C180','ESPM.102A'], "College of Engineering", 'Environmental Engineering Science')
+		self.assertTrue(not ans[23]['reqCompleted'])
 
 
 class TestChem(TestCase):
