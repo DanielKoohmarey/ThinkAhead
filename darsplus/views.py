@@ -7,7 +7,7 @@ from django.template import RequestContext
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
-#from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponseRedirect
 import json
 
@@ -50,25 +50,29 @@ def splash(request):
                 return HttpResponseRedirect('/registration/')
     
     else:
-        dashboardContext = dashboardData(request)
-        if dashboardContext: # If user has a profile
-            return HttpResponseRedirect('/dashboard/')
-        elif request.user.is_authenticated(): # If a user is not registered/logged-in
-            return HttpResponseRedirect('/registration/')
-        else: # If a user is not logged in 
+        #Handle GET request
+        if not request.user.is_authenticated():
             return render(request, 'splash.html', {'form':LoginForm()})
+        else:
+            return HttpResponseRedirect('/dashboard/')
+            
     return render(request, 'splash.html',{'form':LoginForm()})
 
-#@login_required
+def registration_check(user):
+    """ Check whether or not a user has completed registration """    
+    if not user.is_anonymous() and getUserProfile(user.username):
+        return True
+    else:
+        return False
+        
+@login_required
 @csrf_exempt
 def userRegistration(request):
     """ View called via create user button from splashpage, attempts to create user with post data
-    Upon sucesful creation redirects to registration page, else returns to splash page"""
-    if checkRegistration(request):
+    Upon sucesful creation redirects to registration page, else returns to splash page """
+    if registration_check(request.user):
         return HttpResponseRedirect('/dashboard/')
     elif request.method == 'POST':
-        if not request.user.is_authenticated():
-            return HttpResponseRedirect('/home/')
         gradInfo = GradForm(request.POST)
         majorInfo = MajorForm(request.POST)
         courseInfo = CourseFormSet(request.POST)
@@ -79,8 +83,8 @@ def userRegistration(request):
             for form in courseInfo:
                 errors.update(form.errors)
         # Temporarily ignore errors because ChoiceField must have options populated before hand
-        #if errors:
-        #    return render(request, 'registration.html',{'errors':errors,'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON}) 
+        if errors:
+            return render(request, 'registration.html',{'errors':errors,'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON}) 
         major = request.POST['major']
         college = request.POST['college']
         graduationSemester = request.POST['semester'] 
@@ -101,10 +105,10 @@ def userRegistration(request):
             return HttpResponseRedirect('/dashboard/')
         else:
             return render(request, 'registration.html',{'errors':"Error adding user profile to database. Please try again later.", 'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})
-    if request.user.is_authenticated():
-        return render(request, 'registration.html', {'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})
     else:
-        return HttpResponseRedirect('/home/')
+        return render(request, 'registration.html', {'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})
+
+        
 @csrf_exempt
 def userLogout(request):
     """ Logs out current user session if one exists, return to splashpage"""
@@ -117,12 +121,13 @@ def userLogout(request):
     else:
         return HttpResponseRedirect('/home/')
 
-#@login_required
+
+        
+@login_required
+@user_passes_test(registration_check, login_url='/registration/')
 @csrf_exempt
 def dashboard(request):
     """ Button from registration page sends a post request to /dashboard. View takes in post data, populates user profile associated with user, then loads dashboard if no errors on registration page """
-    if not request.user.is_authenticated():
-        return HttpResponseRedirect('/home/')
     dashboardContext = dashboardData(request)    
 
     if not dashboardContext:
@@ -131,28 +136,17 @@ def dashboard(request):
     else:
         return render(request, 'dashboard.html',dashboardContext)
         
-def checkRegistration(request):
-    """ Check whether or not a user has completed registration """    
-    if request.user.is_authenticated():
-        if getUserProfile(request.user.username):
-            return True
-        else:
-            return False
-    else:
-        return False
+
 
 def dashboardData(request):
     """ Retrieve user profile information and return context dictionary for dashboard. """
-    if checkRegistration(request):
-        username = request.user.username
-        userProfile = getUserProfile(username)
-        userInformation = {}
-        userInformation['unitsCompleted'] = getUnitsCompleted(username)
-        userInformation['major'] = userProfile.major
-        userInformation['graduationSemester'] = userProfile.graduationSemester
-        userInformation['graduationYear'] = userProfile.graduationYear
-        userInformation['requirements'] = remainingRequirements(getCoursesTaken(username), majorToCollege(userProfile.major), userProfile.major)
-      
-        return userInformation
-    else:
-        return False
+    username = request.user.username
+    userProfile = getUserProfile(username)
+    userInformation = {}
+    userInformation['unitsCompleted'] = getUnitsCompleted(username)
+    userInformation['major'] = userProfile.major
+    userInformation['graduationSemester'] = userProfile.graduationSemester
+    userInformation['graduationYear'] = userProfile.graduationYear
+    userInformation['requirements'] = remainingRequirements(getCoursesTaken(username), majorToCollege(userProfile.major), userProfile.major)
+  
+    return userInformation
