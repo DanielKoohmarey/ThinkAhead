@@ -10,6 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponseRedirect
 import json
+import re
 
 majorJSON = json.dumps(getCollegesToMajors())
 
@@ -96,20 +97,32 @@ def userRegistration(request):
         for form in courseInfo:
             course = form.cleaned_data.get('name')
             #Convert course name to our format
+            #Supports cs.169, cs 170, cs188 type formats and any capitalization
+            #TODO: User major name to convert input name to standardized form. Convert before appending by replacing before . with name
             if course:
-                course = course.upper()
+                print(course)
+                course = course.strip().upper()
                 course = course.replace(' ','.')
                 periods = course.count('.')
-                course = course.replace('.','',periods-1)
+                if periods:
+                    course = course.replace('.','',periods-1)
+                else:
+                    m = re.search("\d",course)
+                    if m:
+                        digit_index = m.start()
+                        course = course[:digit_index]+'.'+course[digit_index:]
+                    else:
+                        continue #could not determine course format, skipping course
+                #TODO:standardize name here, name guaranteed left of '.'
                 coursesTaken.append(course)
         newProfile = addUserProfile(request.user.username, major, college, graduationSemester, graduationYear, coursesTaken)
-
+        print(coursesTaken)
         if newProfile == SUCCESS:
             return HttpResponseRedirect('/dashboard/')
         else:
-            return render(request, 'registration.html',{'errors':"Error adding user profile to database. Please try again later.", 'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})
+            return render(request, 'registration.html',{'errors':"Error adding user profile to database. Please try again later.", 'form0': EmailForm(), 'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})
     else:
-        return render(request, 'registration.html', {'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})
+        return render(request, 'registration.html', {'form0': EmailForm(), 'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})
 
         
 @csrf_exempt

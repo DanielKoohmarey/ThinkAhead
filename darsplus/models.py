@@ -4,7 +4,7 @@ Classes to represent Databases for our application
 """
 from django.db import models
 from djorm_pgarray.fields import ArrayField #Postgres package that enables ArrayField
-# http://www.craigkerstiens.com/2012/11/06/django-and-arrays/ for reference 
+from django.contrib.auth.models import User
 from utils import * 
 from statics import * 
 
