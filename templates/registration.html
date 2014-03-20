@@ -55,13 +55,12 @@
 		<label class="formLabel">
 			<span>Successfully completed courses</span>
 		</label>
-		{{ form3.management_form }}
-		{% for form in form3.forms %}
+		{{ formset.management_form }}
+		{% for form in formset.forms %}
 
 		<div class='addCourseForm'>
-    	<table class='no_error'>
         	{{ form.name }}
-    	</table>
+        	<input id="deleteForm" class="buttonLink" type="button" value="Delete" >
     	</div>
 		{% endfor %}
 
