@@ -42,8 +42,7 @@ function deleteForm(btn, prefix) {
 }
 
 function addForm(btn, prefix) {
-    //var formCount = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
-    var formCount = $('.addCourseForm').length; // Get all the forms
+    var formCount = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
 
     // Clone a form (without event handlers) from the last form
     var row = $(btn).clone(false);
@@ -94,6 +93,11 @@ function getDropdownOptions(){
 
 
 $(document).ready(function(){
+
+// Update/check TOTAL_FORMS
+var formCount = $('.addCourseForm').length; // Get all the forms
+$("#id_form-TOTAL_FORMS").val(formCount);
+
 
 // Listener hooking cloneMore() to #addMore to add additional forms.
 $('#addForm').click(function() {
