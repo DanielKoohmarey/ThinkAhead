@@ -79,14 +79,17 @@ def userRegistration(request):
         majorInfo = MajorForm(request.POST)
         courseInfo = CourseFormSet(request.POST)
         errors = {}
-        if emailInfo.errors or gradInfo.errors or majorInfo.errors or CourseFormSet.errors:
+        if emailInfo.errors or gradInfo.errors or CourseFormSet.errors:
+            errors.update(emailInfo.errors)
             errors.update(gradInfo.errors)
-            errors.update(majorInfo.errors)
             for form in courseInfo:
                 errors.update(form.errors)
+        majorForm_errors = majorInfo.errors()
+        if majorForm_errors:
+            errors.update({'major':majorForm_errors})
         # Temporarily ignore errors because ChoiceField must have options populated before hand
-        #if errors:
-        #    return render(request, 'registration.html',{'errors':errors,'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON}) 
+        if errors:
+            return render(request, 'registration.html',{'errors':errors,'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON}) 
         
         setEmail(request.user.username,request.POST['email'])     
         major = request.POST['major']
