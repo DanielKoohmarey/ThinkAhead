@@ -490,3 +490,17 @@ def getCollegesToMajors():
     for college in colleges:
         output[college] = Colleges.getMajorsInCollege(college)
     return output
+
+def setEmail(username, email):
+    """ Sets the email of the default Django user username to email """
+    user = User.objects.get(username__exact=username)
+    user.email = email
+    user.save()
+    return SUCCESS
+    
+def changePassword(username, password):
+    """ Change the password of the default Django user username to password """
+    user = User.objects.get(username__exact=username)
+    user.set_password(password)
+    user.save()
+    return SUCCESS

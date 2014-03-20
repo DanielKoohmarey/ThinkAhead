@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from darsplus.statics import SUCCESS
-from darsplus.forms import LoginForm, GradForm, MajorForm, CourseFormSet
-from darsplus.models import addUserProfile, getUserProfile, getCoursesTaken, getUnitsCompleted, majorToCollege, getCollegesToMajors
+from darsplus.forms import LoginForm, EmailForm, GradForm, MajorForm, CourseFormSet
+from darsplus.models import addUserProfile, getUserProfile, getCoursesTaken, getUnitsCompleted, majorToCollege, getCollegesToMajors, setEmail
 from darsplus.requirementscode import remainingRequirements
 from django.template import RequestContext
 from django.contrib.auth.models import User
@@ -73,18 +73,21 @@ def userRegistration(request):
     if registration_check(request.user):
         return HttpResponseRedirect('/dashboard/')
     elif request.method == 'POST':
+        emailInfo = EmailForm(request.POST)
         gradInfo = GradForm(request.POST)
         majorInfo = MajorForm(request.POST)
         courseInfo = CourseFormSet(request.POST)
         errors = {}
-        if gradInfo.errors or majorInfo.errors or CourseFormSet.errors:
+        if emailInfo.errors or gradInfo.errors or majorInfo.errors or CourseFormSet.errors:
             errors.update(gradInfo.errors)
             errors.update(majorInfo.errors)
             for form in courseInfo:
                 errors.update(form.errors)
         # Temporarily ignore errors because ChoiceField must have options populated before hand
-        if errors:
-            return render(request, 'registration.html',{'errors':errors,'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON}) 
+        #if errors:
+        #    return render(request, 'registration.html',{'errors':errors,'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON}) 
+        
+        setEmail(request.user.username,request.POST['email'])     
         major = request.POST['major']
         college = request.POST['college']
         graduationSemester = request.POST['semester'] 
@@ -112,14 +115,10 @@ def userRegistration(request):
 @csrf_exempt
 def userLogout(request):
     """ Logs out current user session if one exists, return to splashpage"""
-    if request.user.is_anonymous():
-        return HttpResponseRedirect('/home/')       
-    elif request.user.is_authenticated():# and 'logout' in request.POST:
+    if not request.user.is_anonymous() and request.user.is_authenticated():# and 'logout' in request.POST:
         #User was logged in and the logout button was pressed
         logout(request)
-        return HttpResponseRedirect('/home/')
-    else:
-        return HttpResponseRedirect('/home/')
+    return HttpResponseRedirect('/home/')
 
 
         
