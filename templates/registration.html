@@ -18,9 +18,7 @@
 <h1 class="sectionHeader">Registration Title (NAME PENDING)</h1>
 <p>Welcome {{user.username}} ! Please complete the registration. (NEW CSS CLASS?)</p>
 
-{% if errors %}
-	<span style="color: red;">{{ errors }}</span>
-{% endif %}
+
 
 <form action="" method="post">
 	{% csrf_token %}
@@ -29,6 +27,9 @@
 		<label class="formLabel">
 			<span>Email</span>
 		</label>
+            {% if "email" in errors %}
+            	{{ errors.email }}
+            {% endif %}
 		{{ form0.email }}
 	</div>
 	
@@ -46,6 +47,9 @@
 		<label class="formLabel">
 			<span>Major</span>
 		</label>
+            {% if "major" in errors %}
+            	{{ errors.major }}
+            {% endif %}
 		{{ form2.college }}
 		{{ form2.major }}
 	</div>

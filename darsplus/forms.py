@@ -1,6 +1,6 @@
 from django import forms
 from django.forms.formsets import formset_factory
-
+from django.forms.util import ErrorList
 import datetime
 
 """ reminder looking at PasswordChangeForm, PasswordResetForm Built-in forms for future iterations """
@@ -37,13 +37,14 @@ class MajorForm(forms.Form):
  
 	def errors(self):
 		"""Check if value has been updated from default"""
-		college = self['college'].value
-  		major = self['major'].value
-		if college == "Please select a college":
-			return "College and Major must be selected"
-		if major == "Please select a college and major":
-			return "Major must be selected."  
-		return False
+		college = self['college'].value()
+  		major = self['major'].value()
+		if college == "0":
+			return ErrorList([u"College and Major must be selected"])
+		elif major == "-1":
+			return ErrorList([u"Major must be selected."]) 
+		else:
+			return False
 
 # Used in registration.html
 class CourseForm(forms.Form):

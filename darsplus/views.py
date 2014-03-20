@@ -9,6 +9,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponseRedirect
+from django.forms.util import ErrorList
 import json
 import re
 
@@ -29,7 +30,7 @@ def splash(request):
                     login(request,currentUser)
                     return HttpResponseRedirect('/dashboard/')
                 else:
-                    return render(request, 'splash.html',{'errors':"Invalid Username/Password. Please try again.", 'form':LoginForm()}) 
+                    return render(request, 'splash.html',{'errors':{"user":ErrorList([u"Invalid Username/Password. Please try again."])}, 'form':LoginForm()}) 
         else:
             if 'add' in request.POST:
                 form = LoginForm(request.POST)
@@ -42,7 +43,7 @@ def splash(request):
                 
                 #Checks whether user already exists    
                 if User.objects.filter(username=request.POST['username']):
-                    return render(request, 'splash.html',RequestContext(request,{'errors':"Username is already taken.",'form':LoginForm()}))
+                    return render(request, 'splash.html',RequestContext(request,{'errors':{"user":ErrorList([u"Username is already taken."])},'form':LoginForm()}))
 
                 new_user = User.objects.create_user(username=username,password=password)
                 new_user.save()
@@ -75,21 +76,19 @@ def userRegistration(request):
         return HttpResponseRedirect('/dashboard/')
     elif request.method == 'POST':
         emailInfo = EmailForm(request.POST)
-        gradInfo = GradForm(request.POST)
         majorInfo = MajorForm(request.POST)
         courseInfo = CourseFormSet(request.POST)
         errors = {}
-        if emailInfo.errors or gradInfo.errors or CourseFormSet.errors:
+        if emailInfo.errors or CourseFormSet.errors:
             errors.update(emailInfo.errors)
-            errors.update(gradInfo.errors)
             for form in courseInfo:
                 errors.update(form.errors)
         majorForm_errors = majorInfo.errors()
         if majorForm_errors:
             errors.update({'major':majorForm_errors})
-        # Temporarily ignore errors because ChoiceField must have options populated before hand
+
         if errors:
-            return render(request, 'registration.html',{'errors':errors,'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON}) 
+            return render(request, 'registration.html',{'errors':errors,'form0': EmailForm(),'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON}) 
         
         setEmail(request.user.username,request.POST['email'])     
         major = request.POST['major']
