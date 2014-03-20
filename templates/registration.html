@@ -24,6 +24,14 @@
 
 <form action="" method="post">
 	{% csrf_token %}
+	<!-- Expecting EmailForm() as form0 -->
+	<div class="formGroup">
+		<label class="formLabel">
+			<span>Email</span>
+		</label>
+		{{ form0.email }}
+	</div>
+	
 	<!-- Expecting GradForm() as form1 -->
 	<div class="formGroup">
 		<label class="formLabel">
