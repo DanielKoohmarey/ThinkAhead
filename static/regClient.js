@@ -1,6 +1,5 @@
 /* 
 Adds/delete CourseForms to CourseFormSet when #addForm or #deleteForm is clicked.
-BUG: If page is refreshed, form indices do not reset
 Adapted from:
 http://stellarchariot.com/blog/2011/02/dynamically-add-form-to-formset-using-javascript-and-django/
 */
