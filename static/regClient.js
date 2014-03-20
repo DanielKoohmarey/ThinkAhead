@@ -1,27 +1,3 @@
-/*
-Adds additional CourseForms to CourseFormSet when #addForm is clicked.
-http://stackoverflow.com/questions/501719/dynamically-adding-a-form-to-a-django-formset-with-ajax
-NOT USED
-function cloneMore(selector, type) {
-    var newElement = $(selector).clone(true);
-    var total = $('#id_' + type + '-TOTAL_FORMS').val();
-    alert(total);
-    newElement.find(':input').each(function() {
-        var name = $(this).attr('name').replace('-' + (total-1) + '-','-' + total + '-');
-        var id = 'id_' + name;
-        $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
-    });
-    newElement.find('label').each(function() {
-        var newFor = $(this).attr('for').replace('-' + (total-1) + '-','-' + total + '-');
-        $(this).attr('for', newFor);
-    });
-    total++;
-    $('#id_' + type + '-TOTAL_FORMS').val(total);
-    $(selector).after(newElement);
-}
-*/
-
-
 /* 
 Adds/delete CourseForms to CourseFormSet when #addForm or #deleteForm is clicked.
 BUG: If page is refreshed, form indices do not reset
@@ -31,10 +7,15 @@ http://stellarchariot.com/blog/2011/02/dynamically-add-form-to-formset-using-jav
 function updateElementIndex(el, prefix, ndx) {
     var id_regex = new RegExp('(' + prefix + '-\\d+-)');
     var replacement = prefix + '-' + ndx + '-';
-    if ($(el).attr("for")) $(el).attr("for", $(el).attr("for").replace(id_regex,
-    replacement));
-    if (el.id) el.id = el.id.replace(id_regex, replacement);
-    if (el.name) el.name = el.name.replace(id_regex, replacement);
+    if ($(el).attr("for")) {
+        $(el).attr("for", $(el).attr("for").replace(id_regex, replacement));
+    }
+    if (el.id) {
+        el.id = el.id.replace(id_regex, replacement);
+    }
+    if (el.name) {
+        el.name = el.name.replace(id_regex, replacement);
+    }
 }
 
 function deleteForm(btn, prefix) {
@@ -48,7 +29,7 @@ function deleteForm(btn, prefix) {
         var i = 0;
         // Go through the forms and set their indices, names and IDs
         for (formCount = forms.length; i < formCount; i++) {
-            $(forms.get(i)).children().children().each(function () {
+            $(forms.get(i)).children().each(function () {
                 if ($(this).attr('type') == 'text') {updateElementIndex(this, prefix, i);
                 }
             });
@@ -61,7 +42,9 @@ function deleteForm(btn, prefix) {
 }
 
 function addForm(btn, prefix) {
-    var formCount = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+    //var formCount = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+    var formCount = $('.addCourseForm').length; // Get all the forms
+
     // Clone a form (without event handlers) from the last form
     var row = $(btn).clone(false);
     // Insert it after the last form
@@ -74,8 +57,6 @@ function addForm(btn, prefix) {
 
     // Relabel or rename all the relevant bits
     $(row).children().each(function () {
-        alert('add ' + formCount);
-
         updateElementIndex(this, prefix, formCount);
         //$(this).val("");
         if ($(this).attr('id') == 'deleteForm') {
@@ -90,7 +71,8 @@ function addForm(btn, prefix) {
         return deleteForm(this, prefix);
     });
     // Update the total form count
-    $("#id_" + prefix + "-TOTAL_FORMS").val(formCount + 1);
+    var forms = $('.addCourseForm'); // Get all the forms
+    $("#id_" + prefix + "-TOTAL_FORMS").val(forms.length);
     return false;
 }
 
