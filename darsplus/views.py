@@ -100,9 +100,8 @@ def userRegistration(request):
             course = form.cleaned_data.get('name')
             #Convert course name to our format
             #Supports cs.169, cs 170, cs188 type formats and any capitalization
-            #TODO: User major name to convert input name to standardized form. Convert before appending by replacing before . with name
+
             if course:
-                print(course)
                 course = course.strip().upper()
                 course = course.replace(' ','.')
                 periods = course.count('.')
@@ -115,10 +114,9 @@ def userRegistration(request):
                         course = course[:digit_index]+'.'+course[digit_index:]
                     else:
                         continue #could not determine course format, skipping course
-                #TODO:standardize name here, name guaranteed left of '.'
                 coursesTaken.append(course)
+                
         newProfile = addUserProfile(request.user.username, major, college, graduationSemester, graduationYear, coursesTaken)
-        print(coursesTaken)
         if newProfile == SUCCESS:
             return HttpResponseRedirect('/dashboard/')
         else:
