@@ -17,7 +17,12 @@ majorJSON = json.dumps(getCollegesToMajors())
 
 @csrf_exempt
 def splash(request):
-    """ Load the splashpage, or appropriate page depending on user status """
+    """ Load the splashpage if the user is not logged in, the registration page if they are logged in
+        and have not registered, or the dashboard if they are logged in and have registered.
+        Args:
+            request (HttpRequest): The request sent the Django server 
+        Returns:
+            (HttpResponse) The data containing the page the browser will server to the client """
     if request.method == 'POST':
         if 'login' in request.POST:
             form = LoginForm(request.POST)
@@ -61,7 +66,12 @@ def splash(request):
     return render(request, 'splash.html',{'form':LoginForm()})
 
 def registration_check(user):
-    """ Check whether or not a user has completed registration """    
+    """ Check whether or not a user has completed registration. 
+        Args: 
+            user (django.contrib.auth.models.User)
+        Returns:
+            (bool) True if the user has registered, False if the user has not/ is not logged in.
+    """    
     if not user.is_anonymous() and getUserProfile(user.username):
         return True
     else:
@@ -70,8 +80,13 @@ def registration_check(user):
 @login_required
 @csrf_exempt
 def userRegistration(request):
-    """ View called via create user button from splashpage, attempts to create user with post data
-    Upon sucesful creation redirects to registration page, else returns to splash page """
+    """ If there is no current user logged in, ttempts to create user with post data.
+    Upon sucesful creation redirects to registration page, else returns to splash page 
+        Args:
+            request (HttpRequest): The request sent the Django server 
+        Returns:
+            (HttpResponse) The data containing the page the browser will server to the client 
+    """
     if registration_check(request.user):
         return HttpResponseRedirect('/dashboard/')
     elif request.method == 'POST':
@@ -100,7 +115,6 @@ def userRegistration(request):
             course = form.cleaned_data.get('name')
             #Convert course name to our format
             #Supports cs.169, cs 170, cs188 type formats and any capitalization
-
             if course:
                 course = course.strip().upper()
                 course = course.replace(' ','.')
@@ -127,8 +141,13 @@ def userRegistration(request):
         
 @csrf_exempt
 def userLogout(request):
-    """ Logs out current user session if one exists, return to splashpage"""
-    if not request.user.is_anonymous() and request.user.is_authenticated():# and 'logout' in request.POST:
+    """ Logs out current user session if one exists, return to splashpage
+           Args:
+            request (HttpRequest): The request sent the Django server 
+        Returns:
+            (HttpResponse) The data containing the page the browser will server to the client 
+    """
+    if not request.user.is_anonymous() and request.user.is_authenticated():
         #User was logged in and the logout button was pressed
         logout(request)
     return HttpResponseRedirect('/home/')
@@ -139,7 +158,14 @@ def userLogout(request):
 @user_passes_test(registration_check, login_url='/registration/')
 @csrf_exempt
 def dashboard(request):
-    """ Button from registration page sends a post request to /dashboard. View takes in post data, populates user profile associated with user, then loads dashboard if no errors on registration page """
+    """ Populates user profile associated with user with request POST data, 
+    then loads dashboard if no errors occurred on registration page. If the user
+    was not logged in, redirects to splash page.
+        Args:
+            request (HttpRequest): The request sent the Django server 
+        Returns:
+            (HttpResponse) The data containing the page the browser will server to the client 
+    """
     dashboardContext = dashboardData(request)    
 
     if not dashboardContext:
@@ -151,7 +177,12 @@ def dashboard(request):
 
 
 def dashboardData(request):
-    """ Retrieve user profile information and return context dictionary for dashboard. """
+    """ Retrieve user profile information and return context dictionary for dashboard. 
+        Args:
+            request (HttpRequest): The request sent the Django server 
+        Returns:
+            (dict) User profile information for the template context  
+    """
     username = request.user.username
     userProfile = getUserProfile(username)
     userInformation = {}
