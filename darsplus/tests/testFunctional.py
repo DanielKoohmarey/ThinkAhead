@@ -178,7 +178,27 @@ class TestUserCase(TestCase):
         response = c.post('/dashboard/',{})
         self.assertEquals(302, response.status_code)
         self.assertIn('/home/', response.url)
-
+    
+    def testLogoutAnon(self):
+        c = Client()
+        response = c.post('/logout/', {})
+        self.assertEquals(302, response.status_code)
+        self.assertIn('/home/', response.url)
+    
+    def testLogout(self):
+        response = client.post('',{'username':'smith', 'password':'pass','add':"Create User"})
+        response = client.post('/logout/', {})
+        self.assertEquals(302, response.status_code)
+        self.assertIn('/home/', response.url)
+        request = {'major':['Bioengineering'],'college':['College of Engineering'],
+                   'semester':['Summer'], 'year':[2015],'form-0-name':['CS 61A'],}
+        request.update(managementForm)
+        response = client.post('/registration/', request)
+        self.assertEquals(302, response.status_code)
+        self.assertIn('/home/', response.url)
+        profiles = UserProfile.objects.filter(username='smith')
+        self.assertEquals(0, len(profiles))
+        
     def testMultipleLogin(self):
         # TODO: Create 2 accounts, different registration info. able to login and see corresponding dashboard
         pass

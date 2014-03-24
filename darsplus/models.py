@@ -48,8 +48,9 @@ class UserProfile(models.Model):
             return ERR_USER_EXISTS
         plannerID = Planner.addPlanner()
         newUser = UserProfile(username=username, major=major, college=college, graduationSemester=graduationSemester, 
-                              graduationYear=graduationYear, coursesTaken=coursesTaken, plannerID=plannerID, unitsCompleted=0)
+                              graduationYear=graduationYear, coursesTaken=[], plannerID=plannerID, unitsCompleted=0)
         newUser.save()
+        addListCoursesTaken(username, coursesTaken)
         return SUCCESS
 
     @staticmethod
