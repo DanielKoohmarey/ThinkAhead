@@ -1,19 +1,30 @@
 =====================================================================================================
+=====================================================================================================
+  _______ _     _       _              _                    _ 
+ |__   __| |   (_)     | |       /\   | |                  | |
+    | |  | |__  _ _ __ | | __   /  \  | |__   ___  __ _  __| |
+    | |  | '_ \| | '_ \| |/ /  / /\ \ | '_ \ / _ \/ _` |/ _` |
+    | |  | | | | | | | |   <  / ____ \| | | |  __/ (_| | (_| |
+    |_|  |_| |_|_|_| |_|_|\_\/_/    \_\_| |_|\___|\__,_|\__,_|
+                                                              
+=====================================================================================================
+=====================================================================================================
 TABLE OF CONTENTS
 -Table of Contents
 -Live Deployment and Repo Links
 -Configuring Database
+-Local Database
+-Heroku Database
 -Setting Up: Local vs Heroku
 -Running Tests
 -Running Coverage
--Local Database
 
-Last Update: 13 March 2014
-     	     1:50PM
+Last Update: 20 March 2014
+     	     10:00 PM
 
 ** If you have any trouble with setting up database/local test/heroku/running tests, contact Marion **
 ======================================================================================================
-
+======================================================================================================
 
 
 ========================
@@ -62,11 +73,67 @@ CONFIGURING DATABASE
 
 
 
+==============
+LOCAL DATABASE
+==============
+
+	If you run the webapp locally (i.e. via "python manage.py runserver"), all of the records and databases are saved in your local database.
+	Here are the steps (and example commands) if you want to observe your DB
+
+	0) In your terminal, type "python manage.py dbshell". This should bring you to Postgres' prompt
+
+	1) Example commands:
+
+	   a) '\dt'
+	      lists the databases that you have. Note that the name is usually "<app name>_<model name>"
+
+	   b) '\d darsplus_courses'
+	      lists the field names AND field type of the given database. 
+	      If you made an update to models, this is what you should do to check if the DBs are updated
+	      If DB is not up to date, lookat step 3
+
+	   c) 'select * from darsplus_userprofile;'
+	      returns all entries in userprofile
+
+	   d) 'select * from darsplus_courses where "minUnit" > 3;'
+	      returns all entries where some fields satisfy some condition
+	      note that since our fields have capital letters,we HAVE TO PUT THE FIELD WITH DOUBLE QUOTES
+
+	   e) 'select * from darsplus_courses where "minUnit" > 3 and "maxUnit" < 10;'
+	      example of multiple conditions
+	      
+	2) To exit the Postgres prompt, type "\q"
+
+	3) Updating Database. 
+	   Right now, the only way to update the database is to remove it, and recreate it
+
+	   a) To remove database, type "dropdb 'darsplus'" in the terminal
+
+	   b) To recreate database, type "createdb 'darsplus'" in the terminal
+	   
+	   c) To sync the database with Django app, type "python manage.py syncdb" in the terminal
+
+
+
+===============
+HEROKU DATABASE
+===============
+	
+	If you made a change in models.py and wants to see that change visible in the heroku app, do the following commands:
+	
+	0) In the terminal, type "heroku pg:reset HEROKU_POSTGRESQL_CYAN_URL" *That should be the name of the DB in our heroku app*
+	   If it is not the name of the DB, the command should return an error with list of valid DB name
+
+	1) In the terminal, type "heroku run python manage.py syncdb"
+
+
+
 ===============================
 SETTING UP: LOCAL VERSUS HEROKU
 ===============================
 
-      By default the settings.py are set to work locally. In the case that it got pushed to a heroku setting, there are two things that you need to change
+      By default the settings.py and wsig.py files are set to work locally. 
+      In the case that it got pushed to a heroku setting, there are two things that you need to change
 
       0) Open thinkahead/wsgi.py. Comment the part that is for Heroku (should have a comment) and uncomment the other one
       
@@ -120,42 +187,3 @@ RUNNING COVERAGE
 
 
 
-==============
-LOCAL DATABASE
-==============
-
-	If you run the webapp locally (i.e. via "python manage.py runserver"), all of the records and databases are saved in your local database.
-	Here are the steps (and example commands) if you want to observe your DB
-
-	0) In your terminal, type "python manage.py dbshell". This should bring you to Postgres' prompt
-
-	1) Example commands:
-
-	   a) '\dt'
-	      lists the databases that you have. Note that the name is usually "<app name>_<model name>"
-
-	   b) '\d darsplus_courses'
-	      lists the field names AND field type of the given database. 
-	      If you made an update to models, this is what you should do to check if the DBs are updated
-	      If DB is not up to date, lookat step 3
-
-	   c) 'select * from darsplus_userprofile;'
-	      returns all entries in userprofile
-
-	   d) 'select * from darsplus_courses where "minUnit" > 3;'
-	      returns all entries where some fields satisfy some condition
-	      note that since our fields have capital letters,we HAVE TO PUT THE FIELD WITH DOUBLE QUOTES
-
-	   e) 'select * from darsplus_courses where "minUnit" > 3 and "maxUnit" < 10;'
-	      example of multiple conditions
-	      
-	2) To exit the Postgres prompt, type "\q"
-
-	3) Updating Database. 
-	   Right now, the only way to update the database is to remove it, and recreate it
-
-	   a) To remove database, type "dropdb 'darsplus'" in the terminal
-
-	   b) To recreate database, type "createdb 'darsplus'" in the terminal
-	   
-	   c) To sync the database with Django app, type "python manage.py syncdb" in the terminal
