@@ -68,7 +68,7 @@ def splash(request):
 def registration_check(user):
     """ Check whether or not a user has completed registration. 
         Args: 
-            user (django.contrib.auth.models.User)
+            user (django.contrib.auth.models.User): The user to check for registration
         Returns:
             (bool) True if the user has registered, False if the user has not/ is not logged in.
     """    
