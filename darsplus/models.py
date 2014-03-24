@@ -402,16 +402,6 @@ def emailExists(email):
     else:
         return False
 
-"""
-def addUser(user, email, password):
-    return UserLoginInformation.add(user, email, password)
-
-def login(user, password):
-    return UserLoginInformation.login(user, password)
-
-def logout(user):
-    return UserLoginInformation.logout(user)
-"""
 def addUserProfile(username, major,college, graduationSemester, graduationYear, coursesTaken):
     return UserProfile.addUserProfile(username, major, college, graduationSemester, graduationYear, coursesTaken)
 
@@ -476,14 +466,15 @@ def majorToCollege(major):
 
 
 def getCollegesToMajors():
-    """
-    Returns a dictionary with a key college name, and value list of majors
-
-    Example Output (shortened):
-    {
-		"Engineering College": ["EECS", "MechE"],
-		"L&S": ["CS", "English"],
-     }
+    """ Returns a dictionary with a key college name, and value list of majors
+        Args:
+        Returns:
+            (dict) Dictionary mapping college names to a list of majors
+            Example Output (shortened):
+            {
+        		"Engineering College": ["EECS", "MechE"],
+        		"L&S": ["CS", "English"],
+             }
     """
     colleges = Colleges.allColleges()
     output = {}
@@ -492,15 +483,33 @@ def getCollegesToMajors():
     return output
 
 def setEmail(username, email):
-    """ Sets the email of the default Django user username to email """
+    """ Sets the email of the default Django user username to email
+        Args:
+            (str) username: The username of the user whose email will be updated
+            (str) email: The new email of the use
+        Returns:
+            (SUCCESS) If the user's email was saved, else (FAILURE)
+    """
     user = User.objects.get(username__exact=username)
-    user.email = email
-    user.save()
+    try:
+        user.email = email
+        user.save()
+    except AttributeError:
+        return FAILURE
     return SUCCESS
     
 def changePassword(username, password):
-    """ Change the password of the default Django user username to password """
+    """ Change the password of the default Django user username to password 
+    	Args:
+    	    (str) username: The username of the user whose password will be changed
+    	    (str) password: The new password for the user
+    	Returns:
+    	    (SUCCESS) If the password was successfully changed, else (FAILURE)
+    """
     user = User.objects.get(username__exact=username)
-    user.set_password(password)
-    user.save()
+    try:
+        user.set_password(password)
+        user.save()
+    except AttributeError:
+        return FAILURE
     return SUCCESS
