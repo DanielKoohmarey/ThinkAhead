@@ -317,43 +317,20 @@ class Courses(models.Model):
             return ERR_NO_RECORD_FOUND
         course = matches[0]
         return course.maxUnit
-    '''
-    #No longer need this method if using fixtures, keeping temporarily incase fixtures error
-    @staticmethod
-    def loadCourses():
-        """ Run this once to populate the database with Courses """
-        import pickle
-        departments = pickle.load( open("courses.p", "rb") )
-        for department in departments.keys():
-            for course in departments[department].keys():
-                courseInfo = departments[department][course]
-                units = courseInfo[1]
-                if 'or' in units: # Some specified their units as '3 or 4'
-                    units = units.split( " or ")
-                else:
-                    units = units.split(" - ")
 
-                if len(units) == 1:
-                    units = units[0],units[0]
-                #units = [int(unit) for unit in units] # There are courses with .5 units. I changed the field corresponding to units to Decimals
-                courses = course.split("/") # Some are in "HISTART C196W/HISTORY C196W/MEDIAST C196W/"
-                for similarCourse in courses:
-                    newCourse = Courses(courseCode = similarCourse, courseName = courseInfo[0],
-                                        courseDescription = courseInfo[4], courseLevel = courseInfo[3],
-                                        minUnit = units[0], maxUnit = units[1], department = department)
-                    newCourse.save()
-        return SUCCESS
-    '''
 class Colleges(models.Model):
     major = models.CharField(max_length=128)
     college = models.CharField(max_length=128)
-       
 
     @staticmethod
     def majorToCollege(major):
-        """
-        * Return college(s) of the corresponding major (in String)
-        * If major does not exist, return ERR_RECORD_NOT_FOUND        
+        """ Returns college(s) corresponding to the given major
+            Args:
+                major (str): The name of the major to get corresponding colleges
+            Returns:
+               (str) college if one college is associated with the major
+               (list) Colleges (str) associated with the major
+               (ERR_NO_RECORD_FOUND) No colleges associated with the major
         """
         matches = Colleges.objects.filter(major=major)
         numMatches = matches.count()
@@ -367,16 +344,21 @@ class Colleges(models.Model):
  
     @staticmethod
     def allColleges():
-        """
-        Returns a list of all unique college names
+        """ Returns a list of unique colleges in the DB
+            Args:
+            Returns:
+                (list) The college names (str) saved in the DB
         """
         matches = Colleges.objects.distinct('college')
         return [match.college for match in matches]
  
     @staticmethod
     def getMajorsInCollege(college):
-        """
-        Returns a list of majors (in strings) that are inside college
+        """ Returns a list of majors that are inside college
+            Args:
+                college (str): The college name to get the associated Majors from
+            Returns:
+                (list) The majors (str) the given college offers 
         """
         matches = Colleges.objects.filter(college=college)
         majorList = map(lambda match: match.major, matches)
@@ -464,6 +446,9 @@ def getCourseUnits(courseName):
 def majorToCollege(major):
     return Colleges.majorToCollege(major)
 
+""" 
+    Support Functions for view logic 
+"""
 
 def getCollegesToMajors():
     """ Returns a dictionary with a key college name, and value list of majors
@@ -488,7 +473,8 @@ def setEmail(username, email):
             (str) username: The username of the user whose email will be updated
             (str) email: The new email of the use
         Returns:
-            (SUCCESS) If the user's email was saved, else (FAILURE)
+            (SUCCESS) The user's email was saved
+            (FAILURE) The user could not be found
     """
     user = User.objects.get(username__exact=username)
     try:
@@ -504,7 +490,8 @@ def changePassword(username, password):
     	    (str) username: The username of the user whose password will be changed
     	    (str) password: The new password for the user
     	Returns:
-    	    (SUCCESS) If the password was successfully changed, else (FAILURE)
+    	    (SUCCESS) The password was successfully changed
+    	    (FAILURE) The User was not found
     """
     user = User.objects.get(username__exact=username)
     try:
