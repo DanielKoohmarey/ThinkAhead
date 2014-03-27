@@ -300,6 +300,12 @@ class Courses(models.Model):
 
     @staticmethod
     def getCourseInfo(courseCode):
+        """ Returns Courses object given course code
+            Args:
+                courseCode (str): The name of the course, i.e COMPSCI.169
+            Returns:
+               (Courses) course object corresponding to course code
+        """
         matches = Courses.objects.filter(courseCode=courseCode)
         course = matches[0]
         return course
