@@ -334,6 +334,12 @@ class Courses(models.Model):
 
     @staticmethod
     def getCourseInfo(courseCode):
+        """ Returns Courses object given course code
+            Args:
+                courseCode (str): The name of the course, i.e COMPSCI.169
+            Returns:
+               (Courses) course object corresponding to course code
+        """
         matches = Courses.objects.filter(courseCode=courseCode)
         course = matches[0]
         return course
@@ -351,43 +357,20 @@ class Courses(models.Model):
             return ERR_NO_RECORD_FOUND
         course = matches[0]
         return course.maxUnit
-    '''
-    #No longer need this method if using fixtures, keeping temporarily incase fixtures error
-    @staticmethod
-    def loadCourses():
-        """ Run this once to populate the database with Courses """
-        import pickle
-        departments = pickle.load( open("courses.p", "rb") )
-        for department in departments.keys():
-            for course in departments[department].keys():
-                courseInfo = departments[department][course]
-                units = courseInfo[1]
-                if 'or' in units: # Some specified their units as '3 or 4'
-                    units = units.split( " or ")
-                else:
-                    units = units.split(" - ")
 
-                if len(units) == 1:
-                    units = units[0],units[0]
-                #units = [int(unit) for unit in units] # There are courses with .5 units. I changed the field corresponding to units to Decimals
-                courses = course.split("/") # Some are in "HISTART C196W/HISTORY C196W/MEDIAST C196W/"
-                for similarCourse in courses:
-                    newCourse = Courses(courseCode = similarCourse, courseName = courseInfo[0],
-                                        courseDescription = courseInfo[4], courseLevel = courseInfo[3],
-                                        minUnit = units[0], maxUnit = units[1], department = department)
-                    newCourse.save()
-        return SUCCESS
-    '''
 class Colleges(models.Model):
     major = models.CharField(max_length=128)
     college = models.CharField(max_length=128)
-       
 
     @staticmethod
     def majorToCollege(major):
-        """
-        * Return college(s) of the corresponding major (in String)
-        * If major does not exist, return ERR_RECORD_NOT_FOUND        
+        """ Returns college(s) corresponding to the given major
+            Args:
+                major (str): The name of the major to get corresponding colleges
+            Returns:
+               (str) college if one college is associated with the major
+               (list) Colleges (str) associated with the major
+               (ERR_NO_RECORD_FOUND) No colleges associated with the major
         """
         matches = Colleges.objects.filter(major=major)
         numMatches = matches.count()
@@ -401,16 +384,21 @@ class Colleges(models.Model):
  
     @staticmethod
     def allColleges():
-        """
-        Returns a list of all unique college names
+        """ Returns a list of unique colleges in the DB
+            Args:
+            Returns:
+                (list) The college names (str) saved in the DB
         """
         matches = Colleges.objects.distinct('college')
         return [match.college for match in matches]
  
     @staticmethod
     def getMajorsInCollege(college):
-        """
-        Returns a list of majors (in strings) that are inside college
+        """ Returns a list of majors that are inside college
+            Args:
+                college (str): The college name to get the associated Majors from
+            Returns:
+                (list) The majors (str) the given college offers 
         """
         matches = Colleges.objects.filter(college=college)
         majorList = map(lambda match: match.major, matches)
@@ -436,16 +424,6 @@ def emailExists(email):
     else:
         return False
 
-"""
-def addUser(user, email, password):
-    return UserLoginInformation.add(user, email, password)
-
-def login(user, password):
-    return UserLoginInformation.login(user, password)
-
-def logout(user):
-    return UserLoginInformation.logout(user)
-"""
 def addUserProfile(username, major,college, graduationSemester, graduationYear, coursesTaken):
     return UserProfile.addUserProfile(username, major, college, graduationSemester, graduationYear, coursesTaken)
 
@@ -508,16 +486,20 @@ def getCourseUnits(courseName):
 def majorToCollege(major):
     return Colleges.majorToCollege(major)
 
+""" 
+    Support Functions for view logic 
+"""
 
 def getCollegesToMajors():
-    """
-    Returns a dictionary with a key college name, and value list of majors
-
-    Example Output (shortened):
-    {
-		"Engineering College": ["EECS", "MechE"],
-		"L&S": ["CS", "English"],
-     }
+    """ Returns a dictionary with a key college name, and value list of majors
+        Args:
+        Returns:
+            (dict) Dictionary mapping college names to a list of majors
+            Example Output (shortened):
+            {
+        		"Engineering College": ["EECS", "MechE"],
+        		"L&S": ["CS", "English"],
+             }
     """
     colleges = Colleges.allColleges()
     output = {}
@@ -526,15 +508,35 @@ def getCollegesToMajors():
     return output
 
 def setEmail(username, email):
-    """ Sets the email of the default Django user username to email """
+    """ Sets the email of the default Django user username to email
+        Args:
+            (str) username: The username of the user whose email will be updated
+            (str) email: The new email of the use
+        Returns:
+            (SUCCESS) The user's email was saved
+            (FAILURE) The user could not be found
+    """
     user = User.objects.get(username__exact=username)
-    user.email = email
-    user.save()
+    try:
+        user.email = email
+        user.save()
+    except AttributeError:
+        return FAILURE
     return SUCCESS
     
 def changePassword(username, password):
-    """ Change the password of the default Django user username to password """
+    """ Change the password of the default Django user username to password 
+    	Args:
+    	    (str) username: The username of the user whose password will be changed
+    	    (str) password: The new password for the user
+    	Returns:
+    	    (SUCCESS) The password was successfully changed
+    	    (FAILURE) The User was not found
+    """
     user = User.objects.get(username__exact=username)
-    user.set_password(password)
-    user.save()
+    try:
+        user.set_password(password)
+        user.save()
+    except AttributeError:
+        return FAILURE
     return SUCCESS
