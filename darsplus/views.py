@@ -80,7 +80,7 @@ def registration_check(user):
 @login_required
 @csrf_exempt
 def userRegistration(request):
-    """ If there is no current user logged in, ttempts to create user with post data.
+    """ If there is no current user logged in, attempts to create user with post data.
     Upon sucesful creation redirects to registration page, else returns to splash page 
         Args:
             request (HttpRequest): The request sent the Django server 
@@ -90,54 +90,62 @@ def userRegistration(request):
     if registration_check(request.user):
         return HttpResponseRedirect('/dashboard/')
     elif request.method == 'POST':
-        emailInfo = EmailForm(request.POST)
-        majorInfo = MajorForm(request.POST)
-        courseInfo = CourseFormSet(request.POST)
-        errors = {}
-        if emailInfo.errors or CourseFormSet.errors:
-            errors.update(emailInfo.errors)
-            for form in courseInfo:
-                errors.update(form.errors)
-        majorForm_errors = majorInfo.errors()
-        if majorForm_errors:
-            errors.update({'major':majorForm_errors})
-
-        if errors:
-            return render(request, 'registration.html',{'errors':errors,'form0': EmailForm(),'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON}) 
-        
-        setEmail(request.user.username,request.POST['email'])     
-        major = request.POST['major']
-        college = request.POST['college']
-        graduationSemester = request.POST['semester'] 
-        graduationYear = request.POST['year']  
-        coursesTaken = []
-        for form in courseInfo:
-            course = form.cleaned_data.get('name')
-            #Convert course name to our format
-            #Supports cs.169, cs 170, cs188 type formats and any capitalization
-            if course:
-                course = course.strip().upper()
-                course = course.replace(' ','.')
-                periods = course.count('.')
-                if periods:
-                    course = course.replace('.','',periods-1)
-                else:
-                    m = re.search("\d",course)
-                    if m:
-                        digit_index = m.start()
-                        course = course[:digit_index]+'.'+course[digit_index:]
-                    else:
-                        continue #could not determine course format, skipping course
-                coursesTaken.append(course)
-                
-        newProfile = addUserProfile(request.user.username, major, college, graduationSemester, graduationYear, coursesTaken)
-        if newProfile == SUCCESS:
+        newUser = addUserProfile(*register(request))
+        if newUser == SUCCESS:
             return HttpResponseRedirect('/dashboard/')
         else:
             return render(request, 'registration.html',{'errors':"Error adding user profile to database. Please try again later.", 'form0': EmailForm(), 'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})
     else:
         return render(request, 'registration.html', {'form0': EmailForm(), 'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})
 
+def register(request):
+    """ Saves user profile information for the user
+            Args:
+            request (HttpRequest): The request sent the Django server 
+        Returns:
+            (list) The user profile information, [request.user.username (str), major (str), college (str), graduationSemester (str), graduationYear (str), coursesTaken(list)]
+    """
+    emailInfo = EmailForm(request.POST)
+    majorInfo = MajorForm(request.POST)
+    courseInfo = CourseFormSet(request.POST)
+    errors = {}
+    if emailInfo.errors or CourseFormSet.errors:
+        errors.update(emailInfo.errors)
+        for form in courseInfo:
+            errors.update(form.errors)
+    majorForm_errors = majorInfo.errors()
+    if majorForm_errors:
+        errors.update({'major':majorForm_errors})
+
+    if errors:
+        return render(request, 'registration.html',{'errors':errors,'form0': EmailForm(),'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON}) 
+    
+    setEmail(request.user.username,request.POST['email'])     
+    major = request.POST['major']
+    college = request.POST['college']
+    graduationSemester = request.POST['semester'] 
+    graduationYear = request.POST['year']  
+    coursesTaken = []
+    for form in courseInfo:
+        course = form.cleaned_data.get('name')
+        #Convert course name to our format
+        #Supports cs.169, cs 170, cs188 type formats and any capitalization
+        if course:
+            course = course.strip().upper()
+            course = course.replace(' ','.')
+            periods = course.count('.')
+            if periods:
+                course = course.replace('.','',periods-1)
+            else:
+                m = re.search("\d",course)
+                if m:
+                    digit_index = m.start()
+                    course = course[:digit_index]+'.'+course[digit_index:]
+                else:
+                    continue #could not determine course format, skipping course
+            coursesTaken.append(course)
+            
+    return [request.user.username, major, college, graduationSemester, graduationYear, coursesTaken]
         
 @csrf_exempt
 def userLogout(request):
@@ -151,8 +159,6 @@ def userLogout(request):
         #User was logged in and the logout button was pressed
         logout(request)
     return HttpResponseRedirect('/home/')
-
-
         
 @login_required
 @user_passes_test(registration_check, login_url='/registration/')
@@ -193,3 +199,23 @@ def dashboardData(request):
     userInformation['requirements'] = remainingRequirements(getCoursesTaken(username), majorToCollege(userProfile.major), userProfile.major)
   
     return userInformation
+
+@login_required
+@user_passes_test(registration_check, login_url='/registration/')
+def updateProfile(request):
+    """ Allow a user to update their profile
+        Args:
+            request (HttpRequest): The request sent the Django server 
+        Returns:
+            (HttpResponse) The data containing the page the browser will server to the client 
+    """
+    if request.method == 'POST':
+        newUser = addUserProfile(*register(request))
+        if newUser == SUCCESS:
+            return HttpResponseRedirect('/dashboard/')
+        else:
+            return newUser
+    else:
+        #TODO:PREPOPULATE WITH USER DATA
+        #TODO:CHANGE BUTTON NAME TO SUBMIT using django.core.context_processors.request
+        return render(request, 'registration.html',{'form0': EmailForm(), 'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})
