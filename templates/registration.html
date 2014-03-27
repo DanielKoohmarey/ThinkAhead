@@ -11,7 +11,7 @@
 
 <body>
 
-<header><div class="user_bar"> <input formaction="logout" class="button" type="submit" name="logout" value="Logout"></div></header>
+<header><a href="/home/"><img src="{% static "logoTmp.png" %}" style="float:left; padding-left:25px;" height=50px></a><div class="user_bar"><input formaction="logout" class="button" type="submit" name="logout" value="Logout"></div></header>
 
 <div class="page">
 <h1 class="sectionHeader">Registration Title (NAME PENDING)</h1>
@@ -69,8 +69,11 @@
 
 		<input id="addForm" class="buttonLink" type="button" value="+ Add Course" >
 	</div>
-
-	<input id="createUser" class="button" type="submit" value="Complete Registration">
+            {%if "profile" in request.path %}  
+            <input id="createUser" class="button" type="submit" value="Update Profile">
+            {% else %}
+            <input id="createUser" class="button" type="submit" value="Complete Registration">
+            {%endif %}
 </form>
 
 </div>
