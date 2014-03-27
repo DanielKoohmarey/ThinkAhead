@@ -18,14 +18,18 @@
 		<label class="formLabel">
 			<span>Sign-in or register</span>
 		</label>
-		{{ form.username }}
-		<label class="formLabel"></label>
-		{{ form.password }}
-
-		{% if errors %}
-		<label class="formLabel"></label>
-		<span style="color: red;">{{ errors }}</span>
+		{% if "user" in errors %}
+        		{{ errors.user }}
 		{% endif %}
+		{% if "username" in errors %}
+        		{{ errors.username }}
+		{% endif %}
+		{{ form.username }}
+            <br/>
+		{% if "password" in errors %}
+        		{{ errors.password }}
+		{% endif %}
+		{{ form.password }}
 	</div>
 
 	<input class="button" type="submit" name="login" value="Login">

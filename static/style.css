@@ -1,9 +1,17 @@
 /* Base styling to be used across all pages */
 
-body {
+body, input, button, select, option, textarea {
 	font-family: Arial, sans-serif;
+}
+
+body {
+	/* font-family: Arial, sans-serif; */
 	color: #000000;
 	margin: 0px;
+}
+
+input, button, select, option, textarea {
+	font-size: 100%;
 }
 
 header {
@@ -29,6 +37,10 @@ header {
 	min-width: 100px;
 	height: 30px;
 	border-radius: 5px;
+	border: none;
+}
+.button:hover {
+	background: #999999;
 }
 
 /* Headers for page sections */
@@ -55,7 +67,7 @@ header {
 	float: left;
 	height: 100%;
 	width: 48%;
-	overflow:scroll;
+	overflow: scroll;
 	padding: 1%;
 }
 
@@ -80,9 +92,11 @@ header {
 	background: none;
     border: none; 
     padding: 0px;
-    width: 100px;
+    width: auto;
 }
-
+.buttonLink:hover {
+	color: #999999;
+}
 
 
 /* Styling specific to dash.html */
@@ -130,15 +144,9 @@ li.courseCompleted {
 }
 
 
-
-
-
-
-
 input {
 	width: 200px;
 }
-
 
 
 ul.errorlist {

@@ -1,23 +1,79 @@
-/*
-Adds additional CourseForms to CourseFormSet when #addMore is clicked.
-http://stackoverflow.com/questions/501719/dynamically-adding-a-form-to-a-django-formset-with-ajax
+/* 
+Adds/delete CourseForms to CourseFormSet when #addForm or #deleteForm is clicked.
+Adapted from:
+http://stellarchariot.com/blog/2011/02/dynamically-add-form-to-formset-using-javascript-and-django/
 */
-function cloneMore(selector, type) {
-    var newElement = $(selector).clone(true);
-    var total = $('#id_' + type + '-TOTAL_FORMS').val();
-    newElement.find(':input').each(function() {
-        var name = $(this).attr('name').replace('-' + (total-1) + '-','-' + total + '-');
-        var id = 'id_' + name;
-        $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
-    });
-    newElement.find('label').each(function() {
-        var newFor = $(this).attr('for').replace('-' + (total-1) + '-','-' + total + '-');
-        $(this).attr('for', newFor);
-    });
-    total++;
-    $('#id_' + type + '-TOTAL_FORMS').val(total);
-    $(selector).after(newElement);
+function updateElementIndex(el, prefix, ndx) {
+    var id_regex = new RegExp('(' + prefix + '-\\d+-)');
+    var replacement = prefix + '-' + ndx + '-';
+    if ($(el).attr("for")) {
+        $(el).attr("for", $(el).attr("for").replace(id_regex, replacement));
+    }
+    if (el.id) {
+        el.id = el.id.replace(id_regex, replacement);
+    }
+    if (el.name) {
+        el.name = el.name.replace(id_regex, replacement);
+    }
 }
+
+function deleteForm(btn, prefix) {
+    var formCount = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+    if (formCount > 1) {
+        // Delete the item/form
+        $(btn).parents('.addCourseForm').remove();
+        var forms = $('.addCourseForm'); // Get all the forms  
+        // Update the total number of forms (1 less than before)
+        $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
+        var i = 0;
+        // Go through the forms and set their indices, names and IDs
+        for (formCount = forms.length; i < formCount; i++) {
+            $(forms.get(i)).children().each(function () {
+                if ($(this).attr('type') == 'text') {updateElementIndex(this, prefix, i);
+                }
+            });
+        }
+    }
+    else {
+        alert("You have to enter at least one course!");
+    }
+    return false;
+}
+
+function addForm(btn, prefix) {
+    var formCount = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+
+    // Clone a form (without event handlers) from the last form
+    var row = $(btn).clone(false);
+    // Insert it after the last form
+    $(row).removeAttr('id').hide().insertAfter(".addCourseForm:last").slideDown(300);
+
+    // Remove the bits we don't want in the new row/form
+    // e.g. error messages
+    $(".errorlist", row).remove();
+    $(row).children().removeClass("error");
+
+    // Relabel or rename all the relevant bits
+    $(row).children().each(function () {
+        updateElementIndex(this, prefix, formCount);
+        //$(this).val("");
+        if ($(this).attr('id') == 'deleteForm') {
+            $(this).val("Delete");
+        } else {
+            $(this).val("");
+        }
+    });
+
+    // Add an event handler for the delete item/form link 
+    $(row).find(".buttonLink").click(function () {
+        return deleteForm(this, prefix);
+    });
+    // Update the total form count
+    var forms = $('.addCourseForm'); // Get all the forms
+    $("#id_" + prefix + "-TOTAL_FORMS").val(forms.length);
+    return false;
+}
+
 
 // Function to prepare possible dropdown options for MajorForm using var majorDict
 function getDropdownOptions(){
@@ -37,11 +93,20 @@ function getDropdownOptions(){
 
 $(document).ready(function(){
 
-// Listener hooking cloneMore() to #addMore to add additional forms.
-$('#addMore').click(function() {
-        cloneMore('div.addCourseForm:last', 'form');
+// Update/check TOTAL_FORMS
+var formCount = $('.addCourseForm').length; // Get all the forms
+$("#id_form-TOTAL_FORMS").val(formCount);
 
+
+// Listener hooking cloneMore() to #addMore to add additional forms.
+$('#addForm').click(function() {
+    addForm('div.addCourseForm:nth-last-child(2)', 'form');
 });
+
+$('#deleteForm').click(function() {
+    deleteForm(this, 'form');
+});
+
 
 // Populates MajorForm.college dropdown with all colleges in DB
 $.each(colleges, function(val, text) {

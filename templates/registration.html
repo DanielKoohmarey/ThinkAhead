@@ -18,12 +18,21 @@
 <h1 class="sectionHeader">Registration Title (NAME PENDING)</h1>
 <p>Welcome {{user.username}} ! Please complete the registration. (NEW CSS CLASS?)</p>
 
-{% if errors %}
-	<span style="color: red;">{{ errors }}</span>
-{% endif %}
+
 
 <form action="" method="post">
 	{% csrf_token %}
+	<!-- Expecting EmailForm() as form0 -->
+	<div class="formGroup">
+		<label class="formLabel">
+			<span>Email</span>
+		</label>
+            {% if "email" in errors %}
+            	{{ errors.email }}
+            {% endif %}
+		{{ form0.email }}
+	</div>
+	
 	<!-- Expecting GradForm() as form1 -->
 	<div class="formGroup">
 		<label class="formLabel">
@@ -38,6 +47,9 @@
 		<label class="formLabel">
 			<span>Major</span>
 		</label>
+            {% if "major" in errors %}
+            	{{ errors.major }}
+            {% endif %}
 		{{ form2.college }}
 		{{ form2.major }}
 	</div>
@@ -45,19 +57,18 @@
 	<!-- Expecting CourseForm() as form3 -->
 	<div class="formGroup">
 		<label class="formLabel">
-			<span>Successfully completed courses</span>
+			<span>Successfully completed courses<br/><small><i>i.e cs 160, econ 100a</i></small></span>
 		</label>
 		{{ form3.management_form }}
 		{% for form in form3.forms %}
 
 		<div class='addCourseForm'>
-    	<table class='no_error'>
-        	{{ form.name }}
-    	</table>
-    	</div>
+			{{ form.name }}
+			<input id="deleteForm" class="buttonLink" type="button" value="Delete" >
+		</div>
 		{% endfor %}
 
-		<input id="addMore" class="buttonLink" type="button" value="+ Add Course" >
+		<input id="addForm" class="buttonLink" type="button" value="+ Add Course" >
 	</div>
 
 	<input id="createUser" class="button" type="submit" value="Complete Registration">

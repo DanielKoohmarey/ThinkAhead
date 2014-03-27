@@ -4,9 +4,8 @@ Classes to represent Databases for our application
 """
 from django.db import models
 from djorm_pgarray.fields import ArrayField #Postgres package that enables ArrayField
-# http://www.craigkerstiens.com/2012/11/06/django-and-arrays/ for reference 
+from django.contrib.auth.models import User
 from utils import * 
-from statics import * 
 
 # Create your models here
 
@@ -25,8 +24,10 @@ class UserProfile(models.Model):
         """
         Checks if user already exists in UserLoginInformation DB. Is case sensitive
 
-        @param userame is a string
-        @return UserProfile
+        Args:
+            username: String representing username
+        Retuns:
+            UserProfile Object: object as determined by the query. Or None if it does not exist
         """
         try:
             profile = UserProfile.objects.get(username=username)
@@ -43,6 +44,16 @@ class UserProfile(models.Model):
         coursesTaken and unitsCompleted default to [] and 0 respectively
         creates a planner that corresponds with this user
         * If username already exists, return ERR_USER_EXISTS
+
+        Args:
+            username: String
+            major:    String
+            college:  String
+            graduationSemester: String
+            graduationYear: Integer
+            coursesTaken: List
+        Retuns:
+            SUCCESS or ERR_USER_EXISTS
         """
         if getUserProfile(username):
             return ERR_USER_EXISTS
@@ -58,6 +69,11 @@ class UserProfile(models.Model):
         """
         returns list of courses (as strings) of courses already taken by username
         if username does not exist, return ERR_NO_RECORD_FOUND
+        
+        Args:
+            username: String
+        Returns:
+            List of Coursecode (as Strings)
         """
         matches = UserProfile.objects.filter(username=username)
         numMatches = matches.count()
@@ -71,6 +87,11 @@ class UserProfile(models.Model):
         """
         return number of units taken by username
         * If username does not exist, return ERR_NO_RECORD_FOUND
+
+        Args:
+            username: String
+        Returns:
+            Float
         """
         matches = UserProfile.objects.filter(username=username)
         numMatches = matches.count()
@@ -88,6 +109,12 @@ class UserProfile(models.Model):
         * return SUCCESS
         * If username is not registered, return ERR_NO_RECORD_FOUND
         * If course already in list, return ERR_RECORD_EXISTS
+
+        Args:
+            username: String
+            coursename: String
+        Returns:
+            SUCCESS or Error message
         """
         matches = UserProfile.objects.filter(username=username)
         numMatches = matches.count()
@@ -111,6 +138,12 @@ class UserProfile(models.Model):
         * If successful, return SUCCESS 
         * If username is not registered, return ERR_NO_RECORD_FOUND
         * If course is not in list, return ERR_NO_RECORD_FOUND
+
+        Args:
+            username: String
+            coursename: String
+        Returns:
+            SUCCESS
         """
         matches = UserProfile.objects.filter(username=username)
         numMatches = matches.count()
@@ -491,3 +524,17 @@ def getCollegesToMajors():
     for college in colleges:
         output[college] = Colleges.getMajorsInCollege(college)
     return output
+
+def setEmail(username, email):
+    """ Sets the email of the default Django user username to email """
+    user = User.objects.get(username__exact=username)
+    user.email = email
+    user.save()
+    return SUCCESS
+    
+def changePassword(username, password):
+    """ Change the password of the default Django user username to password """
+    user = User.objects.get(username__exact=username)
+    user.set_password(password)
+    user.save()
+    return SUCCESS

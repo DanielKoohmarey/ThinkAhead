@@ -30,13 +30,13 @@ class TestUserCase(TestCase):
         # Expect login page exists at url /dashboard/. Redirects to home if not logged in
         response = client.get('/dashboard/')
         self.assertEqual(response.status_code, 302)
-        self.assertIn('/home', response.url)
+        self.assertIn('/home/', response.url)
 
     def testRegisterRedirect(self):
         # Exepct registration without authenticated login to redirect 
         response = client.post('/registration/',{'user':'john','password':'pass'})
         self.assertEqual(302, response.status_code)
-        self.assertIn('/home', response.url)
+        self.assertIn('/home/', response.url)
 
     def testCreateNoUser(self):
         # Expect Invalid username to be blank
@@ -55,23 +55,28 @@ class TestUserCase(TestCase):
         self.assertEquals("Username is already taken.", response.context['errors'])
 
 
-    def testLogin(self):
-        # Logins in a user correctly
+    def testLoginNotRegistered(self):
+        # If user navigates to home with get/post request when logged in, redirects to registration
         response = client.post('',{'username':'john', 'password':'pass','add':"Create User"})
         response = client.post('',{'username':'john', 'password':'pass', 'login':'Login'})
         self.assertEquals(302, response.status_code)
-        self.assertIn('/dashboard/', response.url)
+        self.assertIn('/registration/', response.url)
+        
+    def testLogin(self):   
+        client.post('',{'username':'john', 'password':'pass','add':"Create User"})
+        client.get('/logout/')
+        response = client.post('',{'username':'john', 'password':'pass', 'login':'Login'})
+        self.assertEquals(302, response.status_code)
+        self.assertIn('/registration/', response.url)    
         user = User.objects.filter(username='john')[0]
         self.assertTrue(user.is_active)
         self.assertTrue(user.is_authenticated())
         
-
     def testInvalidLogin(self):
         # If password does not match, return error message
         response = client.post('',{'username':'john', 'password':'pass','add':"Create User"})
         response = client.post('',{'username':'john', 'password':'otherpass', 'login':'Login'})
         self.assertEquals(200, response.status_code)
-        user = User.objects.filter(username='john')[0]
         self.assertIn('Invalid Username/Password. Please try again', response.context['errors'])
     
 
@@ -174,31 +179,27 @@ class TestUserCase(TestCase):
         response = client.post('/registration/', request)
         client.logout()
         c = Client()
-        x = c.login(username='smith',password='otherpass')
+        c.login(username='smith',password='otherpass')
         response = c.post('/dashboard/',{})
         self.assertEquals(302, response.status_code)
         self.assertIn('/home/', response.url)
-    
-    def testLogoutAnon(self):
+
+
+    def testLogoutLoggedIn(self):
+        #Ensure logging out works when a user has oreviously logged in
+        response = client.post('',{'username':'smith', 'password':'pass','add':"Create User"})
+        self.assertTrue(response.context['user'].is_authenticated())
+        response = client.get('/logout/')
+        self.assertFalse(response.context['user'].is_authenticated())
+        self.assertRedirects(response, '/home/', status_code=302, target_status_code=200, msg_prefix='')
+
+    def testLogoutAnonymous(self):
         c = Client()
         response = c.post('/logout/', {})
         self.assertEquals(302, response.status_code)
         self.assertIn('/home/', response.url)
-    
-    def testLogout(self):
-        response = client.post('',{'username':'smith', 'password':'pass','add':"Create User"})
-        response = client.post('/logout/', {})
-        self.assertEquals(302, response.status_code)
-        self.assertIn('/home/', response.url)
-        request = {'major':['Bioengineering'],'college':['College of Engineering'],
-                   'semester':['Summer'], 'year':[2015],'form-0-name':['CS 61A'],}
-        request.update(managementForm)
-        response = client.post('/registration/', request)
-        self.assertEquals(302, response.status_code)
-        self.assertIn('/home/', response.url)
-        profiles = UserProfile.objects.filter(username='smith')
-        self.assertEquals(0, len(profiles))
         
+
     def testMultipleLogin(self):
         # TODO: Create 2 accounts, different registration info. able to login and see corresponding dashboard
         pass

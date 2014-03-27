@@ -1,13 +1,19 @@
 from django import forms
 from django.forms.formsets import formset_factory
-
+from django.forms.util import ErrorList
 import datetime
+
 """ reminder looking at PasswordChangeForm, PasswordResetForm Built-in forms for future iterations """
 class LoginForm(forms.Form):
 	username = forms.CharField(max_length=128, label='Username',
 		widget=forms.TextInput(attrs={'placeholder': 'Username'}))
 	password = forms.CharField(max_length=128, label='Password',
 		widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
+
+
+# Used in registration.html
+class EmailForm(forms.Form):
+	email = forms.EmailField()
 
 
 # Used in registration.html
@@ -29,14 +35,16 @@ class MajorForm(forms.Form):
 	college = forms.ChoiceField(choices=((0, "Please select a college"),))
 	major = forms.ChoiceField(choices=((0, "Please select a college and major"),))
  
-	def validate(self, value):
+	def errors(self):
 		"""Check if value has been updated from default"""
-		college = self.cleaned_data['college']
-  		major = self.cleaned_data['major']
-		if college == "Please select a college":
-			raise forms.ValidationError("College must be selected.")
-		if major == "Please select a college and major":
-			raise forms.ValidationError("Major must be selected.")     
+		college = self['college'].value()
+  		major = self['major'].value()
+		if college == "0":
+			return ErrorList([u"College and Major must be selected"])
+		elif major == "-1":
+			return ErrorList([u"Major must be selected."]) 
+		else:
+			return False
 
 # Used in registration.html
 class CourseForm(forms.Form):
