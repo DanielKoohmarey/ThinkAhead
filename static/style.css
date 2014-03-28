@@ -8,6 +8,8 @@ body {
 	/* font-family: Arial, sans-serif; */
 	color: #000000;
 	margin: 0px;
+	background-image:url('lined_paper.png'); /* subtlepatterns.com */
+	background-repeat:repeat;
 }
 
 input, button, select, option, textarea {
