@@ -223,8 +223,9 @@ def updateProfile(request):
         """
         newUser = register(request)
         response = setUserProfile(*newUser)
-        from django.http import HttpResponse
-        return HttpResponse('magikarp')
+        print response
+        if response == SUCCESS:
+            return HttpResponseRedirect('/dashboard/')
     else:
         #TODO:CHANGE BUTTON NAME TO SUBMIT using django.core.context_processors.request
 
