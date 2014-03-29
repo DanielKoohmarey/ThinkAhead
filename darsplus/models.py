@@ -143,7 +143,7 @@ class UserProfile(models.Model):
             username: String
             coursename: String
         Returns:
-            SUCCESS
+            SUCCESS or ERR_NO_RECORD_FOUND
         """
         matches = UserProfile.objects.filter(username=username)
         numMatches = matches.count()
@@ -166,6 +166,12 @@ class UserProfile(models.Model):
         
         * If successful, return SUCCESS
         * If username is not registered, return ERR_NO_RECORD_FOUND
+        
+        Args:
+            username: String
+            semester: String
+        Return:
+            SUCCESS or NO_RECORD_FOUND
         """
         matches = UserProfile.objects.filter(username=username)
         numMatches = matches.count()
@@ -184,6 +190,11 @@ class UserProfile(models.Model):
         
         * If successful, return SUCCESS
         * If username is not registered, return ERR_NO_RECORD_FOUND
+        Args:
+            username: String
+            year: Integer
+        Returns:
+            SUCCESS or ERR_NO_RECORD_FOUND
         """
         matches = UserProfile.objects.filter(username=username)
         numMatches = matches.count()
@@ -201,6 +212,12 @@ class UserProfile(models.Model):
         
         * If successful, return SUCCESS
         * If username is not registered, return ERR_NO_RECORD_FOUND
+
+        Args:
+            username: String
+            newMajor: String
+        Returns:
+            SUCCESS or ERR_NO_RECORD_FOUND
         """
         matches = UserProfile.objects.filter(username=username)
         numMatches = matches.count()
@@ -238,6 +255,11 @@ class Planner(models.Model):
         
         * Returns the ID of the new planner
         * Initializes all semesters' list of courses to []
+        
+        Args:
+        
+        Returns:
+            Integer. ID of newly created planner
         """
         count = Planner.objects.all().count()
         planner = Planner(plannerID=count, semester1=[], semester2=[], semester3=[],
@@ -259,6 +281,12 @@ class Planner(models.Model):
         * If plannerID does not exist, return ERR_NO_RECORD_FOUND
         * If the course already is in the list, return ERR_RECORD_EXISTS
 
+        Args:
+            plannerID: Integer
+            index: Integer
+            coursename: String
+        Returns:
+            SUCCESS or ERR_NO_RECORD_FOUND or ERR_RECORD_EXISTS
         """
         matches = Planner.objects.filter(plannerID=plannerID)
         numMatches = matches.count()
@@ -285,6 +313,13 @@ class Planner(models.Model):
         * If plannerID does not exist, return ERR_NO_RECORD_FOUND
         * If the course already is not in the list, return ERR_NO_RECORD_FOUND
 
+        Args:
+            plannerID: Integer
+            index: Integer
+            coursename: String
+        Returns:
+            SUCCESS or ERR_NO_RECORD_FOUND
+
         """
         matches = Planner.objects.filter(plannerID=plannerID)
         numMatches = matches.count()
@@ -308,6 +343,12 @@ class Planner(models.Model):
 
         * Return total number of units in the semester
         * If plannerID does not exist, return ERR_NO_RECORD_FOUND
+        
+        Args:
+            plannerID: Integer
+            index: Integer
+        Return:
+            float
         """
         matches = Planner.objects.filter(plannerID=plannerID)
         numMatches = matches.count()
@@ -351,6 +392,11 @@ class Courses(models.Model):
         * Return number of units for a given course
         * If it is a variable unit course, tentatively return maxUnit
         * If record is not found, return ERR_NO_RECORD_FOUND
+
+        Args:
+            courseCode: Integer
+        Returns:
+            Float or ERR_NO_RECORD_FOUND
         """
         matches = Courses.objects.filter(courseCode=courseCode)
         if (matches.count() == 0):
@@ -429,6 +475,30 @@ def addUserProfile(username, major,college, graduationSemester, graduationYear, 
 
 def getUserProfile(username):
     return UserProfile.getUserProfile(username)
+
+def setUserProfile(username, major, college, semester, year, newCourses):
+    response = changeGraduationSemester(username, semester)
+    if response != SUCCESS:
+        return response
+    response = changeGraduationYear(username, year)
+    if response != SUCCESS:
+        return response
+
+    response = changeMajor(username, major)
+    if response != SUCCESS:
+        return response
+    
+    previousCourses = getUserProfile(username).coursesTaken
+    toAdd = filter(lambda course: course not in previousCourses, newCourses)
+    toRemove = filter(lambda course: course not in newCourses, previousCourses)
+    response = addListCoursesTaken(username, toAdd)
+    if response != SUCCESS:
+        return response
+
+    response = removeListCoursesTaken(username, toRemove)
+    if response != SUCCESS:
+        return response
+    return SUCCESS
 
 def changeGraduationSemester(username, semester):
     return UserProfile.changeGraduationSemester(username, semester)
