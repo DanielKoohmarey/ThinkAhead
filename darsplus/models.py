@@ -272,6 +272,23 @@ class Planner(models.Model):
         return count
 
     @staticmethod
+    def getPlanners(plannerID):
+        """
+        returns a list of all of the planners associated with plannerID
+
+        Args:
+            username: plannerID
+        Returns:
+            List of planners or ERR_NO_RECORD_FOUND
+        """
+        matches = Planner.objects.filter(plannerID=plannerID)
+        numMatches = matches.count()
+        if (numMatches == 0):
+            return ERR_NO_RECORD_FOUND
+        account = matches[0]        
+        return [getattr(account, 'semester'+str(index))for index in range(1,16)]
+
+    @staticmethod
     def addCourseToPlanner(plannerID, index, coursename):
         """
         Adds a new course to the planner's index-th semester. 
@@ -363,6 +380,25 @@ class Planner(models.Model):
             unitCount =  unitCount + units
         return unitCount
 
+    @staticmethod
+    def getAllCourses(plannerID):
+        """
+        Returnsa a list of course in all planners of the corresponding planner ID
+        
+        Args:
+            plannerID: integer
+        Returns:
+            List of Coursename
+        """
+        matches = Planner.objects.filter(plannerID=plannerID)
+        numMatches = matches.count()
+        if numMatches == 0:
+            return ERR_NO_RECORD_FOUND
+        account = matches[0]
+        allCourses = []
+        for index in range(1,15):
+            allCourses.append(getattr(account, 'semester'+str(index)))
+        return allCourses
 
 class Courses(models.Model):
     courseCode = models.CharField(max_length=64)
@@ -541,6 +577,9 @@ def removeListCoursesTaken(username, courseList):
             return response
     return SUCCESS
 
+def getPlanners(plannerID):
+    return Planner.getPlanners(plannerID)
+
 def addCourseToPlanner(plannerID, index, coursename):
     return Planner.addCourseToPlanner(plannerID, index, coursename)
 
@@ -549,6 +588,9 @@ def removeCourseFromPlanner(plannerID, index, coursename):
 
 def totalUnitsPlanner(plannerID, index):
     return Planner.totalUnitsPlanner(plannerID, index)
+
+def getAllCourses(plannerID):
+    return Planner.getAllCourses(plannerID)
 
 def getCourseUnits(courseName):
     return Courses.getCourseUnits(courseName)
@@ -610,3 +652,4 @@ def changePassword(username, password):
     except AttributeError:
         return FAILURE
     return SUCCESS
+
