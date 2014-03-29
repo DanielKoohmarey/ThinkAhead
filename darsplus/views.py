@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from darsplus.statics import SUCCESS
 from darsplus.forms import LoginForm, EmailForm, GradForm, MajorForm, CourseFormSet
-from darsplus.models import addUserProfile, getUserProfile, getCoursesTaken, getUnitsCompleted, majorToCollege, getCollegesToMajors, setEmail
+from darsplus.models import addUserProfile, getUserProfile, getCoursesTaken, getUnitsCompleted, majorToCollege, getCollegesToMajors, setEmail, setUserProfile
 from darsplus.requirementscode import remainingRequirements
 from django.template import RequestContext
 from django.contrib.auth.models import User
@@ -97,6 +97,8 @@ def userRegistration(request):
             return render(request, 'registration.html',{'errors':"Error adding user profile to database. Please try again later.", 'form0': EmailForm(), 'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})
     else:
         return render(request, 'registration.html', {'form0': EmailForm(), 'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})
+
+
 
 def register(request):
     """ Saves user profile information for the user
@@ -200,6 +202,7 @@ def dashboardData(request):
   
     return userInformation
 
+
 @login_required
 @user_passes_test(registration_check, login_url='/registration/')
 def updateProfile(request):
@@ -209,13 +212,33 @@ def updateProfile(request):
         Returns:
             (HttpResponse) The data containing the page the browser will server to the client 
     """
-    if request.method == 'POST':
+    if request.method == 'POST': #updates user
+        print "new Post"
+        """
         newUser = addUserProfile(*register(request))
         if newUser == SUCCESS:
             return HttpResponseRedirect('/dashboard/')
         else:
             return newUser
+        """
+        newUser = register(request)
+        response = setUserProfile(*newUser)
+        from django.http import HttpResponse
+        return HttpResponse('magikarp')
     else:
-        #TODO:PREPOPULATE WITH USER DATA
         #TODO:CHANGE BUTTON NAME TO SUBMIT using django.core.context_processors.request
-        return render(request, 'registration.html',{'form0': EmailForm(), 'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})
+
+        profile = getUserProfile(request.user)
+
+
+        initial_data = []
+        for course in profile.coursesTaken:
+            initial_data.append({'name':course.replace('.', ' ')}) # Revert our representation to a user-friendly one
+
+        formset = CourseFormSet(initial=initial_data)
+
+        return render(request,'registration.html',{'form0': EmailForm({'email':User.objects.filter(username=request.user)[0].email}), 
+                                                   'form1': GradForm({'semester':profile.graduationSemester,'year':profile.graduationYear}), 
+                                                   'form2':MajorForm({'college':profile.college,'major':profile.major}), # Does not work. Has to be the index
+                                                   'form3':formset,
+                                                   'majorDict':majorJSON})
