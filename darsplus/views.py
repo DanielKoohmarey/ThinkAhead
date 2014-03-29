@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from darsplus.statics import SUCCESS
 from darsplus.forms import LoginForm, EmailForm, GradForm, MajorForm, CourseFormSet
-from darsplus.models import addUserProfile, getUserProfile, getCoursesTaken, getUnitsCompleted, majorToCollege, getCollegesToMajors, setEmail, setUserProfile
+from darsplus.models import addUserProfile, getUserProfile, getCoursesTaken, getUnitsCompleted, majorToCollege, getCollegesToMajors, setEmail, setUserProfile, getPlanners, addCourseToPlanner, getAllCourses
 from darsplus.requirementscode import remainingRequirements
 from django.template import RequestContext
 from django.contrib.auth.models import User
@@ -179,7 +179,10 @@ def dashboard(request):
     if not dashboardContext:
         #Attempt to create user profile with data     
         return HttpResponseRedirect('/registration/') #GET request and user profile is not yet created
-    else:
+    elif (request.method == 'POST'): 
+        # TODO: Update planner and requirements, load dashboard
+        pass
+    else: # Get. Just display dashboard, no update
         return render(request, 'dashboard.html',dashboardContext)
         
 
@@ -193,13 +196,20 @@ def dashboardData(request):
     """
     username = request.user.username
     userProfile = getUserProfile(username)
+    plannerID = userProfile.plannerID
     userInformation = {}
     userInformation['unitsCompleted'] = getUnitsCompleted(username)
     userInformation['major'] = userProfile.major
     userInformation['graduationSemester'] = userProfile.graduationSemester
     userInformation['graduationYear'] = userProfile.graduationYear
-    userInformation['requirements'] = remainingRequirements(getCoursesTaken(username), majorToCollege(userProfile.major), userProfile.major)
-  
+    allCourses = getCoursesTaken(username) #If a course is in the planner, should be excluded as well 
+    allCourses.append(getAllCourses(plannerID))
+    userInformation['requirements'] = remainingRequirements(allCourses, majorToCollege(userProfile.major), userProfile.major)
+
+    userInformation['planners'] = getPlanners(userProfile.plannerID)  
+    userInformation['form'] = CourseFormSet()
+    
+    #userInformation['magikarp'] = [{'plan':planner,'form':CourseFormSet()} for planner in userInformation['planners']]
     return userInformation
 
 
@@ -223,7 +233,6 @@ def updateProfile(request):
         """
         newUser = register(request)
         response = setUserProfile(*newUser)
-        print response
         if response == SUCCESS:
             return HttpResponseRedirect('/dashboard/')
     else:
