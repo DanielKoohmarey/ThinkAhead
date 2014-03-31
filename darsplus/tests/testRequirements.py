@@ -322,8 +322,74 @@ class TestEngineering(TestCase):
 	def testENVENG6(self):
 		ans= remainingRequirements(['EPS.101','EPS.C180','ESPM.102A'], "College of Engineering", 'Environmental Engineering Science')
 		self.assertTrue(not ans[23]['reqCompleted'])
-
-
-class TestChem(TestCase):
+class TestChem(unittest.TestCase):
 	def testBSCHEM1(self):
+		ans= remainingRequirements([], "College of Chemistry", 'B.S. Chemistry')
+		self.assertEqual(5+8+5,len(ans))
+	def testBACHEM1(self):
+		ans= remainingRequirements([], "College of Chemistry", 'B.A. Chemistry')
+		self.assertEqual(5+8+3,len(ans))
+	def testCHEMENG1(self):
+		ans= remainingRequirements([], "College of Chemistry", 'Chemical Engineering')
+		self.assertEqual(5+8+16,len(ans))
+	def testCHEMBIO1(self):
+		ans= remainingRequirements([], "College of Chemistry", 'Chemical Biology')
+		self.assertEqual(5+8+9,len(ans))
+	def testCHEMMATSCI1(self):
+		ans= remainingRequirements([], "College of Chemistry", 'Chemical Engineering/Materials Science & Engineering')
+		#to be changed
+		self.assertEqual(5+8,len(ans))
+	def testCHEMNUCENG1(self):
+		ans= remainingRequirements([], "College of Chemistry", 'Chemical Engineering/Nuclear Engineering')
+		#to be changed
+		self.assertEqual(5+8,len(ans))
+class TestEnvironmentalDesign(unittest.TestCase):
+	def testARCH1(self):
+		ans= remainingRequirements([], "College of Environmental Design", 'Architecture')
+		self.assertEqual(5+8+14,len(ans))
+	def testLDARCH1(self):
+		ans= remainingRequirements([], "College of Environmental Design", 'Landscape Architecture')
+		self.assertEqual(5+8+18,len(ans))
+	def testURDES1(self):
+		ans= remainingRequirements([], "College of Environmental Design", 'Urban Studies')
+		self.assertEqual(5+8+13,len(ans))
+	def testSENVDES1(self):
+		ans= remainingRequirements([], "College of Environmental Design", 'Sustainable Environmental Design')
+		self.assertEqual(5+8+17,len(ans))
+class TestHaas(unittest.TestCase):
+	def testUGBA1(self):
+		ans= remainingRequirements([], "Haas School of Business", 'Business Administration')
+		self.assertEqual(5+18,len(ans))
+class TestNaturalResources(unittest.TestCase):
+	def testSE1(self):
 		self.assertEqual(1,1)
+class TestBreadth(unittest.TestCase):
+	def testBreadth1(self):
+		self.assertEqual(7,len(sevenBreadth([])))
+	def testBreadth2(self):
+		temp=sevenBreadth([])
+		self.assertTrue(not (temp[0]['reqCompleted']))
+		self.assertTrue(not (temp[1]['reqCompleted']))
+		self.assertTrue(not (temp[2]['reqCompleted']))
+		self.assertTrue(not (temp[3]['reqCompleted']))
+		self.assertTrue(not (temp[4]['reqCompleted']))
+		self.assertTrue(not (temp[5]['reqCompleted']))
+		self.assertTrue(not (temp[6]['reqCompleted']))
+	def testBreadth3(self):
+		temp=sevenBreadth(['AFRICAM.4A'])
+		for i in range(7):
+			if ('Art' in temp[i]['reqName']):
+				self.assertTrue (temp[i]['reqCompleted'])
+			else:
+				self.assertTrue(not (temp[i]['reqCompleted']))
+	def testBreadth4(self):
+		temp=sevenBreadth(['AFRICAM.4A','AFRICAM.5A'])
+		for i in range(7):
+			if ('Art' in temp[i]['reqName'] )or('Historical' in temp[i]['reqName'] ):
+				self.assertTrue (temp[i]['reqCompleted'])
+			else:
+				self.assertTrue(not (temp[i]['reqCompleted']))
+	def testBreadth5(self):
+		temp=sevenBreadth(['AFRICAM.4A','AFRICAM.5A','ANTHRO.1','AFRICAM.4B','BUDDHST.39A','ANTHRO.131','AFRICAM.5B'])
+		for i in range(7):
+			self.assertTrue (temp[i]['reqCompleted'])
