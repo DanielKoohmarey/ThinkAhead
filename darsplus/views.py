@@ -295,4 +295,8 @@ def updateProfile(request):
                                                    'form2':MajorForm(initial={'college':profile.college, 'major':profile.major}),#,'college_id':2,'major_id':2}), # Does not work. Has to be the index
                                                  
                                                    'form3':formset,
-                                                   'majorDict':majorJSON})
+                                                   'majorDict':majorJSON,
+                                                    'college':profile.college,
+                                                    'major':profile.major,
+                                                   }
+                                                   )
