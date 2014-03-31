@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponseRedirect
 from django.forms.util import ErrorList
 from django.utils.datastructures import MultiValueDictKeyError
+import cgi
 import json
 import re
 
@@ -290,13 +291,11 @@ def updateProfile(request):
         formset = CourseFormSet(initial=initialData)
 
         return render(request,'registration.html',{'form0': EmailForm({'email':User.objects.filter(username=request.user)[0].email}), 
-                                                   'form1': GradForm({'semester':profile.graduationSemester,'year':profile.graduationYear}), 
-                                                   #'form2':MajorForm({'college':profile.college,'major':profile.major}), # Does not work. Has to be the index
+                                                   'form1': GradForm({'semester':profile.graduationSemester,'year':profile.graduationYear}),
                                                    'form2':MajorForm(initial={'college':profile.college, 'major':profile.major}),#,'college_id':2,'major_id':2}), # Does not work. Has to be the index
-                                                 
                                                    'form3':formset,
                                                    'majorDict':majorJSON,
-                                                    'college':profile.college,
-                                                    'major':profile.major,
+                                                   'userCollege':cgi.escape(profile.college).encode("ascii", "xmlcharrefreplace"),
+                                                   'userMajor':cgi.escape(profile.major).encode("ascii", "xmlcharrefreplace"),
                                                    }
                                                    )
