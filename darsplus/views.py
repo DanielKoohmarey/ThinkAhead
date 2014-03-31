@@ -242,8 +242,6 @@ def updateProfile(request):
         if response == SUCCESS:
             return HttpResponseRedirect('/dashboard/')
     else:
-        #TODO:CHANGE BUTTON NAME TO SUBMIT using django.core.context_processors.request
-
         profile = getUserProfile(request.user)
 
 
