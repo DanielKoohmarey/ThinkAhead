@@ -2,4 +2,6 @@ venv
 *.pyc
 *.py~
 \#*#
+thinkahead/wsgi.py
+thinkahead/settings.py
 staticfiles
