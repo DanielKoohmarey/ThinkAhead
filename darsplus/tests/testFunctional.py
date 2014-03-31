@@ -192,7 +192,7 @@ class TestUserCase(TestCase):
     def testProfileNotLoggedIn(self):
         #If not logged in, redirect to home page
         response = client.get('/profile/')
-        self.assertRedirects(response, '/home/', status_code=302, target_status_code=200, msg_prefix='')
+        self.assertRedirects(response, '/home/?next=/profile/', status_code=302, target_status_code=200, msg_prefix='')
         
     def testProfileUnregistered(self):
         #If not registered, redirect to registration page
@@ -203,7 +203,7 @@ class TestUserCase(TestCase):
         self.assertTrue(user.is_authenticated())
 
         response = client.get('/profile/')
-        self.assertRedirects(response, '/home/', status_code=302, target_status_code=200, msg_prefix='')
+        self.assertRedirects(response, '/registration/?next=/profile/', status_code=302, target_status_code=200, msg_prefix='')
     
     def testProfileRegistered(self):
         #If registered, load profile page

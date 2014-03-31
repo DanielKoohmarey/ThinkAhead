@@ -145,7 +145,7 @@ def register(request):
                 else:
                     continue #could not determine course format, skipping course
             coursesTaken.append(course)
-    print(coursesTaken)
+
     return [request.user.username, major, college, graduationSemester, graduationYear, coursesTaken]
         
 @csrf_exempt
