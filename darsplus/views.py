@@ -65,7 +65,7 @@ def splash(request):
             
     return render(request, 'splash.html',{'form':LoginForm()})
 
-def registration_check(user):
+def registrationCheck(user):
     """ Check whether or not a user has completed registration. 
         Args: 
             user (django.contrib.auth.models.User): The user to check for registration
@@ -87,7 +87,7 @@ def userRegistration(request):
         Returns:
             (HttpResponse) The data containing the page the browser will server to the client 
     """
-    if registration_check(request.user):
+    if registrationCheck(request.user):
         return HttpResponseRedirect('/dashboard/')
     elif request.method == 'POST':
         newUser = addUserProfile(*register(request))
@@ -162,7 +162,7 @@ def userLogout(request):
     return HttpResponseRedirect('/home/')
         
 @login_required
-@user_passes_test(registration_check, login_url='/registration/')
+@user_passes_test(registrationCheck, login_url='/registration/')
 @csrf_exempt
 def dashboard(request):
     """ Populates user profile associated with user with request POST data, 
@@ -221,7 +221,7 @@ def dashboardData(request):
 
 
 @login_required
-@user_passes_test(registration_check, login_url='/registration/')
+@user_passes_test(registrationCheck, login_url='/registration/')
 def updateProfile(request):
     """ Allow a user to update their profile
         Args:
