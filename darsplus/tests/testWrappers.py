@@ -130,3 +130,38 @@ class TestCourses(TestCase):
         self.assertEquals(5, units)
 
 
+    def testSetUserProfileWrapper(self):
+        """ 
+        Ensures that you are able to overwrite the fields of a specific person
+        """
+        response = addUserProfile('magikarp', 'EECS', 'College of Engineering',SUMMER_SEMESTER, 2017,[])
+
+        response = setUserProfile('magikarp', 'Computer Science', 'Letters and Science', 'Fall', 2018, ['COMPSCI.61A'])
+        profile = getUserProfile('magikarp')
+        self.assertEquals('Computer Science', profile.major)
+        self.assertEquals('Letters and Science', profile.college)
+        self.assertEquals('Fall', profile.graduationSemester)
+        self.assertEquals(2018, profile.graduationYear)
+        self.assertIn('COMPSCI.61A', profile.coursesTaken)
+        self.assertEquals(4, profile.unitsCompleted)
+
+    def testSetUserProfileError(self):
+        """
+        Prevents setting user profile that does not exist
+        """
+        response = setUserProfile('nobody', 'Computer Science', 'Letters and Science', 'Fall', 2018, ['COMPSCI.61A'])
+        self.assertEquals(ERR_NO_RECORD_FOUND,response)
+
+    def testGetPlanners(self):
+        account = UserProfile.objects.filter(username='magikarp')[0]
+        ID = account.plannerID
+        response = addCourseToPlanner(ID, 7, 'COMPSCI 188')
+        response = addCourseToPlanner(ID, 8, 'COMPSCI 169') 
+        response = addCourseToPlanner(ID, 8, 'COMPSCI 170')
+        response = addCourseToPlanner(ID, 9, 'BIOLOGY 1A')
+        response = addCourseToPlanner(ID, 9, 'ELENG 42')
+        
+        allPlanners = getPlanners(ID)
+        allCourses = [['COMPSCI 188'],['COMPSCI 169','COMPSCI 170'],['BIOLOGY 1A','ELENG 42']]
+        for course in allCourses:
+            self.assertIn(course, allPlanners)

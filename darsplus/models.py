@@ -227,7 +227,29 @@ class UserProfile(models.Model):
         account.major = newMajor
         account.save()
         return SUCCESS
+
+    @staticmethod
+    def changeCollege(username, newCollege):
+        """
+        Changes the entry for college  of the corresponding username
         
+        * If successful, return SUCCESS
+        * If username is not registered, return ERR_NO_RECORD_FOUND
+
+        Args:
+            username: String
+            newMajor: String
+        Returns:
+            SUCCESS or ERR_NO_RECORD_FOUND
+        """
+        matches = UserProfile.objects.filter(username=username)
+        numMatches = matches.count()
+        if numMatches == 0:
+            return ERR_NO_RECORD_FOUND
+        account = matches[0]
+        account.college = newCollege
+        account.save()
+        return SUCCESS        
 
 class Planner(models.Model):
     plannerID = models.IntegerField()
@@ -286,7 +308,12 @@ class Planner(models.Model):
         if (numMatches == 0):
             return ERR_NO_RECORD_FOUND
         account = matches[0]        
-        return [getattr(account, 'semester'+str(index))for index in range(1,16)]
+        allPlanners = []
+        for index in range(1,16):
+            toAdd = getattr(account, 'semester'+str(index))
+            toAdd.sort()
+            allPlanners.append(toAdd)
+        return allPlanners
 
     @staticmethod
     def addCourseToPlanner(plannerID, index, coursename):
@@ -496,8 +523,10 @@ def emailExists(email):
     """
     Checks if an email is already registered under another user
 
-    @param email is a string
-    @return Boolean
+    Args:
+        email (string)
+    Returns:
+        Boolean
     """
     matches = UserLoginInformation.objects.filter(email=email)
     numMatches = matches.count()
@@ -517,6 +546,10 @@ def setUserProfile(username, major, college, semester, year, newCourses):
     if response != SUCCESS:
         return response
     response = changeGraduationYear(username, year)
+    if response != SUCCESS:
+        return response
+    
+    response = changeCollege(username, college)
     if response != SUCCESS:
         return response
 
@@ -544,6 +577,9 @@ def changeGraduationYear(username, year):
 
 def changeMajor(username, newMajor):
     return UserProfile.changeMajor(username, newMajor)
+
+def changeCollege(username, newCollege):
+    return UserProfile.changeCollege(username, newCollege)
 
 def getCoursesTaken(username):
     return UserProfile.getCoursesTaken(username)

@@ -8,6 +8,11 @@ client=Client()
 managementForm = {'form-TOTAL_FORMS': u'1','form-INITIAL_FORMS': u'0','form-MAX_NUM_FORMS': u''} # Default Dictionary for management form validation. has ONE form by default
 
 class TestUserCase(TestCase):
+
+    @staticmethod
+    def strip(str):
+        return str.replace('\t','').replace('\n','')
+
     def testHomePage(self):
         # Expect login page exists at url /home/
         response = client.get('/home/')
@@ -210,9 +215,39 @@ class TestUserCase(TestCase):
 
     def testMultipleLogin(self):
         # TODO: Create 2 accounts, different registration info. able to login and see corresponding dashboard
+        """
+        response = client.post('',{'username':'john', 'password':'pass','add':"Create User"})
+        request = {'email':'johnsmith@berkeley.edu', 'major':['Bioengineering'],'college':['College of Engineering'],
+                   'semester':['Summer'], 'year':[2015],'form-0-name':['CS 61A'],}
+        request.update(managementForm)
+        response = client.post('/registration/', request)
+        response = client.get('/dashboard/',{})
+
+
+        response = client.post('',{'username':'smith', 'password':'otherpass','add':"Create User"})
+        request = {'email':'goldsmith@berkeley.edu', 'major':['Bioengineering'],'college':['College of Engineering'],
+                   'semester':['Summer'], 'year':[2015],'form-0-name':['CS 61B'],}
+        request.update(managementForm)
+        response = client.post('/registration/', request)       
+        """
         pass
 
     def testGenerateRequirement(self):
-        # TODO: Given different variationos of courses taken, generate the correct webpage content
+        response = client.post('',{'username':'john', 'password':'pass','add':"Create User"})
+        request = {'email':'johnsmith@berkeley.edu', 'major':['Bioengineering'],'college':['College of Engineering'],
+                   'semester':['Summer'], 'year':[2015],'form-0-name':['COMPSCI 61A'],}
+        request.update(managementForm)
+        response = client.post('/registration/', request)
+        response = client.get('/dashboard/',{})
+
+        body = response.content
+        
+        # University Requirement
+        self.assertIn('<h3 class="reqTitle">American Cultures</h3><p class="reqDescription">Description: Take at least one course labeled AC </p><p>Requirement Completed: False</p>', self.strip(body))
+        
+        # Major Requirement
+        self.assertIn('<h3 class="reqTitle">Introduction to Applied Computing</h3><p class="reqDescription">Description: The freshman year Introduction to Applied Computing requirement of either E 7 or CS 61A </p><p>Requirement Completed: True</p>', self.strip(body)) #Has COMPSCI 61A
+
+
         pass
 
