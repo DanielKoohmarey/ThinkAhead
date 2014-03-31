@@ -32,9 +32,34 @@ class GradForm(forms.Form):
 
 # Used in registration.html
 class MajorForm(forms.Form):
+
 	college = forms.ChoiceField(choices=((0, "Please select a college"),))
 	major = forms.ChoiceField(choices=((0, "Please select a college and major"),))
  
+	def __init__(self, *args, **kwargs):
+		super(MajorForm, self).__init__(*args, **kwargs)
+		"""
+		output = ()
+		index = 0
+		from models import getCollegesToMajors
+		for college in getCollegesToMajors():
+			output += ((index,college),)
+			index += 1		
+		#self.fields['college'] = forms.ChoiceField(choices=output,initial=1)
+
+		from models import Colleges
+		majorList = Colleges.getMajorsInCollege(kwargs['initial']['college'])
+		output = ()
+		index = 0
+		for major in majorList:
+			output += ((index,major),)
+			index += 1
+
+		print output
+		self.fields['major'] = forms.ChoiceField(choices=output)
+		#self.fields['college'].initial = self.instance.object_id
+		"""
+
 	def errors(self):
 		"""Check if value has been updated from default"""
 		college = self['college'].value()

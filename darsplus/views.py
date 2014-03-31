@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from darsplus.statics import SUCCESS
 from darsplus.forms import LoginForm, EmailForm, GradForm, MajorForm, CourseFormSet
-from darsplus.models import addUserProfile, getUserProfile, getCoursesTaken, getUnitsCompleted, majorToCollege, getCollegesToMajors, setEmail, setUserProfile, getPlanners, addCourseToPlanner, getAllCourses
+from darsplus.models import addUserProfile, getUserProfile, getCoursesTaken, getUnitsCompleted, majorToCollege, getCollegesToMajors, setEmail, setUserProfile, getPlanners, addCourseToPlanner, getAllCourses, removeCourseFromPlanner
 from darsplus.requirementscode import remainingRequirements
 from django.template import RequestContext
 from django.contrib.auth.models import User
@@ -118,7 +118,6 @@ def register(request):
     majorForm_errors = majorInfo.errors()
     if majorForm_errors:
         errors.update({'major':majorForm_errors})
-
     if errors:
         return render(request, 'registration.html',{'errors':errors,'form0': EmailForm(),'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON}) 
     
@@ -174,14 +173,22 @@ def dashboard(request):
         Returns:
             (HttpResponse) The data containing the page the browser will server to the client 
     """
-    dashboardContext = dashboardData(request)    
 
+    dashboardContext = dashboardData(request)    
     if not dashboardContext:
         #Attempt to create user profile with data     
         return HttpResponseRedirect('/registration/') #GET request and user profile is not yet created
     elif (request.method == 'POST'): 
-        # TODO: Update planner and requirements, load dashboard
-        pass
+        # TODO: Temporary way of adding and removing course to planner
+        user = request.user.username
+        plannerID = getUserProfile(user).plannerID
+        index = request.POST['index']
+        courseName = request.POST['course']
+        if request.POST['change'] == 'add':
+            addCourseToPlanner(plannerID, index, courseName)
+        elif request.POST['change'] == 'remove':
+            removeCourseFromPlanner(plannerID, index, courseName)
+        return HttpResponseRedirect('/dashboard/')
     else: # Get. Just display dashboard, no update
         return render(request, 'dashboard.html',dashboardContext)
         
@@ -208,7 +215,7 @@ def dashboardData(request):
 
     userInformation['planners'] = getPlanners(userProfile.plannerID)  
     userInformation['form'] = CourseFormSet()
-    
+
     #userInformation['magikarp'] = [{'plan':planner,'form':CourseFormSet()} for planner in userInformation['planners']]
     return userInformation
 
@@ -223,7 +230,6 @@ def updateProfile(request):
             (HttpResponse) The data containing the page the browser will server to the client 
     """
     if request.method == 'POST': #updates user
-        print "new Post"
         """
         newUser = addUserProfile(*register(request))
         if newUser == SUCCESS:
@@ -241,14 +247,16 @@ def updateProfile(request):
         profile = getUserProfile(request.user)
 
 
-        initial_data = []
+        initialData = []
         for course in profile.coursesTaken:
-            initial_data.append({'name':course.replace('.', ' ')}) # Revert our representation to a user-friendly one
-
-        formset = CourseFormSet(initial=initial_data)
+            initialData.append({'name':course.replace('.', ' ')}) # Revert our representation to a user-friendly one
+        initialData.sort()
+        formset = CourseFormSet(initial=initialData)
 
         return render(request,'registration.html',{'form0': EmailForm({'email':User.objects.filter(username=request.user)[0].email}), 
                                                    'form1': GradForm({'semester':profile.graduationSemester,'year':profile.graduationYear}), 
-                                                   'form2':MajorForm({'college':profile.college,'major':profile.major}), # Does not work. Has to be the index
+                                                   #'form2':MajorForm({'college':profile.college,'major':profile.major}), # Does not work. Has to be the index
+                                                   'form2':MajorForm(initial={'college':profile.college, 'major':profile.major}),#,'college_id':2,'major_id':2}), # Does not work. Has to be the index
+                                                 
                                                    'form3':formset,
                                                    'majorDict':majorJSON})

@@ -15,6 +15,21 @@
         <div class="user_bar">Hello, <a href="/profile"><img src="{% static "user_icon.png" %}" width=16px height=16px style="margin-top:-5px;">{{user.username}}.</a><form action="/logout" style="display:inline;margin: 0; padding: 0"><input class="button" type="submit" name="logout" value="Logout" style="margin-left:15px;"></form></div>
 	</header>
 	<div class = "container">
+	
+	  {% comment %}
+	  Tentative way of adding and removing courses to Planner
+	  {% endcomment %}
+	  <form action="" method="post">
+	    Semester Number: <input id="semester" type="text" name="index">
+	    <br />
+	    Course Name: <input id="coursename" type="text" name="course">
+	    <br />
+	    <input type="radio" name="change" value="add">Add <br>
+	    <input type="radio" name="change" value="remove">Remove <br>
+	    <input id="" type="submit" value="Update Planner" name="update">
+
+	  </form>
+	  
 
 	  {% for planner in planners %}
 	  <h3>Semester {{forloop.counter}}<h3>
@@ -24,22 +39,6 @@
 	      </ul>
 	      {% endfor %}
 
-	      <form action="" method="post">
-		{% csrf_token %}
-		<label class="formLabel">
-		</label>
-		
-		{{ form.management_form }}
-		{% for form in form.forms %}
-
-		<div class='addCourseForm'>
-		  {{ form.name }}
-		  <input id="deleteForm" class="buttonLink" type="button" value="Delete" >
-		</div>
-		{% endfor %}
-
-		<input id="addForm" class="buttonLink" type="button" value="+ Add Course" >
-	      </form>
 	  {% endfor %}
 		
 	</div>  
