@@ -85,7 +85,7 @@ class TestUserCase(TestCase):
         self.assertIn('Invalid Username/Password. Please try again.', response.context['errors']['user'])
     
 
-    def testProfileNotLoggedIn(self):
+    def testRegistrationNotLoggedIn(self):
         # If going to registration without logging in, redirect to home
         response = client.post('',{'username':'john', 'password':'pass','add':"Create User"})
         request = {'email':'johnsmith@berkeley.edu', 'major':['Bioengineering'],'college':['College of Engineering'],
@@ -98,7 +98,7 @@ class TestUserCase(TestCase):
         profiles = UserProfile.objects.filter(username='john')
         self.assertEquals(0, profiles.count())
 
-    def testProfileRegisterSuccess(self):
+    def testRegistrationLoggedIn(self):
         # If going to register and logged in, should add to User Profile and Planner
         response = client.post('',{'username':'john', 'password':'pass','add':"Create User"})
         request = {'email':'johnsmith@berkeley.edu', 'major':['Bioengineering'],'college':['College of Engineering'],
@@ -189,6 +189,31 @@ class TestUserCase(TestCase):
         self.assertEquals(302, response.status_code)
         self.assertIn('/home/', response.url)
 
+    def testProfileNotLoggedIn(self):
+        #If not logged in, redirect to home page
+        response = client.get('/profile/')
+        self.assertRedirects(response, '/home/', status_code=302, target_status_code=200, msg_prefix='')
+        
+    def testProfileUnregistered(self):
+        #If not registered, redirect to registration page
+        response = client.post('',{'username':'john', 'password':'pass','add':"Create User"})
+        
+        user = User.objects.filter(username='john')[0]
+        self.assertTrue(user.is_active)
+        self.assertTrue(user.is_authenticated())
+
+        response = client.get('/profile/')
+        self.assertRedirects(response, '/home/', status_code=302, target_status_code=200, msg_prefix='')
+    
+    def testProfileRegistered(self):
+        #If registered, load profile page
+        response = client.post('',{'username':'smith', 'password':'pass','add':"Create User"})
+        request = {'email':'johnsmith@berkeley.edu','major':['Bioengineering'],'college':['College of Engineering'],
+                   'semester':['Summer'], 'year':[2015],'form-0-name':['CS 61A'],}
+        request.update(managementForm)
+        response = client.post('/registration/', request)
+        response = client.get('/profile/',{})
+        self.assertEquals(200, response.status_code)
 
     def testLogoutLoggedIn(self):
         #Ensure logging out works when a user has oreviously logged in
@@ -211,7 +236,6 @@ class TestUserCase(TestCase):
         response = c.post('/logout/', {})
         self.assertEquals(302, response.status_code)
         self.assertIn('/home/', response.url)
-        
 
     def testMultipleLogin(self):
         # TODO: Create 2 accounts, different registration info. able to login and see corresponding dashboard
