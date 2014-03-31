@@ -424,7 +424,7 @@ class Planner(models.Model):
         account = matches[0]
         allCourses = []
         for index in range(1,15):
-            allCourses.append(getattr(account, 'semester'+str(index)))
+            allCourses += (getattr(account, 'semester'+str(index)))
         return allCourses
 
 class Courses(models.Model):
