@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from darsplus.statics import SUCCESS
+from darsplus.statics import SUCCESS, ERR_NO_RECORD_FOUND, ERR_RECORD_EXISTS
 from darsplus.forms import LoginForm, EmailForm, GradForm, MajorForm, CourseFormSet
-from darsplus.models import addUserProfile, getUserProfile, getCoursesTaken, getUnitsCompleted, majorToCollege, getCollegesToMajors, setEmail, setUserProfile, getPlanners, addCourseToPlanner, getAllCourses, removeCourseFromPlanner
+from darsplus.models import addUserProfile, getUserProfile, getCoursesTaken, getUnitsCompleted, majorToCollege, getCollegesToMajors, setEmail, setUserProfile, getPlanners, addCourseToPlanner, getAllCourses, removeCourseFromPlanner, getCoursesTaken
 from darsplus.requirementscode import remainingRequirements
 from django.template import RequestContext
 from django.contrib.auth.models import User
@@ -10,6 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponseRedirect
 from django.forms.util import ErrorList
+from django.utils.datastructures import MultiValueDictKeyError
 import json
 import re
 
@@ -132,21 +133,34 @@ def register(request):
         #Convert course name to our format
         #Supports cs.169, cs 170, cs188 type formats and any capitalization
         if course:
-            course = course.strip().upper()
-            course = course.replace(' ','.')
-            periods = course.count('.')
-            if periods:
-                course = course.replace('.','',periods-1)
+            if standardizeCourse(course):
+                coursesTaken.append(course)
             else:
-                m = re.search("\d",course)
-                if m:
-                    digit_index = m.start()
-                    course = course[:digit_index]+'.'+course[digit_index:]
-                else:
-                    continue #could not determine course format, skipping course
-            coursesTaken.append(course)
+                continue #could not determine course format, skipping course
 
     return [request.user.username, major, college, graduationSemester, graduationYear, coursesTaken]
+
+def standardizeCourse(course):
+    """ Converts a course name into the standardized form NAME.NUMBER
+        Args:
+            course (str): The course name to standardize
+        Returns:
+            (str) the standardized course name of form NAME.NUMBER
+    """
+    course = course.strip().upper()
+    course = course.replace(' ','.')
+    periods = course.count('.')
+    if periods:
+        course = course.replace('.','',periods-1)
+    else:
+        m = re.search("\d",course)
+        if m:
+            digit_index = m.start()
+            course = course[:digit_index]+'.'+course[digit_index:]
+        else:
+            course = ''
+    return course
+    
         
 @csrf_exempt
 def userLogout(request):
@@ -179,20 +193,44 @@ def dashboard(request):
         #Attempt to create user profile with data     
         return HttpResponseRedirect('/registration/') #GET request and user profile is not yet created
     elif (request.method == 'POST'): 
-        # TODO: Temporary way of adding and removing course to planner
-        user = request.user.username
-        plannerID = getUserProfile(user).plannerID
-        index = request.POST['index']
-        courseName = request.POST['course']
-        if request.POST['change'] == 'add':
-            addCourseToPlanner(plannerID, index, courseName)
-        elif request.POST['change'] == 'remove':
-            removeCourseFromPlanner(plannerID, index, courseName)
-        return HttpResponseRedirect('/dashboard/')
+        #Add/Remove courses from the planner
+        return handlePlannerData(request,dashboardContext)
     else: # Get. Just display dashboard, no update
         return render(request, 'dashboard.html',dashboardContext)
         
-
+def handlePlannerData(request,dashboardContext):
+    """ Handles the user's planner action (add/remove) and updates their planner accordingly
+       Args:
+        request (HttpRequest): The request sent the Django server 
+        dashboardContext (dict): The user information for the dashboard template
+    Returns:
+        (HttpResponse) The data containing the page the browser will server to the client 
+    """
+    user = request.user.username
+    plannerID = getUserProfile(user).plannerID
+    index = request.POST['index']
+    courseName = standardizeCourse(request.POST['course'])
+    try:
+        if not courseName:
+            dashboardContext.update({'errors':{'name':"{} is not a valid course name format"}})
+        elif courseName in getCoursesTaken(user):
+            dashboardContext.update({'errors':{'name':"You have already taken {}.".format(courseName)}})
+        elif request.POST['change'] == 'add':
+            try:
+                if addCourseToPlanner(plannerID, index, courseName) in [ERR_NO_RECORD_FOUND, ERR_RECORD_EXISTS]:
+                    dashboardContext.update({'errors':{'index':"{} is not a valid course name or has already been added.".format(courseName)}})
+                else:
+                    dashboardContext = dashboardData(request)
+            except AttributeError:
+                dashboardContext.update({'errors':{'index':"{} is not a valid semester number. Please enter a valid numeric number.".format(index)}})
+        elif request.POST['change'] == 'remove':
+            if removeCourseFromPlanner(plannerID, index, courseName) == ERR_NO_RECORD_FOUND:
+                dashboardContext.update({'errors':{'name':"{} is not a valid course name.".format(courseName)}})
+            else:
+                dashboardContext = dashboardData(request)
+    except MultiValueDictKeyError:
+        dashboardContext.update({'errors':{'change':"Please select either add or remove."}})
+    return render(request, 'dashboard.html',dashboardContext)
 
 def dashboardData(request):
     """ Retrieve user profile information and return context dictionary for dashboard. 
