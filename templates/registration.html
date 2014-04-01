@@ -31,11 +31,10 @@
     {%endif %}
 </h1>
 <p>
-    Welcome {{user.username}} !
     {%if "profile" in request.path %} 
     You can update your profile information below.
     {%else %}
-    Please complete the registration.
+    Welcome {{user.username}}! Please complete the registration.
     {%endif%}
 </p>
 
