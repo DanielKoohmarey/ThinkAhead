@@ -215,6 +215,56 @@ class TestUserCase(TestCase):
         response = client.get('/profile/',{})
         self.assertEquals(200, response.status_code)
 
+    def testHandlePlannerDataNoButton(self):
+        #Expect change error when no radio button selected
+        response = client.post('',{'username':'smith', 'password':'pass','add':"Create User"})
+        request = {'email':'johnsmith@berkeley.edu','major':['Bioengineering'],'college':['College of Engineering'],
+                   'semester':['Summer'], 'year':[2015],'form-0-name':['CS 61A'],}
+        request.update(managementForm)
+        response = client.post('/registration/', request)
+        response = client.get('/dashboard/',{'index':'1','name':'CS 61A'})  
+        self.assertTrue('change' in response.context['errors'])
+
+    def testHandlePlannerDataInvalidSemester(self):
+        #Expect index error when index invalid 
+        response = client.post('',{'username':'smith', 'password':'pass','add':"Create User"})
+        request = {'email':'johnsmith@berkeley.edu','major':['Bioengineering'],'college':['College of Engineering'],
+                   'semester':['Summer'], 'year':[2015],'form-0-name':['CS 61A'],}
+        request.update(managementForm)
+        response = client.post('/registration/', request)
+        response = client.get('/dashboard/',{'index':'one','name':'CS 61A', 'change':'add'})        
+        self.assertTrue('index' in response.context['errors'])
+
+    def testHandlePlannerDataInvalidCourse(self):
+        #Expect name error when course invalid
+        response = client.post('',{'username':'smith', 'password':'pass','add':"Create User"})
+        request = {'email':'johnsmith@berkeley.edu','major':['Bioengineering'],'college':['College of Engineering'],
+                   'semester':['Summer'], 'year':[2015],'form-0-name':['CS 61A'],}
+        request.update(managementForm)
+        response = client.post('/registration/', request)
+        response = client.get('/dashboard/',{'index':'1','course':'Fake 169', 'change':'add'})      
+        self.assertTrue('name' in response.context['errors'])
+
+    def testHandlePlannerDataCourseAlreadyTaken(self):
+        #Expect name error when course already taken
+        response = client.post('',{'username':'smith', 'password':'pass','add':"Create User"})
+        request = {'email':'johnsmith@berkeley.edu','major':['Bioengineering'],'college':['College of Engineering'],
+                   'semester':['Summer'], 'year':[2015],'form-0-name':['CS 61A'],}
+        request.update(managementForm)
+        response = client.post('/registration/', request)
+        response = client.get('/dashboard/',{'index':'1','course':'CS 61A', 'change':'add'})
+        self.assertTrue('name' in response.context['errors'])
+        
+    def testHandlePlannerDataRemoveInvalidCourse(self):
+        #Expect name error when course already taken 
+        response = client.post('',{'username':'smith', 'password':'pass','add':"Create User"})
+        request = {'email':'johnsmith@berkeley.edu','major':['Bioengineering'],'college':['College of Engineering'],
+                   'semester':['Summer'], 'year':[2015],'form-0-name':['CS 61A'],}
+        request.update(managementForm)
+        response = client.post('/registration/', request)
+        response = client.get('/dashboard/',{'index':'1','course':'CS 169', 'change':'remove'})
+        self.assertTrue('change' in response.context['errors'])
+
     def testLogoutLoggedIn(self):
         #Ensure logging out works when a user has oreviously logged in
         response = client.post('',{'username':'john', 'password':'pass','add':"Create User"})
