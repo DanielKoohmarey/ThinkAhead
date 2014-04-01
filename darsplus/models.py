@@ -443,8 +443,11 @@ class Courses(models.Model):
                 courseCode (str): The name of the course, i.e COMPSCI.169
             Returns:
                (Courses) course object corresponding to course code
+               (ERR_NO_RECORD_FOUND) if course name was not valid
         """
         matches = Courses.objects.filter(courseCode=courseCode)
+        if not matches:
+            return ERR_NO_RECORD_FOUND
         course = matches[0]
         return course
 
@@ -630,6 +633,9 @@ def getAllCourses(plannerID):
 
 def getCourseUnits(courseName):
     return Courses.getCourseUnits(courseName)
+    
+def getCourseInfo(course):
+    return Courses.getCourseInfo(course)
 
 def majorToCollege(major):
     return Colleges.majorToCollege(major)
@@ -688,4 +694,3 @@ def changePassword(username, password):
     except AttributeError:
         return FAILURE
     return SUCCESS
-
