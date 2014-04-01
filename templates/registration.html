@@ -100,12 +100,17 @@ var colleges = {};
 var majorsAll = {};
 
 // For profile editting, pass in user's college and major and unescape for HTML
-var divCollege = document.createElement('div').innerHTML;
-divCollege.innerHTML = '{{ userCollege }}';
-var userCollege = divCollege.firstChild.nodeValue;
-var divMajor = document.createElement('div').innerHTML;
-divMajor.innerHTML = '{{ userMajor }}';
-var userMajor = divMajor.firstChild.nodeValue;
+var userCollege = '{{ userCollege }}';
+var userMajor = '{{ userMajor }}';
+
+if (userCollege != '' && userMajor != '') {
+	var divCollege = document.createElement('div');
+	divCollege.innerHTML = userCollege;
+	var selectCollege = divCollege.firstChild.nodeValue;
+	var divMajor = document.createElement('div');
+	divMajor.innerHTML = userMajor;
+	var selectMajor = divMajor.firstChild.nodeValue;
+}
 
 getDropdownOptions();
 
