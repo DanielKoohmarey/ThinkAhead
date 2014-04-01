@@ -222,7 +222,7 @@ class TestUserCase(TestCase):
                    'semester':['Summer'], 'year':[2015],'form-0-name':['CS 61A'],}
         request.update(managementForm)
         response = client.post('/registration/', request)
-        response = client.get('/dashboard/',{'index':'1','name':'CS 61A'})  
+        response = client.post('/dashboard/',{'index':'1','name':'CS 61A'})  
         self.assertTrue('change' in response.context['errors'])
 
     def testHandlePlannerDataInvalidSemester(self):
@@ -232,7 +232,7 @@ class TestUserCase(TestCase):
                    'semester':['Summer'], 'year':[2015],'form-0-name':['CS 61A'],}
         request.update(managementForm)
         response = client.post('/registration/', request)
-        response = client.get('/dashboard/',{'index':'one','name':'CS 61A', 'change':'add'})        
+        response = client.post('/dashboard/',{'index':'one','name':'CS 61A', 'change':'add'})        
         self.assertTrue('index' in response.context['errors'])
 
     def testHandlePlannerDataInvalidCourse(self):
@@ -242,7 +242,7 @@ class TestUserCase(TestCase):
                    'semester':['Summer'], 'year':[2015],'form-0-name':['CS 61A'],}
         request.update(managementForm)
         response = client.post('/registration/', request)
-        response = client.get('/dashboard/',{'index':'1','course':'Fake 169', 'change':'add'})      
+        response = client.post('/dashboard/',{'index':'1','course':'Fake 169', 'change':'add'})      
         self.assertTrue('name' in response.context['errors'])
 
     def testHandlePlannerDataCourseAlreadyTaken(self):
@@ -252,7 +252,7 @@ class TestUserCase(TestCase):
                    'semester':['Summer'], 'year':[2015],'form-0-name':['CS 61A'],}
         request.update(managementForm)
         response = client.post('/registration/', request)
-        response = client.get('/dashboard/',{'index':'1','course':'CS 61A', 'change':'add'})
+        response = client.post('/dashboard/',{'index':'1','course':'CS 61A', 'change':'add'})
         self.assertTrue('name' in response.context['errors'])
         
     def testHandlePlannerDataRemoveInvalidCourse(self):
@@ -262,7 +262,7 @@ class TestUserCase(TestCase):
                    'semester':['Summer'], 'year':[2015],'form-0-name':['CS 61A'],}
         request.update(managementForm)
         response = client.post('/registration/', request)
-        response = client.get('/dashboard/',{'index':'1','course':'CS 169', 'change':'remove'})
+        response = client.post('/dashboard/',{'index':'1','course':'CS 169', 'change':'remove'})
         self.assertTrue('change' in response.context['errors'])
 
     def testLogoutLoggedIn(self):

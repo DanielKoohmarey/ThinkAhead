@@ -161,8 +161,6 @@ def standardizeCourse(course):
             course = ''
     if course:
         if getCourseInfo(course)==ERR_NO_RECORD_FOUND:
-            print("COURSE NOT FOUND: "+course)
-            print(getCourseInfo(course.replace('.',' ')))
             return ''
     return course
     
