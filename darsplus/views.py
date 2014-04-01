@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from darsplus.statics import SUCCESS, ERR_NO_RECORD_FOUND, ERR_RECORD_EXISTS
 from darsplus.forms import LoginForm, EmailForm, GradForm, MajorForm, CourseFormSet
-from darsplus.models import addUserProfile, getUserProfile, getCoursesTaken, getUnitsCompleted, majorToCollege, getCollegesToMajors, setEmail, setUserProfile, getPlanners, addCourseToPlanner, getAllCourses, removeCourseFromPlanner
+from darsplus.models import addUserProfile, getUserProfile, getCoursesTaken, getUnitsCompleted, majorToCollege, getCollegesToMajors, setEmail, setUserProfile, getPlanners, addCourseToPlanner, getAllCourses, removeCourseFromPlanner, getCourseInfo
 from darsplus.requirementscode import remainingRequirements
 from django.template import RequestContext
 from django.contrib.auth.models import User
@@ -159,6 +159,11 @@ def standardizeCourse(course):
             course = course[:digit_index]+'.'+course[digit_index:]
         else:
             course = ''
+    if course:
+        if getCourseInfo(course)==ERR_NO_RECORD_FOUND:
+            print("COURSE NOT FOUND: "+course)
+            print(getCourseInfo(course.replace('.',' ')))
+            return ''
     return course
     
         
@@ -191,7 +196,7 @@ def dashboard(request):
     dashboardContext = dashboardData(request)    
     if not dashboardContext:
         #Attempt to create user profile with data     
-        return HttpResponseRedirect('/registration/') #GET request and user profile is not yet created
+        return HttpResponseRedirect('/registration/') #TODO: test if we can remove this, decorator now ensures user registered
     elif (request.method == 'POST'): 
         #Add/Remove courses from the planner
         return handlePlannerData(request,dashboardContext)
@@ -212,7 +217,7 @@ def handlePlannerData(request,dashboardContext):
     courseName = standardizeCourse(request.POST['course'])
     try:
         if not courseName:
-            dashboardContext.update({'errors':{'name':"{} is not a valid course name format"}})
+            dashboardContext.update({'errors':{'name':"{} is not a valid course name. Please ensure you are using the appropriate abbreviation of the major."}})
         elif courseName in getCoursesTaken(user):
             dashboardContext.update({'errors':{'name':"You have already taken {}.".format(courseName)}})
         elif request.POST['change'] == 'add':
@@ -225,7 +230,7 @@ def handlePlannerData(request,dashboardContext):
                 dashboardContext.update({'errors':{'index':"{} is not a valid semester number. Please enter a valid numeric number.".format(index)}})
         elif request.POST['change'] == 'remove':
             if removeCourseFromPlanner(plannerID, index, courseName) == ERR_NO_RECORD_FOUND:
-                dashboardContext.update({'errors':{'name':"{} is not a valid course name.".format(courseName)}})
+                dashboardContext.update({'errors':{'name':"{} is not a valid course name to remove.".format(courseName)}})
             else:
                 dashboardContext = dashboardData(request)
     except MultiValueDictKeyError:
