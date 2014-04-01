@@ -1,5 +1,4 @@
 /* Base styling to be used across all pages */
-
 body, input, button, select, option, textarea {
 	font-family: Arial, sans-serif;
 }
@@ -8,8 +7,8 @@ body {
 	/* font-family: Arial, sans-serif; */
 	color: #000000;
 	margin: 0px;
-	background-image:url('lined_paper.png'); /* subtlepatterns.com */
-	background-repeat:repeat;
+	background-image: url('lined_paper.png'); /* subtlepatterns.com */
+	background-repeat: repeat;
 }
 
 input, button, select, option, textarea {
@@ -25,6 +24,37 @@ header {
 	width: 100%;
 	margin: 0px;
 	display: block;
+}
+
+/* Header bar elements */
+.logoHead {
+	background: url('logoTmp.png') left no-repeat;
+	background-size: auto 50px;
+	display: inline-block;
+	height: 50px;
+	width: 300px;
+	margin-left: 20px;
+}
+.userBar {
+    float: right;
+    padding: 10px 25px;
+    color: white;
+}
+.userBar a {
+    color: white;
+    text-decoration: none;
+}
+.userBar a:hover {
+    text-decoration: underline;
+    cursor: hand;
+}
+.userIcon {
+	background: url('user_icon.png') right no-repeat;
+	background-size: 16px;
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	margin-top: -5px;
 }
 
 /* DIV wrapper for page contents */
@@ -43,6 +73,7 @@ header {
 }
 .button:hover {
 	background: #999999;
+	cursor: pointer; 
 }
 
 /* Headers for page sections */
@@ -98,6 +129,7 @@ header {
 }
 .buttonLink:hover {
 	color: #999999;
+	cursor: pointer; 
 }
 
 
@@ -119,7 +151,7 @@ body.noScroll {
 }
 
 ul {
-	list-style-type:none;
+	list-style-type: none;
 	/*padding: 0px;*/
 	margin-top: 1px;
 	margin-bottom: 1px;
@@ -131,15 +163,11 @@ li.courseCompleted {
 .course {
 	/*color: #000000;*/
 }
-.courseNormal {
-	/*color: #000000;*/
-}
 .courseUsed {
 	color: #C0C0C0;
 }
 .courseRequired {
 	color: #FF0000;
-
 }
 .courseMaybe {
 	color: #FDB515;
@@ -149,6 +177,7 @@ li.courseCompleted {
 input {
 	width: 200px;
 }
+
 
 
 ul.errorlist {
@@ -162,18 +191,4 @@ ul.errorlist {
     font-size: 10px;
     margin: 0 0 3px;
     padding: 4px 5px;
-}
-
-.user_bar {
-    float:right;
-    padding:10px 25px;
-    color: white;
-}
-.user_bar a{
-    color:white;
-    text-decoration:none;
-}
-.user_bar a:hover{
-    text-decoration:underline;
-    cursor:hand;
 }

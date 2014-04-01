@@ -18,16 +18,23 @@
 		<label class="formLabel">
 			<span>Sign-in or register</span>
 		</label>
-		{% if "user" in errors %}=
-        		{{ errors.user }}
+		
+		{% if "user" in errors %}
+        	{{ errors.user }}
 		{% endif %}
 		{% if "username" in errors %}
-        		 <ul class="errorlist"><li>Please input a valid username</li></ul> 
+        	<ul class="errorlist">
+        		<li>Please input a valid username</li>
+        	</ul> 
 		{% endif %}
 		{{ form.username }}
-            <br/>
+		
+		<label class="formLabel"></label>
+		
 		{% if "password" in errors %}
-        		 <ul class="errorlist"><li>Please input a valid password</li></ul> 
+			<ul class="errorlist">
+				<li>Please input a valid password</li>
+			</ul> 
 		{% endif %}
 		{{ form.password }}
 	</div>
