@@ -71,37 +71,33 @@
 
 
 
-	<div class = "container">
+	<div class="container">
 		{% if requirements %}
 
 			{% for r in requirements %}
-				<h3 class="reqTitle">{{ r.reqName }}</h3>
+				{% if r.reqCompleted %}
+					<h3 class="reqTitle">{{ r.reqName }} (Completed)</h3>
+				{% else %}
+					<h3 class="reqTitle">{{ r.reqName }}</h3>
+				{% endif %}
 				<p class="reqDescription">Description: {{ r.reqDescription }} </p>
-				<p>Requirement Completed: {{ r.reqCompleted }}</p>
 
 				<ul>
-					Courses Completed
 					{% if r.courseDone %}
 						{% for course in r.courseDone %}
 							<li class="courseCompleted">{{ course }}</li>
 						{% endfor %}
-					{% else %}
-						<li> No courses completion displayed. </li>
 					{% endif %}
-				</ul>
-				<br>
-				<ul>
-					Courses Left
 					{% if r.courseLeft %}
 						{% for left in r.courseLeft %}
 							<li>{{ left }}</li>
 						{% endfor %}
-					{% else %}
-						<li> No courses left to display. </li>
 					{% endif %}
 				</ul>
-						
+				<br>
+					
 			{% endfor %}
+		
 		{% else %}
 			<p> No requirements were given.</p>
 		{% endif %}

@@ -28,12 +28,12 @@ header {
 
 /* Header bar elements */
 .logoHead {
-	background: url('logoTmp.png') left no-repeat;
+	background: url('thinkAheadLogo.png') left no-repeat;
 	background-size: auto 50px;
 	display: inline-block;
 	height: 50px;
 	width: 300px;
-	margin-left: 20px;
+	margin-left: 25px;
 }
 .userBar {
     float: right;
@@ -159,10 +159,14 @@ ul {
 	/*padding: 0px;*/
 	margin-top: 1px;
 	margin-bottom: 1px;
-} 
+}
+ul li {
+	padding-left: 20px;
+}
 li.courseCompleted {
 	color: #C0C0C0;
-	background-image: url();
+	background: url('thinkAheadCheck.png') left no-repeat;
+	background-size: 16px;
 }
 .course {
 	/*color: #000000;*/
