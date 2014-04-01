@@ -102,7 +102,7 @@ class TestUserCase(TestCase):
         # If going to register and logged in, should add to User Profile and Planner
         response = client.post('',{'username':'john', 'password':'pass','add':"Create User"})
         request = {'email':'johnsmith@berkeley.edu', 'major':['Bioengineering'],'college':['College of Engineering'],
-                   'semester':['Summer'], 'year':[2015],'form-0-name':['CS 61A'],}
+                   'semester':['Summer'], 'year':[2015],'form-0-name':['CS.61A'],}
         request.update(managementForm)
         response = client.post('/registration/', request)
         self.assertEquals(302, response.status_code)
@@ -137,7 +137,7 @@ class TestUserCase(TestCase):
         # Test registering with multiple courses taken.All of the courses taken should be added to list of courses Taken
         response = client.post('',{'username':'john', 'password':'pass','add':"Create User"})
         request = {'email':'johnsmith@berkeley.edu','major':['Bioengineering'],'college':['College of Engineering'],
-                   'semester':['Summer'], 'year':[2015],'form-0-name':['CS 61A'],'form-1-name':['EE 42'], 'form-2-name':['BIO 1A']}
+                   'semester':['Summer'], 'year':[2015],'form-0-name':['CS.61A'],'form-1-name':['EE.42'], 'form-2-name':['BIO.1A']}
         request.update(managementForm)
         request['form-TOTAL_FORMS']=3
         response = client.post('/registration/', request)
@@ -309,7 +309,7 @@ class TestUserCase(TestCase):
     def testGenerateRequirement(self):
         response = client.post('',{'username':'john', 'password':'pass','add':"Create User"})
         request = {'email':'johnsmith@berkeley.edu', 'major':['Bioengineering'],'college':['College of Engineering'],
-                   'semester':['Summer'], 'year':[2015],'form-0-name':['COMPSCI 61A'],}
+                   'semester':['Summer'], 'year':[2015],'form-0-name':['COMPSCI.61A'],}
         request.update(managementForm)
         response = client.post('/registration/', request)
         response = client.get('/dashboard/',{})
@@ -321,7 +321,4 @@ class TestUserCase(TestCase):
         
         # Major Requirement
         self.assertIn('<h3 class="reqTitle">Introduction to Applied Computing</h3><p class="reqDescription">Description: The freshman year Introduction to Applied Computing requirement of either E 7 or CS 61A </p><p>Requirement Completed: True</p>', self.strip(body)) #Has COMPSCI 61A
-
-
-        pass
 
