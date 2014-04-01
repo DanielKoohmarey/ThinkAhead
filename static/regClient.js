@@ -137,4 +137,9 @@ $('#id_college').change(function() {
     $('#id_major').change();
 }).change(); 
 
+if (undefined != userCollege && undefined != userMajor) {
+    $("#id_college").val(userCollege).change();
+    $("#id_major").val(userMajor);
+}
+
 });
