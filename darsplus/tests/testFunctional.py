@@ -256,7 +256,25 @@ class TestUserCase(TestCase):
         """
         pass
 
-    def testGenerateRequirement(self):
+
+        
+    def testGetSplash(self):
+        response = client.get('', {'username':'john', 'password':'pass'})
+        self.assertEquals(200, response.status_code)
+        self.assertIn('<h1 class="sectionHeader">Welcome to</h1>',response.content)
+
+    def testGetRegistration(self):
+        response = client.post('',{'username':'john', 'password':'pass','add':"Create User"})
+        response = client.get('/registration/',{})
+        self.assertEquals(200, response.status_code)
+        self.assertNotIn('<input id="id_email" name="email" type="email" value="', response.content) # Should not auto populate
+        self.assertNotIn('selected', response.content) # Should  not repopulate
+        self.assertIn('<option value="0">Please select a college</option>', response.content) # option for college should be there
+        self.assertIn('<option value="0">Please select a college and major</option>', response.content) # Option for major should be
+        self.assertIn('form-0-name', response.content) # there should be ONE form
+        self.assertNotIn('form-1-name', response.content) 
+        
+    def testGetDashboard(self):
         response = client.post('',{'username':'john', 'password':'pass','add':"Create User"})
         request = {'email':'johnsmith@berkeley.edu', 'major':['Bioengineering'],'college':['College of Engineering'],
                    'semester':['Summer'], 'year':[2015],'form-0-name':['COMPSCI.61A'],}
@@ -271,4 +289,3 @@ class TestUserCase(TestCase):
         
         # Major Requirement
         self.assertIn('<h3 class="reqTitle">Introduction to Applied Computing</h3><p class="reqDescription">Description: The freshman year Introduction to Applied Computing requirement of either E 7 or CS 61A </p><p>Requirement Completed: True</p>', self.strip(body)) #Has COMPSCI 61A
-
