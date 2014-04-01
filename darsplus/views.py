@@ -11,7 +11,6 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponseRedirect
 from django.forms.util import ErrorList
 from django.utils.datastructures import MultiValueDictKeyError
-import cgi
 import json
 import re
 
