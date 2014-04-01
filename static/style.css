@@ -26,6 +26,11 @@ header {
 	display: block;
 }
 
+.centered {
+	margin-left: auto;
+	margin-right: auto;
+}
+
 /* Header bar elements */
 .logoHead {
 	background: url('thinkAheadLogo.png') left no-repeat;
@@ -142,6 +147,17 @@ header {
 /* Get rid of main scroll bar so that sections can scroll independently */
 body.noScroll {
 	overflow: hidden;
+}
+
+.planner {
+}
+.semesterPlan {
+	border: 2px solid;
+	border-radius: 5px;
+	margin: 5px;
+	padding: 5px;
+	height: 100px;
+	width: 150px;
 }
 
 .reqTitle {

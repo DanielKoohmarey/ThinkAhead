@@ -57,15 +57,24 @@
 	  </form>
 	  
 
-	  {% for planner in planners %}
-	  <h3>Semester {{forloop.counter}}<h3>
-	      {% for course in planner %}
-	      <ul>
-		<li> {{course}} </li>
-	      </ul>
-	      {% endfor %}
+	<table class="planner">
+		<tr>
+			{% for p in planners %}
+				<td><div class="semesterPlan">
+					<ul>
+						{% for course in p %}
+							<li>{{ course }}</li>
+						{% endfor %}
+					</ul>
+				</div></td>
 
-	  {% endfor %}
+				{% if not forloop.last and forloop.counter == 3 or forloop.counter == 6 or forloop.counter == 9 or forloop.counter == 12 %}
+		</tr>
+		<tr>
+				{% endif %}
+			{% endfor %}
+		</tr>
+	</table>
 		
 	</div>  
 
