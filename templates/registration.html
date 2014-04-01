@@ -23,8 +23,21 @@
 </header>
 
 <div class="page">
-<h1 class="sectionHeader">Registration Title (NAME PENDING)</h1>
-<p>Welcome {{user.username}} ! Please complete the registration. (NEW CSS CLASS?)</p>
+<h1 class="sectionHeader">
+    {%if "profile" in request.path %} 
+    Profile
+    {%else %}
+    Registration
+    {%endif %}
+</h1>
+<p>
+    Welcome {{user.username}} !
+    {%if "profile" in request.path %} 
+    You can update your profile information below.
+    {%else %}
+    Please complete the registration.
+    {%endif%}
+</p>
 
 
 

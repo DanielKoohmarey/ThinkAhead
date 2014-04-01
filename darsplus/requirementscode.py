@@ -1646,7 +1646,7 @@ def abbreviateMajor(major):
 	return abr[major.replace(' and ',' & ')]
 
 def abbreviateCollege(college):
-	abr = {"College of Engineering":'Engineering',"College of Chemistry":'Chemistry',"NaturalResources":'College of Natural Resources',"LettersAndSciences":'College of Letters and Science',"Haas":'Haas School of Business',"EnvironmentalDesign":'College of Environmental Design'}
+	abr = {"College of Engineering":'Engineering',"College of Chemistry":'Chemistry','College of Natural Resources':"NaturalResources",'College of Letters and Science':"LettersAndSciences",'Haas School of Business':"Haas",'College of Environmental Design':"EnvironmentalDesign"}
 	return abr[college]
 
 """
