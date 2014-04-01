@@ -133,8 +133,9 @@ def register(request):
         #Convert course name to our format
         #Supports cs.169, cs 170, cs188 type formats and any capitalization
         if course:
-            if standardizeCourse(course):
-                coursesTaken.append(course)
+            valid = standardizeCourse(course)
+            if valid:
+                coursesTaken.append(valid)
             else:
                 continue #could not determine course format, skipping course
 
@@ -147,6 +148,7 @@ def standardizeCourse(course):
         Returns:
             (str) the standardized course name of form NAME.NUMBER
     """
+    abbreviations = {"CS":"COMPSCI", "BIO":"BIOLOGY", "EE":"ELENG"}#TODO: Build abbreviation table
     course = course.strip().upper()
     course = course.replace(' ','.')
     periods = course.count('.')
@@ -160,7 +162,10 @@ def standardizeCourse(course):
         else:
             course = ''
     if course:
-        if getCourseInfo(course)==ERR_NO_RECORD_FOUND:
+        name,number = course[:course.rfind('.')], course[course.rfind('.'):]
+        if name in abbreviations:
+            course = abbreviations[name]+number
+        if getCourseInfo(course)==ERR_NO_RECORD_FOUND: #else possibly covnert to for loop for all possible conversions
             return ''
     return course
     
@@ -215,7 +220,7 @@ def handlePlannerData(request,dashboardContext):
     courseName = standardizeCourse(request.POST['course'])
     try:
         if not courseName:
-            dashboardContext.update({'errors':{'name':"{} is not a valid course name. Please ensure you are using the appropriate abbreviation of the major."}})
+            dashboardContext.update({'errors':{'name':"{} is not a valid course name. Please ensure you are using the appropriate abbreviation of the major.".format(courseName)}})
         elif courseName in getCoursesTaken(user):
             dashboardContext.update({'errors':{'name':"You have already taken {}.".format(courseName)}})
         elif request.POST['change'] == 'add':

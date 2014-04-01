@@ -8,7 +8,7 @@ client=Client()
 managementForm = {'form-TOTAL_FORMS': u'1','form-INITIAL_FORMS': u'0','form-MAX_NUM_FORMS': u''} # Default Dictionary for management form validation. has ONE form by default
 
 class TestUserCase(TestCase):
-
+    fixtures = ['courses.json', 'colleges.json']
     @staticmethod
     def strip(str):
         return str.replace('\t','').replace('\n','')
@@ -114,7 +114,7 @@ class TestUserCase(TestCase):
         self.assertEquals('College of Engineering', profile.college)
         self.assertEquals('Summer', profile.graduationSemester)
         self.assertEquals(2015, profile.graduationYear)
-        self.assertIn('CS.61A', profile.coursesTaken)
+        self.assertIn('COMPSCI.61A', profile.coursesTaken)
         plannerID = profile.plannerID
         planner = Planner.objects.filter(plannerID=plannerID)
         self.assertEquals(1, planner.count())
@@ -146,9 +146,9 @@ class TestUserCase(TestCase):
         profiles = UserProfile.objects.filter(username='john')
         self.assertEquals(1, profiles.count())
         profile = profiles[0]
-        self.assertIn('CS.61A', profile.coursesTaken)
-        self.assertIn('EE.42', profile.coursesTaken)
-        self.assertIn('BIO.1A', profile.coursesTaken)
+        self.assertIn('COMPSCI.61A', profile.coursesTaken)
+        self.assertIn('ELENG.42', profile.coursesTaken)
+        self.assertIn('BIOLOGY.1A', profile.coursesTaken)
 
 
     def testDashboardNotLoggedIn(self):
@@ -222,7 +222,7 @@ class TestUserCase(TestCase):
                    'semester':['Summer'], 'year':[2015],'form-0-name':['CS 61A'],}
         request.update(managementForm)
         response = client.post('/registration/', request)
-        response = client.post('/dashboard/',{'index':'1','name':'CS 61A'})  
+        response = client.post('/dashboard/',{'index':'1','course':'CS 169'})  
         self.assertTrue('change' in response.context['errors'])
 
     def testHandlePlannerDataInvalidSemester(self):
@@ -232,14 +232,14 @@ class TestUserCase(TestCase):
                    'semester':['Summer'], 'year':[2015],'form-0-name':['CS 61A'],}
         request.update(managementForm)
         response = client.post('/registration/', request)
-        response = client.post('/dashboard/',{'index':'one','name':'CS 61A', 'change':'add'})        
+        response = client.post('/dashboard/',{'index':'one','course':'CS 188', 'change':'add'})        
         self.assertTrue('index' in response.context['errors'])
 
     def testHandlePlannerDataInvalidCourse(self):
         #Expect name error when course invalid
         response = client.post('',{'username':'smith', 'password':'pass','add':"Create User"})
         request = {'email':'johnsmith@berkeley.edu','major':['Bioengineering'],'college':['College of Engineering'],
-                   'semester':['Summer'], 'year':[2015],'form-0-name':['CS 61A'],}
+                   'semester':['Summer'], 'year':[2015],'form-0-name':['CS 1A'],}
         request.update(managementForm)
         response = client.post('/registration/', request)
         response = client.post('/dashboard/',{'index':'1','course':'Fake 169', 'change':'add'})      
@@ -263,7 +263,7 @@ class TestUserCase(TestCase):
         request.update(managementForm)
         response = client.post('/registration/', request)
         response = client.post('/dashboard/',{'index':'1','course':'CS 169', 'change':'remove'})
-        self.assertTrue('change' in response.context['errors'])
+        self.assertTrue('name' in response.context['errors'])
 
     def testLogoutLoggedIn(self):
         #Ensure logging out works when a user has oreviously logged in
