@@ -48,6 +48,10 @@ header {
     text-decoration: underline;
     cursor: hand;
 }
+.userBar form {
+	display: inline;
+	margin-left: 15px;
+}
 .userIcon {
 	background: url('user_icon.png') right no-repeat;
 	background-size: 16px;
