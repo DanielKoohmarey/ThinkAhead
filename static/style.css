@@ -44,6 +44,7 @@ header {
     float: right;
     padding: 10px 25px;
     color: white;
+    position: relative;
 }
 .userBar a {
     color: white;
@@ -215,4 +216,10 @@ ul.errorlist {
     font-size: 10px;
     margin: 0 0 3px;
     padding: 4px 5px;
+}
+
+#wrapper {
+    margin-left:auto;
+    margin-right:auto;
+    min-width:960px;
 }
