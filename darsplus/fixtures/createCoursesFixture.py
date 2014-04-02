@@ -5,7 +5,6 @@ Should find a better way to avoid duplicating code
 
 
 # HTML Escape taken from https://wiki.python.org/moin/EscapingHtml
-
 import cgi 
 
 html_escape_table = {
@@ -18,7 +17,7 @@ html_escape_table = {
     }
 
 def htmlEscape(text):
-    return text.replace('&#44;', ',').replace('&amp;','&').replace('&apos;',"'")
+    return text.replace('&#44;', ' ').replace('&amp;',' ').replace('&apos;',"")
     #return escape(text, html_escape_table)    
 
 # End of HTML Escape
@@ -61,14 +60,13 @@ def loadCourses():
                 currentFields["courseLevel"] = htmlEscape(courseInfo[3])
                 currentFields["minUnit"] = units[0]
                 currentFields["maxUnit"] = units[1]
-                currentFields["department"] = htmlEscape(department)
+                currentFields["department"] = department
                 currentCourse["fields"] = currentFields
                 allCourses += [currentCourse]
                 
     import json
     output.write(json.dumps(allCourses))
     output.close()
-
 
 loadCourses()
 
