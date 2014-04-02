@@ -1,0 +1,244 @@
+﻿UI Testing
+
+
+Iteration 1:
+
+
+*** Splash Page ***
+Test - CreateUserButton
+Process - Click “Create User” button after filling out form fields “Username” and “Password”.
+Result - Redirects to Registration Page.
+P/F - P
+
+
+Test - HiddenPassword
+Process - Types in password input field.
+Result - Password is hidden.
+P/F - P
+
+
+*** Registration Page ***
+Test - GradSemDropDown
+Process - Using the first dropdown field in “Intended graduation date” form, select a semester.
+Result - Fall, Spring, and Summer should be the only valid and available options.
+P/F - P
+
+
+Test - GradSemYearDropDown
+Process - Using the second dropdown field in “Intended graduation date” form, select a year
+Result - Graduation date section should only display up to 5 years from current year given. (Ex. 2014 —> 2014, 2015, 2016, 2017, 2018).
+P/F - P
+
+
+Test - LimitMajorDropDown
+Process - In “Major” form. try to select a major when no college is selected (“Please select a college”).
+Result - No valid majors should appear. “Please select a college and major” should be only option.
+P/F - P
+
+
+Test - CollegeDropDown
+Process - Pass in a dictionary of all colleges and majors from the view into the template. Select college drop down menu.
+Result - All colleges should be available as options.
+P/F - P
+
+
+Test - MajorDropDown
+Process - Pass in a dictionary of all colleges and majors from the view into the template. Select a college and then a major.
+Result - List of majors should be populated based on selected college.
+P/F - P
+
+
+Test - AddCourseForm
+Process - Click the “+ Add Course” button.
+Result - New input field for “Successfully completed courses” should appear; allows typing inside.
+P/F - P
+
+
+Test - AddCourseTotalForms
+Process - Click the “Add Course” button.
+Result - New input field for “Successfully completed courses” should appear. The hidden field “id_form-TOTAL_FORMS" should update to reflect total number of input fields for “Successfully completed courses”.
+P/F - P
+
+
+Test - AddCourseIDNum
+Process - Click the “Add Course” button.
+Result - New input field for “Successfully completed courses” should appear. The new input field should have the id “id_form-X-name” where X is the zero-indexed counter for how many course forms exist. All course form ids should be unique due to X.
+P/F - P
+
+
+*** Dashboard Page ***
+Test - ReqPlanSections
+Process - View the dashboard page.
+Result - Should have 2 independently-scrolling sections: requirements on the right and planner on the left.
+P/F - P
+
+
+Test - DisplayRequirements
+Process - When viewing the dashboard after registration process
+Result - Requirements section on the right should be populated with correctly inputted information
+P/F - P
+
+
+Total: 12
+=======================================================
+Iteration 2:
+*** Splash Page ***
+Test - UserPassLoginReq
+Process - Provide only a username or password.
+Result - Invalid username/password message appears to notify user.
+P/F - P
+
+
+Test - LoginRedirect
+Process - After creating a user, sign in and click “Login” button.
+Result - Page should be directed to the Dashboard page
+P/F - P
+
+
+Test - SplashResizing
+Process - Resize the browser.
+Result - All images and login information should be static in the center of the page.
+P/F - P
+
+
+*** Registration Page ***
+
+
+Test - RegistrationName
+Process - On registration page.
+Result - Name of the page is clearly noted as registration.
+P/F - P
+
+
+Test - DeleteCourseButton
+Process - Provide different forms with AddCourseButton. Select “Delete” button related to a specific form.
+Result - The corresponding input form should be removed while other forms are still on the page and shifted accordingly. 
+P/F - P
+
+
+Test - RegResizing
+Process - Resize the browser.
+Result - All drop down menus, images and headers should be static with no wrapping.
+P/F - P
+
+
+Test - EmailField
+Process - On registration page.
+Result - Allow typing in email form.
+P/F - P
+
+
+Test - CompleteRegButton
+Process - Located at the end of the form. Click “complete registration”.
+Result - User is redirected to the profile page.
+P/F - P
+
+
+
+
+*** Dashboard Page ***
+
+
+Test - ReqContent
+Process - Pass in a list of courses that are required and completed. On dashboard page.
+Result - Requirement content should appear on the left side. 
+P/F - P
+
+
+Test - PlannerContent
+Process - On dashboard page.
+Result - Planner content should appear on the left side. 
+P/F - P
+
+
+Test - ReqCompleted
+Process - Pass in a list of courses that are required and completed. On dashboard page.
+Result - Check marks are shown next to courses that are completed.
+P/F - P
+
+
+Test - DashResizing
+Process - Resize the browser.
+Result - All drop menus, texts, images and headers should be static with no wrapping.
+P/F - P
+
+
+Test - PlannerInfo
+Process - 
+ Result - 
+P/F - P
+
+
+Test - PlannerTextWrapping
+Process - Pass in a long course name.
+Result - Planner should display the courses in a list format w/o overflowing the boundries.
+P/F - P
+
+
+Test - PlannerScrolling
+Process - Pass in at least on long course name
+Result - 
+P/F - P
+
+
+
+
+- Make sure that number of planners displayed reflect user’s inputed information in how many semesters they have left.
+
+
+*** Profile Page ***
+
+
+Test - ProfileName
+Process - On profile page.
+Result - Name of the page is clearly noted as Profile.
+P/F - P
+
+
+Test - ProfileContent
+Process - Fill out registration form. 
+Result - All content should reflect user’s registration information.
+P/F - P
+
+
+Test - UpdateProfileButton
+Process - Fill in the content on the page. Change email or any of the fields.
+Result - Clicking “Update Profile” button should send users to Dashboard page. When returning to this page, most recent information should be shown.
+P/F - P
+
+
+*** Header ***
+Test - LogoPosition
+Process - Visit Registration, Profile, Dashboard pages.
+Result - Logo should be located in the upper left corner.
+P/F - P
+
+
+Test - HeaderPosition
+Process - Visit Registration, Profile, or Dashboard pages.
+Result - Blue bar should stay at the top of the page at all times
+- P/F - P
+
+
+Test - UserNameLinkPosition
+Process - On Registration, Profile, or Dashboard pages. 
+Result - Should be located at the upper right portion of the web browser; within blue header bar.
+P/F - P
+
+
+Test - UserNameLink
+Process - On Registration, Profile, or Dashboard pages. Clicks on Username.
+Result - Redirects users to the Profile page.
+P/F - P
+
+
+Test - LogoutButtonPosition
+Process -  On Registration, Profile, or Dashboard pages. 
+Result -  Should be located at the upper right portion of the web browser; within blue header bar.
+P/F - P
+
+
+Test - LogoutButton
+Process - On Registration, Profile, or Dashboard pages. Clicks on Logout button.
+Result - Redirects users to the the Splash page.
+P/F - P
