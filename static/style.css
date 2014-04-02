@@ -115,9 +115,9 @@ header {
 /* Only used in dash.html currently but may be used elsewhere depending on page layout?? */
 .container {
 	float: left;
-	height: 100%;
+	height: 600px;
 	width: 48%;
-	overflow: scroll;
+	overflow-y: scroll;
 	padding: 1%;
 }
 
@@ -125,8 +125,38 @@ header {
 
 
 /* Styling specific to splash.html */
+.lightbulb{
+	background:url(lightbulb_bg.png);
+	background-repeat:no-repeat;
+	background-position: center;
+	position: relative;
+	z-index:1;
+	background-size: 513px;
+}
 
 
+.login{
+	position: absolute;
+	width:513px;
+	height:293px;
+	/*background:#f7f7f7;*/
+	top: 92px;
+	left: 0px;
+	z-index: 2;
+	text-align: center;
+}
+
+
+#shift{
+	margin: 50px auto;
+	width: 513px;
+	height: 697px;
+}
+
+img.resize{
+	width: 400px;
+	height: auto;
+}
 
 
 
@@ -159,13 +189,16 @@ body.noScroll {
 
 .planner {
 }
-.semesterPlan {
+.semesterCourseList {
 	border: 2px solid;
 	border-radius: 5px;
 	margin: 5px;
 	padding: 5px;
 	height: 100px;
 	width: 150px;
+	word-wrap: break-word;
+	overflow: hidden;
+	overflow-y: auto;
 }
 
 .reqTitle {
