@@ -115,7 +115,7 @@ header {
 /* Only used in dash.html currently but may be used elsewhere depending on page layout?? */
 .container {
 	float: left;
-	height: 600px;
+	height: 100%;
 	width: 48%;
 	overflow-y: scroll;
 	padding: 1%;
