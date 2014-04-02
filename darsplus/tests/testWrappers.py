@@ -1,6 +1,5 @@
 """
 Test suite for wrapper functions in models.py
-Currently does not test majorToCollege due to no loadCollege defined
 
 To run, type "python manage.py test darsplus.tests.testWrapper"
 """
@@ -9,7 +8,7 @@ from django.test import TestCase
 from darsplus.models import *
 from darsplus.utils import *
 
-class TestCourses(TestCase):
+class TestWrappers(TestCase):
     fixtures = ['courses.json', 'colleges.json']
     def setUp(self):
         """ Load courses and create user profiles for testing """
@@ -165,3 +164,73 @@ class TestCourses(TestCase):
         allCourses = [['COMPSCI 188'],['COMPSCI 169','COMPSCI 170'],['BIOLOGY 1A','ELENG 42']]
         for course in allCourses:
             self.assertIn(course, allPlanners)
+
+    def testChangePassword(self):
+        new_user = User.objects.create_user(username='eevee',password='eevee2014')
+        new_user.save()
+        user = User.objects.filter(username='eevee')[0]
+        from django.test.client import Client
+        client = Client()
+        response = client.login(username='eevee',password='eevee2014')
+        self.assertTrue(response)
+        response = client.logout()
+        response = changePassword('eevee', 'eevee2015')
+        self.assertEquals(SUCCESS, response)
+        response = client.login(username='eevee',password='eevee2014') # Bad password
+        self.assertFalse(response)
+        response = client.login(username='eevee',password='eevee2015') 
+        self.assertTrue(response)
+        
+
+    def testSetEmail(self):
+        new_user = User.objects.create_user(username='eevee',password='eevee2014')
+        new_user.save()
+        response = setEmail('eevee', 'eevee@berkeley.edu')
+        self.assertEquals(SUCCESS, response)
+        user = User.objects.filter(username='eevee')[0]
+        self.assertEquals('eevee@berkeley.edu', user.email)
+
+    """
+    def testChangePasswordError(self):
+        new_user = User.objects.create_user(username='eevee',password='eevee2014')
+        new_user.save()
+        response = changePassword('eve', 'eevee2015') #intended typo
+        self.assertEquals(FAILURE, response)
+    """
+
+
+    """
+    def testSetEmailError(self):
+        response = setEmail('eve', 'eevee@berkeley.edu')
+        self.assertEquals(FAILURE, response)
+    """
+
+
+    def testCollegesToMajors(self):
+        majorDict = getCollegesToMajors()
+        colleges = allColleges()
+        for college in colleges:
+            self.assertIn(college, majorDict)
+            self.assertTrue(len(majorDict[college]) > 0)
+
+    def testMajorToCollege(self):
+        self.assertEquals('College of Engineering', majorToCollege('Bioengineering'))
+        self.assertEquals('College of Chemistry', majorToCollege('Chemical Engineering'))
+        self.assertEquals('College of Environmental Design', majorToCollege('Architecture'))
+        self.assertEquals('College of Letters and Science', majorToCollege('Chinese'))
+        self.assertEquals('College of Natural Resources', majorToCollege('Microbial Biology'))
+        self.assertEquals('Haas School of Business', majorToCollege('Business Administration'))
+    
+    def testMajorToCollegeError(self):
+        self.assertEquals(ERR_NO_RECORD_FOUND, majorToCollege('Eevolution'))
+
+    def testGetCourseInfo(self):
+        course = getCourseInfo('COMPSCI.61A')
+        self.assertEquals(4, course.minUnit)
+        self.assertEquals(4, course.maxUnit)
+        self.assertIn('COMPSCI', course.department)
+        self.assertEquals('Undergraduate', course.courseLevel)
+        self.assertIn('fall', course.courseDescription.lower())
+        self.assertIn('spring', course.courseDescription.lower())
+
+                          

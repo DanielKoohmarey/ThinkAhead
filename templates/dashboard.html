@@ -30,6 +30,7 @@
         		{{ errors.index }}
             </ul></li>
 		{% endif %}
+<div class="formGroup">
 	    Semester Number: <input id="semester" type="text" name="index">
 	    <br />
 		{% if "name" in errors %}
@@ -44,6 +45,7 @@
         		{{ errors.change }}
             </ul></li>
 		{% endif %}
+</div>
 	    <input type="radio" name="change" value="add">Add <br>
 	    <input type="radio" name="change" value="remove">Remove <br>
 	    <input id="" type="submit" value="Update Planner" name="update">

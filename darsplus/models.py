@@ -545,21 +545,16 @@ def getUserProfile(username):
     return UserProfile.getUserProfile(username)
 
 def setUserProfile(username, major, college, semester, year, newCourses):
-    response = changeGraduationSemester(username, semester)
-    if response != SUCCESS:
-        return response
-    response = changeGraduationYear(username, year)
-    if response != SUCCESS:
-        return response
-    
-    response = changeCollege(username, college)
-    if response != SUCCESS:
-        return response
+    matches = UserProfile.objects.filter(username=username)
+    numMatches = matches.count()
+    if numMatches == 0:
+        return ERR_NO_RECORD_FOUND
 
+    response = changeGraduationSemester(username, semester)
+    response = changeGraduationYear(username, year)
+    response = changeCollege(username, college)
     response = changeMajor(username, major)
-    if response != SUCCESS:
-        return response
-    
+
     previousCourses = getUserProfile(username).coursesTaken
     toAdd = filter(lambda course: course not in previousCourses, newCourses)
     toRemove = filter(lambda course: course not in newCourses, previousCourses)
@@ -609,6 +604,13 @@ def removeCourseTaken(username, coursename):
 def removeListCoursesTaken(username, courseList):
     """
     Remove every course in courseList to list of user's courses taken
+    
+    Args:
+        username (String) 
+        courseList (List): list of coursenames to be added
+
+    Returns:
+        SUCCESS or error message
     """
     for i in range(0, len(courseList)):
         response = removeCourseTaken(username, courseList[i])
@@ -639,6 +641,9 @@ def getCourseInfo(course):
 
 def majorToCollege(major):
     return Colleges.majorToCollege(major)
+
+def allColleges():
+    return Colleges.allColleges()
 
 """ 
     Support Functions for view logic 
