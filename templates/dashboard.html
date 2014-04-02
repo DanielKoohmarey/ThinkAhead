@@ -103,12 +103,12 @@
 				<ul>
 					{% if r.courseDone %}
 						{% for course in r.courseDone %}
-							<li class="courseCompleted">{{ course }}</li>
+							<li class="course courseCompleted">{{ course }}</li>
 						{% endfor %}
 					{% endif %}
 					{% if r.courseLeft %}
 						{% for left in r.courseLeft %}
-							<li>{{ left }}</li>
+							<li class="course">{{ left }}</li>
 						{% endfor %}
 					{% endif %}
 				</ul>
