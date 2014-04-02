@@ -75,17 +75,31 @@ P/F - P
 
 Test - DisplayRequirements
 Process - When viewing the dashboard after registration process
-Result - Requirements section on the right should be populated with correctly inputted information
+Result - Requirements section on the right should be populated with requirements information based off of successfully completed courses and major. Information displayed should be: Requirement name, requirement description, true/false requirement completed, list of completed courses towards requirement, and list of courses left for requirement.
 P/F - P
 
 
-Total: 12
+Total: 12 | Pass: 12 | Fail: 0
 =======================================================
+
+
+
+
+
+
 Iteration 2:
+
+
 *** Splash Page ***
-Test - UserPassLoginReq
-Process - Provide only a username or password.
-Result - Invalid username/password message appears to notify user.
+Test - NoUserLogin
+Process - Provide only a password.
+Result - Invalid password message appears to notify user.
+P/F - P
+
+
+Test - NoPasswordLogin
+Process - Provide only a username.
+Result - Invalid username message appears to notify user.
 P/F - P
 
 
@@ -95,150 +109,219 @@ Result - Page should be directed to the Dashboard page
 P/F - P
 
 
-Test - SplashResizing
+Test - SplashPositionResizing
 Process - Resize the browser.
-Result - All images and login information should be static in the center of the page.
+Result - All images and login information should be static in the center of the page and keep relative positions to each other.
+P/F - P
+
+
+Test - SplashImages
+Process - Load the splash page.
+Result - All images should display properly:  lightbulb containing login form, logo inside lightbulb.
 P/F - P
 
 
 *** Registration Page ***
-
-
 Test - RegistrationName
-Process - On registration page.
-Result - Name of the page is clearly noted as registration.
+Process - Load registration page.
+Result - Name of the page is clearly noted as “Registration”.
 P/F - P
 
 
-Test - DeleteCourseButton
-Process - Provide different forms with AddCourseButton. Select “Delete” button related to a specific form.
-Result - The corresponding input form should be removed while other forms are still on the page and shifted accordingly. 
+Test - DeleteCourseForm
+Process - Each course form has an associated “Delete” button. Create multiple course forms and fill them out. Delete an arbitrary course form.
+Result - The corresponding input form should be removed while other forms and any data are still on the page and shifted accordingly in position. 
 P/F - P
 
 
-Test - RegResizing
+Test - DeleteCourseTotalForms
+Process - Each course form has an associated “Delete” button. Create multiple course forms and delete an arbitrary course form.
+Result - The hidden field “id_form-TOTAL_FORMS" should update accordingly to reflect the new number of course forms.
+P/F - P
+
+
+Test - DeleteCourseIDNum
+Process - Each course form has an associated “Delete” button. Create multiple course forms and delete an arbitrary course form.
+Result - All existing course forms should update their ids “id_form-X-name” accordingly such that X is a zero-indexed counter of existing course forms with no number skipped or repeated.
+P/F - P
+
+
+Test - RefreshCourseTotalForms
+Process - Each course form has an associated “Delete” button. Arbitrarily create and delete multiple course forms in any order. Then refresh the page.
+Result - There should only be one course form displayed with id “id_form_0-name” and the hidden field “id_form-TOTAL_FORMS" should have a value of 1 to reflect this. 
+P/F - P
+
+
+Test - RegPositionResizing
 Process - Resize the browser.
-Result - All drop down menus, images and headers should be static with no wrapping.
+Result - All drop down menus, images and headers should be static with no wrapping and keep relative positions to each other.
 P/F - P
 
 
 Test - EmailField
-Process - On registration page.
-Result - Allow typing in email form.
+Process - Load registration or profile page.
+Result - An additional form field prompting for email should be displayed at the top of the form.
 P/F - P
 
 
 Test - CompleteRegButton
-Process - Located at the end of the form. Click “complete registration”.
+Process - Located at the end of the form. Click “Complete Registration”.
 Result - User is redirected to the profile page.
 P/F - P
 
 
-
-
 *** Dashboard Page ***
-
-
-Test - ReqContent
-Process - Pass in a list of courses that are required and completed. On dashboard page.
-Result - Requirement content should appear on the left side. 
-P/F - P
-
-
 Test - PlannerContent
-Process - On dashboard page.
+Process - Load dashboard page.
 Result - Planner content should appear on the left side. 
 P/F - P
 
 
-Test - ReqCompleted
-Process - Pass in a list of courses that are required and completed. On dashboard page.
-Result - Check marks are shown next to courses that are completed.
+Test - ReqDisplay
+Process - Load the dashboard. The template is passed in a list of requirements from the view which is then displayed more neatly than iteration 1.
+Result - The requirement title will be displayed with “(Completed)” next to it if the requirement has been fulfilled. The description and a list of classes that count towards the requirement, whether completed or not, will be displayed underneath the title with less spacing within a single requirement listing.
 P/F - P
 
 
-Test - DashResizing
-Process - Resize the browser.
-Result - All drop menus, texts, images and headers should be static with no wrapping.
+Test - ReqCourseListComplete
+Process - Load the dashboard. Be sure that the information inputted during the registration phase means that you have completed at least a few courses towards a requirement.
+Result - Courses that count towards a requirement will be have a little checkmark beside it and are greyed out.
+P/F - P
+
+
+Test - ReqCourseListDisplay
+Process - Load the dashboard. Be sure that the information inputted during the registration phase means that you have completed at least a few courses towards a requirement, but not all of them.
+Result - All course names that count towards a requirement will be listed and left-aligned by the first character, regardless of if it has a completed icon next to it.
+P/F - P
+
+
+Test - DashPositionResizing
+Process - Resize the browser while on the dashboard page.
+Result - All drop menus, texts, images and headers should be static with no wrapping and keep relative positions to each other.
+P/F - P
+
+
+Test - PlannerSemLayout
+Process - Load the dashboard. The template is passed some number, up to 15, of planners which will be loaded into a table.
+Result - All planners successfully appear in its own separate cell. There will be at most 3 cells per row where the last row can have fewer cells. All cells will be the same size/dimension.
 P/F - P
 
 
 Test - PlannerInfo
-Process - 
- Result - 
+Process - Load the dashboard with saved planner(s).
+Result - Each semester planner should display the classes added to that semester/year by the user. 
 P/F - P
 
 
 Test - PlannerTextWrapping
-Process - Pass in a long course name.
-Result - Planner should display the courses in a list format w/o overflowing the boundries.
+Process - Save a long course name into a semester planner.
+Result - The planner should display the courses in a list format w/o overflowing the boundaries and instead wrap the word around to the next line.
+P/F - P
+
+
+Test - SemesterPlannerScrolling
+Process -  Save at least one long course name into a semester planner or have one semester planner have many courses such that all the text cannot fit into the cell. 
+Result - Each semester planner should have its own independent scrolling when needed if more vertical space is necessary.
 P/F - P
 
 
 Test - PlannerScrolling
-Process - Pass in at least on long course name
-Result - 
-P/F - P
+Process - Have enough saved semester planners passed into the template or resize browser so that vertical scrolling is required.
+Result - Planner section should have its own independent scrolling when needed. The scroll should allow all content to be seen.
+P/F - F
 
 
-
-
-- Make sure that number of planners displayed reflect user’s inputed information in how many semesters they have left.
+Test - ReqScrolling
+Process - Have enough course requirements passed into the template or resize browser so that vertical scrolling is required.
+Result - Requirement section should have its own independent scrolling when needed. The scroll should allow all content to be seen.
+P/F - F
 
 
 *** Profile Page ***
-
-
 Test - ProfileName
-Process - On profile page.
+Process - Load the profile page.
 Result - Name of the page is clearly noted as Profile.
 P/F - P
 
 
 Test - ProfileContent
-Process - Fill out registration form. 
-Result - All content should reflect user’s registration information.
+Process - After creating a user and completing the registration, navigate to the profile page.
+Result - All forms should be pre populated to reflect user’s registration information.
 P/F - P
 
 
 Test - UpdateProfileButton
-Process - Fill in the content on the page. Change email or any of the fields.
-Result - Clicking “Update Profile” button should send users to Dashboard page. When returning to this page, most recent information should be shown.
+Process - Navigate to the profile page and change any content in the form.
+Result - Clicking the “Update Profile” button should send users to Dashboard page. When returning to the profile page, the most recent information submitted should be shown.
 P/F - P
 
 
-*** Header ***
+*** Multi-Page  ***
+Test - ClickableLinkHover
+Process - Hover mouse over clickable elements that act/look like links.
+Result - The cursor should turn into a hand, indicating that the element is clickable and the link text should change to grey.
+P/F - P
+
+
+Test - ClickableButtonHover
+Process - Hover mouse over clickable elements that act/look like buttons.
+Result - The cursor should turn into a hand, indicating that the element is clickable and the button container should change from gold to grey.
+P/F - P
+
+
+Test - HeaderImages
+Process - Load  Registration, Profile, or Dashboard page.
+Result - All images used in the header should display properly: Logo, user icon, logout button.
+P/F - P
+
+
+Test - Background
+Process - Load Splash, Registration, Profile, or Dashboard page.
+Result - Background should be consistent throughout all pages, even with browser resizing.
+P/F - P
+
+
 Test - LogoPosition
 Process - Visit Registration, Profile, Dashboard pages.
-Result - Logo should be located in the upper left corner.
+Result - Logo should be located in the upper left corner; within the dark blue header bar.
 P/F - P
 
 
 Test - HeaderPosition
-Process - Visit Registration, Profile, or Dashboard pages.
-Result - Blue bar should stay at the top of the page at all times
-- P/F - P
+Process - Visit Registration, Profile, or Dashboard page.
+Result - Blue header bar should stay at the top of the page at all times.
+P/F - P
 
 
 Test - UserNameLinkPosition
 Process - On Registration, Profile, or Dashboard pages. 
-Result - Should be located at the upper right portion of the web browser; within blue header bar.
+Result - The username should be located at the upper right portion of the web browser; within the dark blue header bar and to the left of the logout button.
 P/F - P
 
 
 Test - UserNameLink
 Process - On Registration, Profile, or Dashboard pages. Clicks on Username.
-Result - Redirects users to the Profile page.
+Result - The username in the header should be clickable and redirect users to the Profile page.
 P/F - P
 
 
 Test - LogoutButtonPosition
 Process -  On Registration, Profile, or Dashboard pages. 
-Result -  Should be located at the upper right portion of the web browser; within blue header bar.
+Result -  Should be located at the upper right portion of the web browser; within the dark blue header bar.
 P/F - P
 
 
 Test - LogoutButton
 Process - On Registration, Profile, or Dashboard pages. Clicks on Logout button.
-Result - Redirects users to the the Splash page.
+Result - The button should be clickable and redirect users to the the Splash page.
 P/F - P
+
+
+Total: 49 | Pass: 47 | Fail: 2
+=======================================================
+
+
+Iteration 3:
+
+
+Automated Framework: Using Xpresser (Framework for automated GUI testing)
