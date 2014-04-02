@@ -1,5 +1,4 @@
 /* Base styling to be used across all pages */
-
 body, input, button, select, option, textarea {
 	font-family: Arial, sans-serif;
 }
@@ -8,8 +7,8 @@ body {
 	/* font-family: Arial, sans-serif; */
 	color: #000000;
 	margin: 0px;
-	background-image:url('lined_paper.png'); /* subtlepatterns.com */
-	background-repeat:repeat;
+	background-image: url('lined_paper.png'); /* subtlepatterns.com */
+	background-repeat: repeat;
 }
 
 input, button, select, option, textarea {
@@ -27,10 +26,58 @@ header {
 	display: block;
 }
 
+/* Wrap around header and body to prevent layout changing when browser resizes */
+.wrapper {
+    margin-left: auto;
+    margin-right: auto;
+    min-width: 960px;
+}
+
+.centered {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/* Header bar elements */
+.logoHead {
+	background: url('thinkAheadLogo.png') left no-repeat;
+	background-size: auto 50px;
+	display: inline-block;
+	height: 50px;
+	width: 300px;
+	margin-left: 25px;
+}
+.userBar {
+    float: right;
+    padding: 10px 25px;
+    color: white;
+    position: relative;
+}
+.userBar a {
+    color: white;
+    text-decoration: none;
+}
+.userBar a:hover {
+    text-decoration: underline;
+    cursor: hand;
+}
+.userBar form {
+	display: inline;
+	margin-left: 15px;
+}
+.userIcon {
+	background: url('user_icon.png') right no-repeat;
+	background-size: 16px;
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	margin-top: -5px;
+}
+
 /* DIV wrapper for page contents */
 .page {
 	padding-left: 50px;
-	margin-right: 50px;
+	padding-right: 50px;
 }
 
 .button {
@@ -43,6 +90,7 @@ header {
 }
 .button:hover {
 	background: #999999;
+	cursor: pointer; 
 }
 
 /* Headers for page sections */
@@ -67,9 +115,9 @@ header {
 /* Only used in dash.html currently but may be used elsewhere depending on page layout?? */
 .container {
 	float: left;
-	height: 100%;
+	height: 600px;
 	width: 48%;
-	overflow: scroll;
+	overflow-y: scroll;
 	padding: 1%;
 }
 
@@ -77,8 +125,38 @@ header {
 
 
 /* Styling specific to splash.html */
+.lightbulb{
+	background:url(lightbulb_bg.png);
+	background-repeat:no-repeat;
+	background-position: center;
+	position: relative;
+	z-index:1;
+	background-size: 513px;
+}
 
 
+.login{
+	position: absolute;
+	width:513px;
+	height:293px;
+	/*background:#f7f7f7;*/
+	top: 92px;
+	left: 0px;
+	z-index: 2;
+	text-align: center;
+}
+
+
+#shift{
+	margin: 50px auto;
+	width: 513px;
+	height: 697px;
+}
+
+img.resize{
+	width: 400px;
+	height: auto;
+}
 
 
 
@@ -98,6 +176,7 @@ header {
 }
 .buttonLink:hover {
 	color: #999999;
+	cursor: pointer; 
 }
 
 
@@ -106,6 +185,20 @@ header {
 /* Get rid of main scroll bar so that sections can scroll independently */
 body.noScroll {
 	overflow: hidden;
+}
+
+.planner {
+}
+.semesterCourseList {
+	border: 2px solid;
+	border-radius: 5px;
+	margin: 5px;
+	padding: 5px;
+	height: 100px;
+	width: 150px;
+	word-wrap: break-word;
+	overflow: hidden;
+	overflow-y: auto;
 }
 
 .reqTitle {
@@ -119,27 +212,24 @@ body.noScroll {
 }
 
 ul {
-	list-style-type:none;
+	list-style-type: none;
 	/*padding: 0px;*/
 	margin-top: 1px;
 	margin-bottom: 1px;
-} 
+}
+li.course {
+	padding-left: 20px;
+}
 li.courseCompleted {
 	color: #C0C0C0;
-	background-image: url();
-}
-.course {
-	/*color: #000000;*/
-}
-.courseNormal {
-	/*color: #000000;*/
+	background: url('thinkAheadCheck.png') left no-repeat;
+	background-size: 16px;
 }
 .courseUsed {
 	color: #C0C0C0;
 }
 .courseRequired {
 	color: #FF0000;
-
 }
 .courseMaybe {
 	color: #FDB515;
@@ -149,6 +239,7 @@ li.courseCompleted {
 input {
 	width: 200px;
 }
+
 
 
 ul.errorlist {
@@ -162,18 +253,4 @@ ul.errorlist {
     font-size: 10px;
     margin: 0 0 3px;
     padding: 4px 5px;
-}
-
-.user_bar {
-    float:right;
-    padding:10px 25px;
-    color: white;
-}
-.user_bar a{
-    color:white;
-    text-decoration:none;
-}
-.user_bar a:hover{
-    text-decoration:underline;
-    cursor:hand;
 }

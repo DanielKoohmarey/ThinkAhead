@@ -8,26 +8,34 @@
 
 <body>
 
-<div class="page">
+<div class="lightbulb" id="shift">
+<div class="login">  
 
 <h1 class="sectionHeader">Welcome to</h1>
-<img src="{% static "logoTmp.png" %}">
+	<img class="resize" src="{% static "thinkAheadLogo.png" %}">
 
 <form action="" method="post">
 	<div class="formGroup">
 		<label class="formLabel">
 			<span>Sign-in or register</span>
 		</label>
-		{% if "user" in errors %}=
-        		{{ errors.user }}
+		
+		{% if "user" in errors %}
+        	{{ errors.user }}
 		{% endif %}
 		{% if "username" in errors %}
-        		 <ul class="errorlist"><li>Please input a valid username</li></ul> 
+        	<ul class="errorlist">
+        		<li>Please input a valid username</li>
+        	</ul> 
 		{% endif %}
 		{{ form.username }}
-            <br/>
+		
+		<label class="formLabel"></label>
+		
 		{% if "password" in errors %}
-        		 <ul class="errorlist"><li>Please input a valid password</li></ul> 
+			<ul class="errorlist">
+				<li>Please input a valid password</li>
+			</ul> 
 		{% endif %}
 		{{ form.password }}
 	</div>
@@ -37,6 +45,7 @@
 
 </form>
 
+</div>
 </div>
 
 </body>

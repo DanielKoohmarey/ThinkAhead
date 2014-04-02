@@ -10,32 +10,39 @@
 </head>
 
 <body>
+<div class="wrapper">
 
-<header><a href="/home/"><img src="{% static "logoTmp.png" %}" style="float:left; padding-left:25px;" height=50px></a>
-        <div class="user_bar">
-            {%if "profile" in request.path %}
-                Hello, <a href="/profile"><img src="{% static "user_icon.png" %}" width=16px height=16px style="margin-top:-5px;">{{user.username}}.</a>
-            {%endif %}
-            <form action="/logout" style="display:inline;margin: 0; padding: 0">
-                <input class="button" type="submit" name="logout" value="Logout" style="margin-left:15px;">
-            </form>
-        </div>
+<header>
+	<a href="/home/">
+		<div class="logoHead"></div>
+	</a>
+    <div class="userBar">
+        {% if "profile" in request.path %}
+            Hello,
+            <a href="/profile">
+        		<div class="userIcon"></div>
+            	{{ user.username }}</a>.
+        {% endif %}
+        <form action="/logout">
+            <input class="button" type="submit" name="logout" value="Logout">
+        </form>
+    </div>
 </header>
 
 <div class="page">
 <h1 class="sectionHeader">
-    {%if "profile" in request.path %} 
+    {% if "profile" in request.path %} 
     Profile
-    {%else %}
+    {% else %}
     Registration
-    {%endif %}
+    {% endif %}
 </h1>
 <p>
-    {%if "profile" in request.path %} 
+    {% if "profile" in request.path %} 
     You can update your profile information below.
-    {%else %}
-    Welcome {{user.username}}! Please complete the registration.
-    {%endif%}
+    {% else %}
+    Welcome {{ user.username }}! Please complete the registration.
+    {% endif %}
 </p>
 
 
@@ -77,7 +84,11 @@
 	<!-- Expecting CourseForm() as form3 -->
 	<div class="formGroup">
 		<label class="formLabel">
-			<span>Successfully completed courses<br/><small><i>i.e cs 160, econ 100a</i></small></span>
+			<span>
+				Successfully completed courses
+				<br/>
+				<small><i>i.e cs 160, econ 100a</i></small>
+			</span>
 		</label>
 		{{ form3.management_form }}
 		{% for form in form3.forms %}
@@ -90,17 +101,18 @@
 
 		<input id="addForm" class="buttonLink" type="button" value="+ Add Course" >
 	</div>
-            {%if "profile" in request.path %}  
-            <input id="createUser" class="button" type="submit" value="Update Profile">
-            {% else %}
-            <input id="createUser" class="button" type="submit" value="Complete Registration">
-            {%endif %}
+
+    {% if "profile" in request.path %}  
+    	<input id="createUser" class="button" type="submit" value="Update Profile">
+    {% else %}
+    	<input id="createUser" class="button" type="submit" value="Complete Registration">
+    {% endif %}
 </form>
 
 </div>
 
+</div>
 </body>
-
 
 <script type="text/javascript">
 
