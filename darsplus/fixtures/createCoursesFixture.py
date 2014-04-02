@@ -38,6 +38,7 @@ def loadCourses():
     fields = {}
     output = open('courses.json','w')
 
+
     for department in departments.keys():
         for course in departments[department].keys():
             courseInfo = departments[department][course]
@@ -63,7 +64,11 @@ def loadCourses():
                 currentFields["department"] = htmlEscape(department)
                 currentCourse["fields"] = currentFields
                 allCourses += [currentCourse]
+                
     import json
     output.write(json.dumps(allCourses))
     output.close()
+
+
 loadCourses()
+

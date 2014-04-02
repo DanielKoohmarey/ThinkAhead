@@ -115,7 +115,7 @@ header {
 /* Only used in dash.html currently but may be used elsewhere depending on page layout?? */
 .container {
 	float: left;
-	height: 600px;
+	height: 100%;
 	width: 48%;
 	overflow-y: scroll;
 	padding: 1%;
@@ -187,7 +187,16 @@ body.noScroll {
 	overflow: hidden;
 }
 
-.planner {
+.planner td {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+.planner ul {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+.semesterLabel {
+	padding-left: 5px;
 }
 .semesterCourseList {
 	border: 2px solid;

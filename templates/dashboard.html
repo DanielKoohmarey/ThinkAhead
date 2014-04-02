@@ -28,56 +28,62 @@
 	
 	<div class="container">
 	
-	  {% comment %}
-	  Tentative way of adding and removing courses to Planner
-	  {% endcomment %}
-	  <form action="" method="post">
+		{% comment %}
+		Tentative way of adding and removing courses to Planner
+		{% endcomment %}
+		<form action="" method="post">
 		{% if "index" in errors %}
-            <ul class="errorlist"><li>
-        		{{ errors.index }}
-            </ul></li>
+		    <ul class="errorlist"><li>
+				{{ errors.index }}
+		    </ul></li>
 		{% endif %}
-<div class="formGroup">
-	    Semester Number: <input id="semester" type="text" name="index">
-	    <br />
-		{% if "name" in errors %}
-            <ul class="errorlist"><li>
-        		{{ errors.name }}
-            </ul></li>
-		{% endif %}
-	    Course Name: <input id="coursename" type="text" name="course">
-	    <br />
-		{% if "change" in errors %}
-            <ul class="errorlist"><li>
-        		{{ errors.change }}
-            </ul></li>
-		{% endif %}
-</div>
-	    <input type="radio" name="change" value="add">Add <br>
-	    <input type="radio" name="change" value="remove">Remove <br>
-	    <input id="" type="submit" value="Update Planner" name="update">
+		Semester Number: <input id="semester" type="text" name="index">
+		<br />
 
-	  </form>
+		{% if "name" in errors %}
+		    <ul class="errorlist"><li>
+				{{ errors.name }}
+		    </ul></li>
+		{% endif %}
+		Course Name: <input id="coursename" type="text" name="course">
+		<br />
+		{% if "change" in errors %}
+		    <ul class="errorlist"><li>
+				{{ errors.change }}
+		    </ul></li>
+		{% endif %}
+
+		<input type="radio" name="change" value="add">Add <br>
+		<input type="radio" name="change" value="remove">Remove <br>
+		<input id="" type="submit" value="Update Planner" name="update">
+
+
+		</form>
 	  
 
-	<table class="planner">
-		<tr>
-			{% for p in planners %}
-				<td><div class="semesterPlan">
-					<ul>
-						{% for course in p %}
-							<li>{{ course }}</li>
-						{% endfor %}
-					</ul>
-				</div></td>
+		<table class="planner centered">
+			<tr>
+				{% for p in planners %}
+					<td>
+							<div class="semesterLabel"> 
+								Semester {{ forloop.counter }}
+							</div>
+							<div class="semesterCourseList">
+							<ul>
+								{% for course in p %}
+									<li>{{ course }}</li>
+								{% endfor %}
+							</ul>
+							</div>
+					</td>
 
-				{% if not forloop.last and forloop.counter == 3 or forloop.counter == 6 or forloop.counter == 9 or forloop.counter == 12 %}
-		</tr>
-		<tr>
-				{% endif %}
-			{% endfor %}
-		</tr>
-	</table>
+					{% if not forloop.last and forloop.counter == 3 or forloop.counter == 6 or forloop.counter == 9 or forloop.counter == 12 %}
+			</tr>
+			<tr>
+					{% endif %}
+				{% endfor %}
+			</tr>
+		</table>
 		
 	</div>  
 
