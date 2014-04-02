@@ -58,7 +58,7 @@ header {
     text-decoration: none;
 }
 .userBar a:hover {
-    text-decoration: underline;
+    color: #999999;
     cursor: hand;
 }
 .userBar form {
