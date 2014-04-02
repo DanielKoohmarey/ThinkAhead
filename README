@@ -150,12 +150,15 @@ RUNNING TESTS
 	0) Running the whole test suites:
 	   "python manage.py test"
 
-	1) Running a specific test:
+	1) Running a specific test case:
 	   "python manage.py test darsplus.tests.<python file name>"
 	   e.g.
 	   "python manage.py test darsplus.tests.testColleges"
 	   "python manage.py test darsplus.tests.testCourses"
 
+	2) Running a specific test Suite:
+	   "python manage.py test darsplus.tests.<python file name>.<class name>.<function name>"
+	   
 
 
 ================
