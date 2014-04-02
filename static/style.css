@@ -187,7 +187,16 @@ body.noScroll {
 	overflow: hidden;
 }
 
-.planner {
+.planner td {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+.planner ul {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+.semesterLabel {
+	padding-left: 5px;
 }
 .semesterCourseList {
 	border: 2px solid;
