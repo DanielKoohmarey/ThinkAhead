@@ -3,8 +3,30 @@ Copies courseLoad in models.py
 Should find a better way to avoid duplicating code
 """
 
+
+# HTML Escape taken from https://wiki.python.org/moin/EscapingHtml
+
+import cgi 
+
+html_escape_table = {
+    "&": "&amp;",
+    '"': "&quot;",
+    "'": "&apos;",
+    ">": "&gt;",
+    "<": "&lt;",
+    ",": "&#44;",
+    }
+
+def htmlEscape(text):
+    return text.replace('&#44;', ',').replace('&amp;','&').replace('&apos;',"'")
+    #return escape(text, html_escape_table)    
+
+# End of HTML Escape
+
+
 def loadCourses():
     """ Run this once to populate the database with Courses """
+    
     output = open('courses.json','w')
     import pickle
     departments = pickle.load( open("../../courses.p", "rb") )
@@ -15,6 +37,7 @@ def loadCourses():
     courseEntry['model'] = 'darsplus.courses'
     fields = {}
     output = open('courses.json','w')
+
     for department in departments.keys():
         for course in departments[department].keys():
             courseInfo = departments[department][course]
@@ -31,13 +54,13 @@ def loadCourses():
                 currentFields = fields.copy()
                 currentCourse["pk"] = pk
                 pk = pk + 1
-                currentFields["courseCode"] = similarCourse
-                currentFields["courseName"] = courseInfo[0]
-                currentFields["courseDescription"] = courseInfo[4]
-                currentFields["courseLevel"] = courseInfo[3]
+                currentFields["courseCode"] = htmlEscape(similarCourse)
+                currentFields["courseName"] = htmlEscape(courseInfo[0])
+                currentFields["courseDescription"] = htmlEscape(courseInfo[4])
+                currentFields["courseLevel"] = htmlEscape(courseInfo[3])
                 currentFields["minUnit"] = units[0]
                 currentFields["maxUnit"] = units[1]
-                currentFields["department"] = department
+                currentFields["department"] = htmlEscape(department)
                 currentCourse["fields"] = currentFields
                 allCourses += [currentCourse]
     import json
