@@ -17,6 +17,7 @@ TABLE OF CONTENTS
 -Heroku Database
 -Setting Up: Local vs Heroku
 -Running Tests
+-UI Testing
 -Running Coverage
 
 Last Update: 20 March 2014
@@ -36,7 +37,7 @@ https://github.com/DanielKoohmarey/ThinkAhead.git
 
 Tentative Live Deployment via Heroku:
 http://pacific-basin-7918.herokuapp.com/
-
+*If you see "permission denied for relation django_session" then we have to reset the database in Heroku
 
 
 ====================
@@ -159,6 +160,16 @@ RUNNING TESTS
 	2) Running a specific test Suite:
 	   "python manage.py test darsplus.tests.<python file name>.<class name>.<function name>"
 	   
+
+
+==========
+UI TESTING
+==========
+
+	For UI Testing, we are currently using XPresser.
+	Instructions for installing and running it can be found here:
+	https://wiki.ubuntu.com/Xpresser
+
 
 
 ================
