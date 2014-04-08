@@ -103,21 +103,23 @@
 				{% endif %}
 				<p class="reqDescription">Description: {{ r.reqDescription }} </p>
 
-				<ul>
-					{% if r.courseDone %}
-						{% for course in r.courseDone %}
-							<li class="course courseCompleted">{{ course }}</li>
-						{% endfor %}
-					{% endif %}
-				</ul>
-				<ul id="req{{ forloop.counter }}">
-					{% if r.courseLeft %}
-						{% for left in r.courseLeft %}
-							<li class="course">{{ left }}</li>
-						{% endfor %}
-					{% endif %}
-				</ul>
-				<br>
+				<div class="reqCoursesWrapper">
+					<ul>
+						{% if r.courseDone %}
+							{% for course in r.courseDone %}
+								<li class="course courseCompleted">{{ course }}</li>
+							{% endfor %}
+						{% endif %}
+					</ul>
+					<ul id="req{{ forloop.counter }}" class="sortableList">
+						{% if r.courseLeft %}
+							{% for left in r.courseLeft %}
+								<li class="course">{{ left }}</li>
+							{% endfor %}
+						{% endif %}
+					</ul>
+					<br>
+				</div>
 					
 			{% endfor %}
 		

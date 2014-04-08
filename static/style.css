@@ -243,6 +243,12 @@ li.courseCompleted {
 .courseMaybe {
 	color: #FDB515;
 }
+.sortableList {
+	min-height: 20px;
+}
+.reqCoursesWrapper {
+	width: 240px;
+}
 
 
 input {
