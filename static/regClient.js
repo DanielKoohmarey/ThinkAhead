@@ -103,9 +103,16 @@ $('#addForm').click(function() {
     addForm('div.addCourseForm:nth-last-child(2)', 'form');
 });
 
-$('#deleteForm').click(function() {
+$('[id=deleteForm]').each(function(i) {
+    $(this).click(function() {
+        deleteForm(this, 'form');
+    })
+});
+/*
+$('.deleteForm').click(function() {
     deleteForm(this, 'form');
 });
+*/
 
 
 // Populates MajorForm.college dropdown with all colleges in DB
