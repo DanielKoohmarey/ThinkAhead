@@ -4,7 +4,10 @@
 	<title>Think Ahead</title>
 	{% load staticfiles %}
 	<script type="text/javascript" src="{% static "jquery-1.11.0.min.js" %}"></script>
-	<script type="text/javascript" src="{% static "regClient.js" %}"></script>
+	<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
+	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+	<script type="text/javascript" src="{% static "dashClient.js" %}"></script>
 	<link rel="stylesheet" type="text/css" href="{% static "style.css" %}">
 </head>
 
@@ -69,9 +72,9 @@
 								Semester {{ forloop.counter }}
 							</div>
 							<div class="semesterCourseList">
-							<ul>
+							<ul id="planner{{ forloop.counter }}" class="sortableList">
 								{% for course in p %}
-									<li>{{ course }}</li>
+									<li class="course">{{ course }}</li>
 								{% endfor %}
 							</ul>
 							</div>
@@ -106,6 +109,8 @@
 							<li class="course courseCompleted">{{ course }}</li>
 						{% endfor %}
 					{% endif %}
+				</ul>
+				<ul id="req{{ forloop.counter }}">
 					{% if r.courseLeft %}
 						{% for left in r.courseLeft %}
 							<li class="course">{{ left }}</li>
@@ -123,5 +128,12 @@
 
 </div>	
 </body>
+
+
+<script>
+var numPlanners = {{ planners|length }};
+var numReqs = {{ requirements|length }};
+</script>
+
 
 </html>
