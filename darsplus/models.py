@@ -350,10 +350,10 @@ class Planner(models.Model):
     @staticmethod
     def removeCourseFromPlanner(plannerID, index, coursename):
         """
-        Adds a new course to the planner's index-th semester. 
+        Removes a course from the planner's index-th semester. 
         index should be between 1 and 15 inclusive.
         
-        * Return SUCCESS if successfully added
+        * Return SUCCESS if successfully removed
         * If plannerID does not exist, return ERR_NO_RECORD_FOUND
         * If the course already is not in the list, return ERR_NO_RECORD_FOUND
 
@@ -378,6 +378,34 @@ class Planner(models.Model):
         else:
             return ERR_NO_RECORD_FOUND
         return SUCCESS           
+
+    @staticmethod
+    def removeAllCoursesFromPlanner(plannerID, index):
+        """
+        Removes all planner courses.
+        index should be between 1 and 15 inclusive.
+        
+        * Return SUCCESS if successfully removed
+        * If plannerID does not exist, return ERR_NO_RECORD_FOUND
+
+        Args:
+            plannerID: Integer
+            index: Integer
+        Returns:
+            SUCCESS or ERR_NO_RECORD_FOUND
+
+        """
+        matches = Planner.objects.filter(plannerID=plannerID)
+        numMatches = matches.count()
+        if numMatches == 0:
+            return ERR_NO_RECORD_FOUND
+        account = matches[0]
+        semester = 'semester'+str(index)
+        courseList = getattr(account, semester) # Gets the list of courses for corresponding semester
+        for course in courseList:
+            courseList.remove(course)
+        account.save()
+        return SUCCESS  
 
     @staticmethod
     def totalUnitsPlanner(plannerID, index):
@@ -545,16 +573,21 @@ def getUserProfile(username):
     return UserProfile.getUserProfile(username)
 
 def setUserProfile(username, major, college, semester, year, newCourses):
-    matches = UserProfile.objects.filter(username=username)
-    numMatches = matches.count()
-    if numMatches == 0:
-        return ERR_NO_RECORD_FOUND
-
     response = changeGraduationSemester(username, semester)
+    if response != SUCCESS:
+        return response
     response = changeGraduationYear(username, year)
+    if response != SUCCESS:
+        return response
+    
     response = changeCollege(username, college)
-    response = changeMajor(username, major)
+    if response != SUCCESS:
+        return response
 
+    response = changeMajor(username, major)
+    if response != SUCCESS:
+        return response
+    
     previousCourses = getUserProfile(username).coursesTaken
     toAdd = filter(lambda course: course not in previousCourses, newCourses)
     toRemove = filter(lambda course: course not in newCourses, previousCourses)
@@ -604,13 +637,6 @@ def removeCourseTaken(username, coursename):
 def removeListCoursesTaken(username, courseList):
     """
     Remove every course in courseList to list of user's courses taken
-    
-    Args:
-        username (String) 
-        courseList (List): list of coursenames to be added
-
-    Returns:
-        SUCCESS or error message
     """
     for i in range(0, len(courseList)):
         response = removeCourseTaken(username, courseList[i])
@@ -625,8 +651,11 @@ def addCourseToPlanner(plannerID, index, coursename):
     return Planner.addCourseToPlanner(plannerID, index, coursename)
 
 def removeCourseFromPlanner(plannerID, index, coursename):
-    return Planner.removeCourseFromPlanner(plannerID, index, coursename)
+    return Planner.removeAllCoursesFromPlanner(plannerID, index)
 
+def removeAllCoursesFromPlanner(plannerID, index):
+    return Planner.removeAllCoursesFromPlanner(plannerID, index)
+    
 def totalUnitsPlanner(plannerID, index):
     return Planner.totalUnitsPlanner(plannerID, index)
 
@@ -641,9 +670,6 @@ def getCourseInfo(course):
 
 def majorToCollege(major):
     return Colleges.majorToCollege(major)
-
-def allColleges():
-    return Colleges.allColleges()
 
 """ 
     Support Functions for view logic 

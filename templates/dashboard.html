@@ -63,24 +63,29 @@
 
 		</form>
 	  
-
+            <b>Total Unit Count: {{ unitsCompleted }} 
+            {% if previousUnits %}
+                <small><i>({{previousUnits}} units already completed.)</i></small>
+            {% endif %}
+            </b>
 		<table class="planner centered">
 			<tr>
-				{% for p in planners %}
+				{% for planner in planners %}
 					<td>
 							<div class="semesterLabel"> 
 								Semester {{ forloop.counter }}
 							</div>
 							<div class="semesterCourseList">
 							<ul id="planner{{ forloop.counter }}" class="sortableList">
-								{% for course in p %}
+								{% for course in planner.0 %}
 									<li class="course">{{ course }}</li>
 								{% endfor %}
 							</ul>
 							</div>
+                                    <small>Unit count: {{planner.1}}</small>
 					</td>
 
-					{% if not forloop.last and forloop.counter == 3 or forloop.counter == 6 or forloop.counter == 9 or forloop.counter == 12 %}
+					{% if not forloop.last and forloop.counter|divisibleby:"3" %}
 			</tr>
 			<tr>
 					{% endif %}

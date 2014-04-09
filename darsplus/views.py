@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from darsplus.statics import SUCCESS, ERR_NO_RECORD_FOUND, ERR_RECORD_EXISTS
 from darsplus.forms import LoginForm, EmailForm, GradForm, MajorForm, CourseFormSet
-from darsplus.models import addUserProfile, getUserProfile, getCoursesTaken, getUnitsCompleted, majorToCollege, getCollegesToMajors, setEmail, setUserProfile, getPlanners, addCourseToPlanner, getAllCourses, removeCourseFromPlanner, getCourseInfo
+from darsplus.models import addUserProfile, getUserProfile, getCoursesTaken, getUnitsCompleted, majorToCollege, getCollegesToMajors, setEmail, setUserProfile, getPlanners, addCourseToPlanner, getAllCourses, removeCourseFromPlanner, getCourseInfo, totalUnitsPlanner
 from darsplus.requirementscode import remainingRequirements
 from django.template import RequestContext
 from django.contrib.auth.models import User
@@ -98,7 +98,6 @@ def userRegistration(request):
             return render(request, 'registration.html',{'errors':"Error adding user profile to database. Please try again later.", 'form0': EmailForm(), 'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})
     else:
         return render(request, 'registration.html', {'form0': EmailForm(), 'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})
-
 
 
 def register(request):
@@ -384,6 +383,9 @@ def handlePlannerData(request,dashboardContext):
     user = request.user.username
     plannerID = getUserProfile(user).plannerID
     index = request.POST['index']
+    if index not in [str(ele) for ele in range(16)]:
+        dashboardContext.update({'errors':{'index':"{}. Please enter a valid numeric number.".format(index+" is not a valid semester number" if index else "Index cannot be left blank.")}})
+        return render(request, 'dashboard.html',dashboardContext)
     courseName = standardizeCourse(request.POST['course'])
     try:
         if not courseName:
@@ -391,13 +393,10 @@ def handlePlannerData(request,dashboardContext):
         elif courseName in getCoursesTaken(user):
             dashboardContext.update({'errors':{'name':"You have already taken {}.".format(courseName)}})
         elif request.POST['change'] == 'add':
-            try:
-                if addCourseToPlanner(plannerID, index, courseName) in [ERR_NO_RECORD_FOUND, ERR_RECORD_EXISTS]:
-                    dashboardContext.update({'errors':{'index':"{} is not a valid course name or has already been added.".format(courseName)}})
-                else:
-                    dashboardContext = dashboardData(request)
-            except AttributeError:
-                dashboardContext.update({'errors':{'index':"{} is not a valid semester number. Please enter a valid numeric number.".format(index)}})
+            if addCourseToPlanner(plannerID, index, courseName) in [ERR_NO_RECORD_FOUND, ERR_RECORD_EXISTS]:
+                dashboardContext.update({'errors':{'index':"{} is not a valid course name or has already been added.".format(courseName)}})
+            else:
+                dashboardContext = dashboardData(request)    
         elif request.POST['change'] == 'remove':
             if removeCourseFromPlanner(plannerID, index, courseName) == ERR_NO_RECORD_FOUND:
                 dashboardContext.update({'errors':{'name':"{} is not a valid course name to remove.".format(courseName)}})
@@ -418,18 +417,21 @@ def dashboardData(request):
     userProfile = getUserProfile(username)
     plannerID = userProfile.plannerID
     userInformation = {}
-    userInformation['unitsCompleted'] = getUnitsCompleted(username)
+    userInformation['unitsCompleted'] = int(getUnitsCompleted(username))
     userInformation['major'] = userProfile.major
     userInformation['graduationSemester'] = userProfile.graduationSemester
     userInformation['graduationYear'] = userProfile.graduationYear
     allCourses = getCoursesTaken(username) #If a course is in the planner, should be excluded as well 
     allCourses += getAllCourses(plannerID)
     userInformation['requirements'] = remainingRequirements(allCourses, majorToCollege(userProfile.major), userProfile.major)
-
-    userInformation['planners'] = getPlanners(userProfile.plannerID)  
+    userInformation['planners'] = getPlanners(plannerID)
+    unitCount = []
+    for semester in range(1,len(userInformation['planners'])+1):
+        unitCount.append(totalUnitsPlanner(plannerID, semester))
+    userInformation['planners'] = zip(userInformation['planners'],unitCount)
+    userInformation['previousUnits'] = int(userInformation['unitsCompleted']-sum(unitCount))
     userInformation['form'] = CourseFormSet()
 
-    #userInformation['magikarp'] = [{'plan':planner,'form':CourseFormSet()} for planner in userInformation['planners']]
     return userInformation
 
 
