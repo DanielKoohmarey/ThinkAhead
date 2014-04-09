@@ -1,3 +1,30 @@
+/*
+Bound to 'Save Planner Button. 
+Makes a POST request to save current planners state represented as list of lists.
+*/
+function savePlanners() {
+	var planners = getPlanners();
+	$.post( "/dashboard/", { 'planners[]': planners } );
+}
+
+/*
+Called by savePlanners().
+Captures and returns current state of planners as list of lists.
+*/
+function getPlanners() {
+	var planners = [];
+	var currId;
+	for (var i = 0; i < numPlanners; i++) {
+		currId = '#planner' + (i + 1);
+		var courses = [];
+		$(currId + ' li').each(function(i) {
+			courses.push($(this).text());
+		});
+		planners.push(courses);
+	}
+	return planners;
+}
+
 /* On page load, run the following code. */
 $(document).ready(function(){
 
