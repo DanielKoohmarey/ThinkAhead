@@ -17,6 +17,20 @@ import re
 
 majorJSON = json.dumps(getCollegesToMajors())
 
+""" ============= Functions required by decorators ========== """
+def registrationCheck(user):
+    """ Check whether or not a user has completed registration. 
+        Args: 
+            user (django.contrib.auth.models.User): The user to check for registration
+        Returns:
+            (bool) True if the user has registered, False if the user has not/ is not logged in.
+    """    
+    if not user.is_anonymous() and getUserProfile(user.username):
+        return True
+    else:
+        return False
+        
+""" ============ View functions called from urls ================= """        
 @csrf_exempt
 def splash(request):
     """ Load the splashpage if the user is not logged in, the registration page if they are logged in
@@ -66,18 +80,6 @@ def splash(request):
             return HttpResponseRedirect('/dashboard/')
             
     return render(request, 'splash.html',{'form':LoginForm()})
-
-def registrationCheck(user):
-    """ Check whether or not a user has completed registration. 
-        Args: 
-            user (django.contrib.auth.models.User): The user to check for registration
-        Returns:
-            (bool) True if the user has registered, False if the user has not/ is not logged in.
-    """    
-    if not user.is_anonymous() and getUserProfile(user.username):
-        return True
-    else:
-        return False
         
 @login_required
 @csrf_exempt
@@ -99,8 +101,78 @@ def userRegistration(request):
             return render(request, 'registration.html',{'errors':"Error adding user profile to database. Please try again later.", 'form0': EmailForm(), 'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})
     else:
         return render(request, 'registration.html', {'form0': EmailForm(), 'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})
+        
+@csrf_exempt
+def userLogout(request):
+    """ Logs out current user session if one exists, return to splashpage
+           Args:
+            request (HttpRequest): The request sent the Django server 
+        Returns:
+            (HttpResponse) The data containing the page the browser will server to the client 
+    """
+    if not request.user.is_anonymous() and request.user.is_authenticated():
+        #User was logged in and the logout button was pressed
+        logout(request)
+    return HttpResponseRedirect('/home/')
+        
+@login_required
+@user_passes_test(registrationCheck, login_url='/registration/')
+@csrf_exempt
+def dashboard(request):
+    """ Populates user profile associated with user with request POST data, 
+    then loads dashboard if no errors occurred on registration page. If the user
+    was not logged in, redirects to splash page.
+        Args:
+            request (HttpRequest): The request sent the Django server 
+        Returns:
+            (HttpResponse) The data containing the page the browser will server to the client 
+    """
+
+    dashboardContext = dashboardData(request)    
+    if not dashboardContext:
+        #Attempt to create user profile with data     
+        return HttpResponseRedirect('/registration/') #TODO: test if we can remove this, decorator now ensures user registered
+    elif (request.method == 'POST'): 
+        #Add/Remove courses from the planner
+        return handlePlannerData(request,dashboardContext)
+    else: # Get. Just display dashboard, no update
+        return render(request, 'dashboard.html',dashboardContext)
+
+@login_required
+@user_passes_test(registrationCheck, login_url='/registration/')
+def updateProfile(request):
+    """ Allow a user to update their profile
+        Args:
+            request (HttpRequest): The request sent the Django server 
+        Returns:
+            (HttpResponse) The data containing the page the browser will server to the client 
+    """
+    if request.method == 'POST': #updates user
+        newUser = register(request)
+        response = setUserProfile(*newUser)
+        if response == SUCCESS:
+            return HttpResponseRedirect('/dashboard/')
+    else:
+        profile = getUserProfile(request.user)
 
 
+        initialData = []
+        for course in profile.coursesTaken:
+            initialData.append({'name':course.replace('.', ' ')}) # Revert our representation to a user-friendly one
+        initialData.sort()
+        formset = CourseFormSet(initial=initialData)
+
+        return render(request,'registration.html',{'form0': EmailForm({'email':User.objects.filter(username=request.user)[0].email}), 
+                                                   'form1': GradForm({'semester':profile.graduationSemester,'year':profile.graduationYear}),
+                                                   'form2':MajorForm(initial={'college':profile.college, 'major':profile.major}),#,'college_id':2,'major_id':2}), # Does not work. Has to be the index
+                                                   'form3':formset,
+                                                   'majorDict':majorJSON,
+                                                   'userCollege':profile.college,
+                                                   'userMajor':profile.major,
+                                                   }
+                                                   )
+
+""" ====================================== Support functions for the views ====================================== """
 def register(request):
     """ Saves user profile information for the user
             Args:
@@ -139,8 +211,8 @@ def register(request):
             else:
                 continue #could not determine course format, skipping course
 
-    return [request.user.username, major, college, graduationSemester, graduationYear, coursesTaken]
-
+    return [request.user.username, major, college, graduationSemester, graduationYear, coursesTaken]    
+    
 def standardizeCourse(course):
     """ Converts a course name into the standardized form NAME.NUMBER
         Args:
@@ -336,43 +408,6 @@ def standardizeCourse(course):
             return ''
     return course
     
-        
-@csrf_exempt
-def userLogout(request):
-    """ Logs out current user session if one exists, return to splashpage
-           Args:
-            request (HttpRequest): The request sent the Django server 
-        Returns:
-            (HttpResponse) The data containing the page the browser will server to the client 
-    """
-    if not request.user.is_anonymous() and request.user.is_authenticated():
-        #User was logged in and the logout button was pressed
-        logout(request)
-    return HttpResponseRedirect('/home/')
-        
-@login_required
-@user_passes_test(registrationCheck, login_url='/registration/')
-@csrf_exempt
-def dashboard(request):
-    """ Populates user profile associated with user with request POST data, 
-    then loads dashboard if no errors occurred on registration page. If the user
-    was not logged in, redirects to splash page.
-        Args:
-            request (HttpRequest): The request sent the Django server 
-        Returns:
-            (HttpResponse) The data containing the page the browser will server to the client 
-    """
-
-    dashboardContext = dashboardData(request)    
-    if not dashboardContext:
-        #Attempt to create user profile with data     
-        return HttpResponseRedirect('/registration/') #TODO: test if we can remove this, decorator now ensures user registered
-    elif (request.method == 'POST'): 
-        #Add/Remove courses from the planner
-        return handlePlannerData(request,dashboardContext)
-    else: # Get. Just display dashboard, no update
-        return render(request, 'dashboard.html',dashboardContext)
-        
 def handlePlannerData(request,dashboardContext):
     """ Handles the user's planner action (add/remove) and updates their planner accordingly
        Args:
@@ -440,41 +475,6 @@ def dashboardData(request):
 
     return userInformation
 
-
-@login_required
-@user_passes_test(registrationCheck, login_url='/registration/')
-def updateProfile(request):
-    """ Allow a user to update their profile
-        Args:
-            request (HttpRequest): The request sent the Django server 
-        Returns:
-            (HttpResponse) The data containing the page the browser will server to the client 
-    """
-    if request.method == 'POST': #updates user
-        newUser = register(request)
-        response = setUserProfile(*newUser)
-        if response == SUCCESS:
-            return HttpResponseRedirect('/dashboard/')
-    else:
-        profile = getUserProfile(request.user)
-
-
-        initialData = []
-        for course in profile.coursesTaken:
-            initialData.append({'name':course.replace('.', ' ')}) # Revert our representation to a user-friendly one
-        initialData.sort()
-        formset = CourseFormSet(initial=initialData)
-
-        return render(request,'registration.html',{'form0': EmailForm({'email':User.objects.filter(username=request.user)[0].email}), 
-                                                   'form1': GradForm({'semester':profile.graduationSemester,'year':profile.graduationYear}),
-                                                   'form2':MajorForm(initial={'college':profile.college, 'major':profile.major}),#,'college_id':2,'major_id':2}), # Does not work. Has to be the index
-                                                   'form3':formset,
-                                                   'majorDict':majorJSON,
-                                                   'userCollege':profile.college,
-                                                   'userMajor':profile.major,
-                                                   }
-                                                   )
-
 def getCurrentSemester():
     """ Get the current semester based on date
     Args:
@@ -500,4 +500,3 @@ def getNextSemester(semester):
     if semester == 'Spring':
         year = str(int(year)+1)
     return '{} {}'.format(semester,year)
-    
