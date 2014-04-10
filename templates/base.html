@@ -1,0 +1,26 @@
+<html>
+
+<head>
+	<title>Think Ahead</title>
+	{% load staticfiles %}
+	<link rel="stylesheet" type="text/css" href="{% static "style.css" %}">
+	<script type="text/javascript" src="{% static "jquery-1.11.0.min.js" %}"></script>
+	<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
+	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+</head>
+
+<body>
+
+<div class="lightbulb" id="shift">
+<div class="login">  
+
+<h1 class="sectionHeader">Welcome to</h1>
+	<a href="/home/"><img class="resize" src="{% static "thinkAheadLogo.png" %}"></a>
+
+{% block body_block %}{% endblock %}
+
+</div>
+</div>
+
+</body>
+</html>

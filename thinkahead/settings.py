@@ -21,7 +21,14 @@ SECRET_KEY = '()8k4nq(+t#@tel1!u4xiss-5y%53tg3-=!z7z$ooh0ya&gfko'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
+if DEBUG:
+    EMAIL_HOST = 'localhost'
+    EMAIL_PORT = 1025
+    EMAIL_HOST_USER = ''
+    EMAIL_HOST_PASSWORD = ''
+    EMAIL_USE_TLS = False
+    DEFAULT_FROM_EMAIL = 'support@thinkahead.com'
+    #python -m smtpd -n -c DebuggingServer localhost:1025     in cmd to run local smtpd server
 TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
