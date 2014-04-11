@@ -149,6 +149,8 @@ def updateProfile(request):
     """
     if request.method == 'POST': #updates user
         newUser = register(request)
+        if not isinstance(newUser, list):
+            return newUser
         response = setUserProfile(*newUser)
         if response == SUCCESS:
             return HttpResponseRedirect('/dashboard/',{'update':True})
