@@ -151,7 +151,7 @@ def updateProfile(request):
         newUser = register(request)
         response = setUserProfile(*newUser)
         if response == SUCCESS:
-            return HttpResponseRedirect('/dashboard/')
+            return HttpResponseRedirect('/dashboard/',{'update':True})
     else:
         profile = getUserProfile(request.user)
 
@@ -173,6 +173,7 @@ def updateProfile(request):
                                                    )
 
 """ ====================================== Support functions for the views ====================================== """
+
 def register(request):
     """ Saves user profile information for the user
             Args:

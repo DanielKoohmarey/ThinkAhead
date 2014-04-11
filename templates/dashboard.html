@@ -28,16 +28,17 @@
             </form>
         </div>
 	</header>
-	
+     <script> $(document).ready(function(){$("#profileNotification").click(function(){$(this).hide();}); $("#profileNotification").css('cursor','pointer'); if (document.referrer.indexOf("profile")!=-1){$("#profileNotification").show();}}); </script>
+	<img src = "{% static "profileNotification.png" %}" style="margin-left:-55%;display:none;" id="profileNotification"></img>
 	<div class="container">
             <b>Total Unit Count: {{ unitsCompleted }} 
             {% if previousUnits %}
-                <small><i>({{ previousUnits }} units already completed.)</i></small>
+                <small><i>({{previousUnits}} units already completed.)</i></small>
             {% endif %}
             </b>          
-        
-		<input id="savePlanners" class="button" type="submit" value="Save Planner" onClick="savePlanners()">
-		
+            <form>
+		<input id="" type="submit" value="Update Planner" class="button" name="update">
+		</form>
 		<table class="planner centered">
 			<tr>
 				{% for planner in planners %}
@@ -52,7 +53,7 @@
 								{% endfor %}
 							</ul>
 							</div>
-                                    <small>Unit count: {{ planner.2 }}</small>
+                                    <small>Unit count: {{planner.2}}</small>
 					</td>
 
 					{% if not forloop.last and forloop.counter|divisibleby:"3" %}
