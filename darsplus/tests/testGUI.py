@@ -1,31 +1,25 @@
-"""
-from django.test import TestCase
-from xpresser import Xpresser
-xp = Xpresser()
-xp.load_images('darsplus/tests/gui')
-import time
+import unittest
+from selenium import webdriver
 
-class TestGUI(TestCase):
+class testGUI(unittest.TestCase):
+    #Must manually form django admin panel delete created selenium user after every run
 
-    def testCreateUser(self):
-        xp.click("firefox")
-        time.sleep(5)
-        xp.click("urlBar")
-        xp.type("http://127.0.0.1:8000/home/")
-        xp.click("refresh")
-        xp.click("username")
-        xp.type("guitest")
-        xp.click("password")
-        xp.type("test")
-        xp.click("createUser")
-        time.sleep(1)
-        error = False
-        try:
-            xp.find("registration")
-        except:
-            error = True
-        self.assertFalse(error)
-"""   
-        
-        
+    def setUp(self):
+        self.driver = webdriver.Firefox()
     
+    def testCreateUserLogout(self):
+        self.driver.get("http://127.0.0.1:8000/")
+        self.assertIn("Think Ahead",self.driver.title)
+        elem = self.driver.find_element_by_name("username")
+        elem.send_keys("selenium")
+        elem = self.driver.find_element_by_name("password")
+        elem.send_keys("pass")
+        elem = self.driver.find_element_by_name("add")
+        elem.click()
+        self.assertTrue(self.driver.find_element_by_id("createUser"))
+        elem = self.driver.find_element_by_name("logout")
+        elem.click()
+        self.assertIn("home",self.driver.getCurrentURL())
+    
+    def tearDown(self):
+        self.driver.close()
