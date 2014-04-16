@@ -19,7 +19,7 @@ class testGUI(unittest.TestCase):
         self.assertTrue(self.driver.find_element_by_id("createUser"))
         elem = self.driver.find_element_by_name("logout")
         elem.click()
-        self.assertIn("home",self.driver.getCurrentURL())
+        self.assertIn("home",self.driver.current_url)
     
     def tearDown(self):
         self.driver.close()
