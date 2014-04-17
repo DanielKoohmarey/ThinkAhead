@@ -174,6 +174,23 @@ def updateProfile(request):
                                                    }
                                                    )
 
+def autocompleteCourse(request):
+    """ Allow a user to update their profile
+        Args:
+            request (HttpRequest): The request sent the Django server which contains user's input into CourseForm
+        Returns:
+            (HttpResponse) The data containing the list of courses matching user's input
+    """
+    term = request.GET.get('term')
+    courses = Courses.objects.filter(courseCode__contains=term)
+    results = []
+    for c in courses:
+        print c.courseCode
+        courseJSON = {'id': c.id, 'label': c.courseCode, 'value': c.courseCode}
+        results.append(courseJSON)
+    data = json.dumps(results)
+    return HttpResponse(data)
+
 """ ====================================== Support functions for the views ====================================== """
 
 def register(request):

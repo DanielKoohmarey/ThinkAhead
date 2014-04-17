@@ -61,6 +61,16 @@ function addForm(btn, prefix) {
             $(this).val("Delete");
         } else {
             $(this).val("");
+            $(this).autocomplete({
+                source: "/autocompleteCourse/",
+                minLength: 2,
+                change: function(event,ui) {
+                    if (ui.item==null) {
+                        $(this).val('');
+                        $(this).focus();
+                    }
+                }
+            });
         }
     });
 
@@ -108,11 +118,22 @@ $('[id=deleteForm]').each(function(i) {
         deleteForm(this, 'form');
     })
 });
-/*
-$('.deleteForm').click(function() {
-    deleteForm(this, 'form');
-});
-*/
+
+// Binds any existing CourseForms to have autocomplete
+var id;
+for (var i = 0; i < formCount; i++) {
+    id = '#id_form-' + i.toString() + '-name';
+    $(id).autocomplete({
+        source: "/autocompleteCourse/",
+        minLength: 2,
+        change: function(event,ui) {
+            if (ui.item==null) {
+                $(this).val('');
+                $(this).focus();
+            }
+        }
+    });
+}
 
 
 // Populates MajorForm.college dropdown with all colleges in DB
