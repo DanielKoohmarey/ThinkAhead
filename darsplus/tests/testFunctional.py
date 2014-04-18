@@ -263,6 +263,7 @@ class TestUserCase(TestCase):
         request.update(managementForm)
         response = client.post('/registration/', request)
         response = client.post('/dashboard/',{'index':'1','course':'CS 169', 'change':'remove'})
+        print dir(response.context)
         self.assertTrue('name' in response.context['errors'])
 
     def testLogoutLoggedIn(self):

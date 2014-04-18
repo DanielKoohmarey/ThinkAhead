@@ -662,6 +662,9 @@ def totalUnitsPlanner(plannerID, index):
 def getAllCourses(plannerID):
     return Planner.getAllCourses(plannerID)
 
+def getAllColleges():
+    return Colleges.allColleges()
+
 def getCourseUnits(courseName):
     return Courses.getCourseUnits(courseName)
     

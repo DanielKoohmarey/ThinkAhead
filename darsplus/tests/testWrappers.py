@@ -208,7 +208,7 @@ class TestWrappers(TestCase):
 
     def testCollegesToMajors(self):
         majorDict = getCollegesToMajors()
-        colleges = allColleges()
+        colleges = getAllColleges()
         for college in colleges:
             self.assertIn(college, majorDict)
             self.assertTrue(len(majorDict[college]) > 0)
