@@ -130,13 +130,17 @@ def dashboard(request):
             (HttpResponse) The data containing the page the browser will server to the client 
     """
     dashboardContext = dashboardData(request)    
+    print "start"
     if not dashboardContext:
         #Attempt to create user profile with data     
         return HttpResponseRedirect('/registration/') #TODO: test if we can remove this, decorator now ensures user registered
-    elif (request.is_ajax()) and request.method == 'POST': 
+    elif (request.is_ajax()) :#and request.method == 'POST': 
         #Add/Remove courses from the planner
+        print "A"
         return handlePlannerData(request,dashboardContext)
+
     else: # Get. Just display dashboard, no update
+        print "B"
         return render(request, 'dashboard.html',dashboardContext)
 
 @login_required
@@ -203,11 +207,17 @@ def register(request):
     courseInfo = CourseFormSet(request.POST)
     errors = {}
     if emailInfo.errors or CourseFormSet.errors:
-        errors.update(emailInfo.errors)
+        if emailInfo.errors:
+            print "email error"
+            errors.update(emailInfo.errors)
+        
         for form in courseInfo:
-            errors.update(form.errors)
+            print form.errors
+        #    errors.update(form.errors)
+        
     majorForm_errors = majorInfo.errors()
     if majorForm_errors:
+        print "major form error"
         errors.update({'major':majorForm_errors})
     if errors:
         return render(request, 'registration.html',{'errors':errors,'form0': EmailForm(),'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON}) 
@@ -435,7 +445,6 @@ def handlePlannerData(request,dashboardContext):
         (HttpResponse) The data containing the page the browser will server to the client 
     """
     user = request.user.username
-    print user
     plannerID = getUserProfile(user).plannerID
 
     planners = request.POST.getlist('planners[]')
@@ -445,9 +454,11 @@ def handlePlannerData(request,dashboardContext):
         courses = filter(lambda course: course != '', courses)
         courses = [standardizeCourse(course) for course in courses]
         setPlanner(plannerID, index+1, courses)
-    request.method = 'GET' # prevent infinite loop because request is still ajax
+    #request.method = 'GET' # prevent infinite loop because request is still ajax
     dashboardContext = dashboardData(request) # Updates context
-    return render(request,'dashboard.html',dashboardContext)
+    print "refreshing"
+    return HttpRedirect('/registration/')
+    #return render(request,'dashboard.html',dashboardContext)
         
     
     """
