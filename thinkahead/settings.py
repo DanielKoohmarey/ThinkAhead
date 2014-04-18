@@ -21,14 +21,7 @@ SECRET_KEY = '()8k4nq(+t#@tel1!u4xiss-5y%53tg3-=!z7z$ooh0ya&gfko'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-if DEBUG:
-    EMAIL_HOST = 'localhost'
-    EMAIL_PORT = 1025
-    EMAIL_HOST_USER = ''
-    EMAIL_HOST_PASSWORD = ''
-    EMAIL_USE_TLS = False
-    DEFAULT_FROM_EMAIL = 'support@thinkahead.com'
-    #python -m smtpd -n -c DebuggingServer localhost:1025     in cmd to run local smtpd server
+
 TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
@@ -125,7 +118,6 @@ FIXTURE_DIRS = (
 
 # The lines that follow configure Heroku settings. Comment out if testing locally
 # Parse database configuration from $DATABASE_URL
-"""
 import dj_database_url
 DATABASES['default'] =  dj_database_url.config()
 
@@ -144,4 +136,3 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
-"""
