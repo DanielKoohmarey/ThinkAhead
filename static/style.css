@@ -256,16 +256,19 @@ input {
 }
 
 
-
 ul.errorlist {
     margin: 0;
     padding: 0;
 }
 .errorlist li {
-    background-color: red;
+    max-width:200px;
+    background-color: #003262;
     color: white;
-    display: block;
+    display: inline;
     font-size: 10px;
     margin: 0 0 3px;
-    padding: 4px 5px;
+    padding: 3px 15px;
+    border: 2px solid #FDB515;
+    border-radius: 25px;
+    font-family: arial;
 }
