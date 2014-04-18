@@ -159,10 +159,12 @@ class TestUniversity(TestCase):
 	def testAC3(self):
 		ans= remainingRequirements(['ELENG.40','GWS.100AC'], "College of Engineering", 'Electrical Engineering & Computer Sciences')
 		self.assertTrue( ans[0]['reqCompleted'])
+
 	def testUnits1(self):
 		ans= remainingRequirements([], "College of Engineering", 'Electrical Engineering & Computer Sciences')
 		self.assertTrue( not ans[1]['reqCompleted'])
-	def testUnits1(self):
+
+	def testUnits2(self):
 		ans= remainingRequirements(['ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20','ELENG.20'], "College of Engineering", 'Electrical Engineering & Computer Sciences')
 		self.assertTrue(ans[1]['reqCompleted'])
 

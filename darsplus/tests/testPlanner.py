@@ -29,7 +29,7 @@ class TestPlanner(TestCase):
         """ Ensure multiple planners can be added """
         offset = Planner.objects.all().count()
         allIDs = set()
-        for i in range(1,1):
+        for i in range(1,2):
             newID = Planner.addPlanner()
             num = Planner.objects.all().count()        
             self.assertEquals(i+offset, num)
