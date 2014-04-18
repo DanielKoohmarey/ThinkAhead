@@ -29,6 +29,9 @@ ERR_NO_RECORD_FOUND = -7
 # Query into adding something (not username)to a database but it already exists 
 ERR_RECORD_EXISTS = -8
 
+# Error message on invalid semesters
+ERR_INVALID_DATE = -9
+
 MAX_USERNAME_LENGTH = 256
 MAX_PASSWORD_LENGTH = 256
 MAX_EMAIL_LENGTH = 256
