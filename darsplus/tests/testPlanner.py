@@ -73,3 +73,45 @@ class TestPlanner(TestCase):
         for course in courseList:
             Planner.addCourseToPlanner(newID, semester, course)
         self.assertEquals(14.0, Planner.totalUnitsPlanner(newID, semester))
+
+    def testSetPlannerNew(self):
+        """ Tests that you can set on a blank planner
+        """
+        planner = Planner.objects.filter(plannerID = 0)[0]
+        plannerID = planner.plannerID
+        response = Planner.setPlanner(plannerID, 2, ['COMPSCI.61A','COMPSCI.61B'])
+        self.assertEquals(SUCCESS, response)
+
+        planner = Planner.objects.filter(plannerID = 0)[0]
+        planner2 = planner.semester2
+        self.assertIn('COMPSCI.61A', planner2)
+        self.assertIn('COMPSCI.61B', planner2)
+        self.assertEquals(4,  Planner.totalUnitsPlanner(0,1))
+    
+    def testSetPlannerFail(self):
+        """ Tests that you don't call setPlanner with invalid index
+        """
+        planner = Planner.objects.filter(plannerID = 0)[0]
+        plannerID = planner.plannerID
+        response = Planner.setPlanner(plannerID, 0, ['COMPSCI.61A','COMPSCI.61B'])
+        self.assertEquals(ERR_NO_RECORD_FOUND, response)
+        response = Planner.setPlanner(plannerID, 16, ['COMPSCI.61A','COMPSCI.61B'])
+        self.assertEquals(ERR_NO_RECORD_FOUND, response)
+
+    def testSetPlannerOverwrite(self):
+        """ Tests that if you set a planner on something that has a planner, you overwrite it.
+        Note that the planner has 169 in semester1 and 161 in semester15
+        """
+        planner = Planner.objects.filter(plannerID = 0)[0]
+        plannerID = planner.plannerID
+        response = Planner.setPlanner(plannerID, 1, ['COMPSCI.61AS'])
+        planner = Planner.objects.filter(plannerID = 0)[0]
+        self.assertIn('COMPSCI.61AS', planner.semester1)
+        self.assertEquals(1, len(planner.semester1))
+
+        response = Planner.setPlanner(plannerID, 15, ['COMPSCI.61B','COMPSCI.161'])
+        planner = Planner.objects.filter(plannerID = 0)[0]
+        self.assertIn('COMPSCI.61B', planner.semester15)
+        self.assertIn('COMPSCI.161', planner.semester15)
+        self.assertEquals(2, len(planner.semester15))
+        

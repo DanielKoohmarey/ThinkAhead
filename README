@@ -180,6 +180,7 @@ UI TESTING
 	Instructions for installing and running it can be found here:
 	http://docs.seleniumhq.org/
 
+	sudo pip install selenium
 	0) Running all the GUI tests
 	“python manage.py test darsplus.tests.testGUI”
 

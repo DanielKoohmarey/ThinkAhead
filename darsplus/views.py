@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from darsplus.statics import *
 from darsplus.forms import LoginForm, EmailForm, GradForm, MajorForm, CourseFormSet
-from darsplus.models import Courses, addUserProfile, getUserProfile, getCoursesTaken, getUnitsCompleted, majorToCollege, getCollegesToMajors, setEmail, setUserProfile, getPlanners, addCourseToPlanner, getAllCourses, removeCourseFromPlanner, getCourseInfo, totalUnitsPlanner
+from darsplus.models import Courses, addUserProfile, getUserProfile, getCoursesTaken, getUnitsCompleted, majorToCollege, getCollegesToMajors, setEmail, setUserProfile, getPlanners, addCourseToPlanner, getAllCourses, removeCourseFromPlanner, getCourseInfo, totalUnitsPlanner, setPlanner
 from darsplus.requirementscode import remainingRequirements
 from django.template import RequestContext
 from django.contrib.auth.models import User
@@ -114,6 +114,8 @@ def userLogout(request):
         #User was logged in and the logout button was pressed
         logout(request)
     return HttpResponseRedirect('/home/')
+
+
         
 @login_required
 @user_passes_test(registrationCheck, login_url='/registration/')
@@ -127,12 +129,11 @@ def dashboard(request):
         Returns:
             (HttpResponse) The data containing the page the browser will server to the client 
     """
-
     dashboardContext = dashboardData(request)    
     if not dashboardContext:
         #Attempt to create user profile with data     
         return HttpResponseRedirect('/registration/') #TODO: test if we can remove this, decorator now ensures user registered
-    elif (request.method == 'POST'): 
+    elif (request.is_ajax()) and request.method == 'POST': 
         #Add/Remove courses from the planner
         return handlePlannerData(request,dashboardContext)
     else: # Get. Just display dashboard, no update
@@ -183,7 +184,6 @@ def autocompleteCourse(request):
     courses = Courses.objects.filter(courseCode__contains=term)
     results = []
     for c in courses:
-        print c.courseCode
         courseJSON = {'id': c.id, 'label': c.courseCode, 'value': c.courseCode}
         results.append(courseJSON)
     data = json.dumps(results)
@@ -435,12 +435,28 @@ def handlePlannerData(request,dashboardContext):
         (HttpResponse) The data containing the page the browser will server to the client 
     """
     user = request.user.username
+    print user
     plannerID = getUserProfile(user).plannerID
-    index = request.POST['index']
-    if index not in [str(ele) for ele in range(16)]:
+
+    planners = request.POST.getlist('planners[]')
+    for index in range(0, len(planners)):
+        names = planners[index]
+        courses = names.split(",")
+        courses = filter(lambda course: course != '', courses)
+        courses = [standardizeCourse(course) for course in courses]
+        setPlanner(plannerID, index+1, courses)
+    request.method = 'GET' # prevent infinite loop because request is still ajax
+    dashboardContext = dashboardData(request) # Updates context
+    return render(request,'dashboard.html',dashboardContext)
+        
+    
+    """
+    if index not in [str(ele) for ele in range(16)]: #Not valid for new save planner will wait to integrate
         dashboardContext.update({'errors':{'index':"{}. Please enter a valid numeric number.".format(index+" is not a valid semester number" if index else "Index cannot be left blank.")}})
         return render(request, 'dashboard.html',dashboardContext)
+    
     courseName = standardizeCourse(request.POST['course'])
+
     try:
         if not courseName:
             dashboardContext.update({'errors':{'name':"{} is not a valid course name. Please ensure you are using the appropriate abbreviation of the major.".format(courseName)}})
@@ -459,6 +475,7 @@ def handlePlannerData(request,dashboardContext):
     except MultiValueDictKeyError:
         dashboardContext.update({'errors':{'change':"Please select either add or remove."}})
     return render(request, 'dashboard.html',dashboardContext)
+    """
 
 def dashboardData(request):
     """ Retrieve user profile information and return context dictionary for dashboard. 
@@ -487,7 +504,6 @@ def dashboardData(request):
     oldSemester = dates[0]
     oldYear = datetime.date.today().year
     numPlanner = diffDates(oldSemester, oldYear, userProfile.graduationSemester, userProfile.graduationYear)
-    print numPlanner
     for semester in range(1,numPlanner + 1):
         unitCount.append(totalUnitsPlanner(plannerID, semester))
         semesterNames.append(getNextSemester(semesterNames[-1]))

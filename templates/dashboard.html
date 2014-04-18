@@ -35,10 +35,10 @@
             {% if previousUnits %}
                 <small><i>({{previousUnits}} units already completed.)</i></small>
             {% endif %}
-            </b>          
-            <form>
-		<input id="" type="submit" value="Update Planner" class="button" name="update">
-		</form>
+            </b> 
+
+	      <input id="savePlanners" class="button" type="submit" value="Save Planner" onClick="savePlanners()">         
+
 		<table class="planner centered">
 			<tr>
 				{% for planner in planners %}

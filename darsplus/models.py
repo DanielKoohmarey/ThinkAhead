@@ -316,6 +316,34 @@ class Planner(models.Model):
         return allPlanners
 
     @staticmethod
+    def setPlanner(plannerID, index, lst):
+        """
+        sets a list of all of the planners associated with plannerID
+
+        Args:
+            username (str): plannerID
+            index (int): Number between 1 and 15 inclusive. Specifies which semester you want to change
+            lst (list): list of course names
+        Returns:
+            SUCCESS or ERR_NO_RECORD_FOUND
+        """
+        matches = Planner.objects.filter(plannerID=plannerID)
+        numMatches = matches.count()
+        if (numMatches == 0):
+            return ERR_NO_RECORD_FOUND
+        account = matches[0]        
+        if index <= 15 and index >= 1:
+            setattr(account, 'semester'+str(index), lst)
+            account.save()
+            return SUCCESS
+            
+        else:
+            return ERR_NO_RECORD_FOUND
+
+
+
+
+    @staticmethod
     def addCourseToPlanner(plannerID, index, coursename):
         """
         Adds a new course to the planner's index-th semester. 
@@ -646,6 +674,9 @@ def removeListCoursesTaken(username, courseList):
 
 def getPlanners(plannerID):
     return Planner.getPlanners(plannerID)
+
+def setPlanner(plannerID, index, lst):
+    return Planner.setPlanner(plannerID, index, lst)
 
 def addCourseToPlanner(plannerID, index, coursename):
     return Planner.addCourseToPlanner(plannerID, index, coursename)
