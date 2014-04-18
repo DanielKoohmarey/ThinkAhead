@@ -4,7 +4,7 @@ from darsplus.forms import LoginForm, EmailForm, GradForm, MajorForm, CourseForm
 from darsplus.models import Courses, addUserProfile, getUserProfile, getCoursesTaken, getUnitsCompleted, majorToCollege, getCollegesToMajors, setEmail, setUserProfile, getPlanners, addCourseToPlanner, getAllCourses, removeCourseFromPlanner, getCourseInfo, totalUnitsPlanner
 from darsplus.requirementscode import remainingRequirements
 from django.template import RequestContext
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Courses
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -179,15 +179,15 @@ def autocompleteCourse(request):
     Returns:
     (HttpResponse) The data containing the list of courses matching user's input
     """
-        term = request.GET.get('term')
-        courses = Courses.objects.filter(courseCode__contains=term)
-        results = []
-        for c in courses:
-            print c.courseCode
-            courseJSON = {'id': c.id, 'label': c.courseCode, 'value': c.courseCode}
-            results.append(courseJSON)
-        data = json.dumps(results)
-        return HttpResponse(data)
+    term = request.GET.get('term')
+    courses = Courses.objects.filter(courseCode__contains=term)
+    results = []
+    for c in courses:
+        print c.courseCode
+        courseJSON = {'id': c.id, 'label': c.courseCode, 'value': c.courseCode}
+        results.append(courseJSON)
+    data = json.dumps(results)
+    return HttpResponse(data)
     
 """ ====================================== Support functions for the views ====================================== """
 
