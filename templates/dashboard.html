@@ -31,9 +31,9 @@
      <script> $(document).ready(function(){$("#profileNotification").click(function(){$(this).hide();}); $("#profileNotification").css('cursor','pointer'); if (document.referrer.indexOf("profile")!=-1){$("#profileNotification").show();}}); </script>
 	<img src = "{% static "profileNotification.png" %}" style="margin-left:-55%;display:none;" id="profileNotification"></img>
 	<div class="container">
-            <b>Total Unit Count: {{ unitsCompleted }} 
-            {% if previousUnits %}
-                <small><i>({{previousUnits}} units already completed.)</i></small>
+            <b>Total Unit Count: {{ unitsPlanner }} 
+            {% if unitsCompleted %}
+                <small><i>({{unitsCompleted}} units already completed.)</i></small>
             {% endif %}
             </b> 
 
