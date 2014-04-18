@@ -69,11 +69,14 @@
 
 	<div class="container">
 		{% if requirements %}
+		<ul class="reqsList">
 
 			{% for r in requirements %}
 				{% if r.reqCompleted %}
+				<li class="req reqComplete">
 					<h3 class="reqTitle">{{ r.reqName }} (Completed)</h3>
 				{% else %}
+					<li class="req">
 					<h3 class="reqTitle">{{ r.reqName }}</h3>
 				{% endif %}
 				<p class="reqDescription">Description: {{ r.reqDescription }} </p>
@@ -95,9 +98,11 @@
 					</ul>
 					<br>
 				</div>
-					
+			</li>
+						
 			{% endfor %}
-		
+		</ul>
+
 		{% else %}
 			<p> No requirements were given.</p>
 		{% endif %}

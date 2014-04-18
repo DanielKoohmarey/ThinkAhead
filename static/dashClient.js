@@ -28,6 +28,19 @@ function getPlanners() {
 /* On page load, run the following code. */
 $(document).ready(function(){
 
+/*
+Sets up collaspible requirements list.
+Modified from:
+http://stackoverflow.com/questions/12480838/use-jquery-to-expand-collapse-ul-list-having-problems
+*/
+$('.reqComplete ul').hide();
+$('.reqComplete .reqDescription').hide();
+
+$('.reqTitle').click(function() {
+    $(this).parent().find('ul').slideToggle();
+    $(this).parent().find('.reqDescription').slideToggle();
+});
+
 /* 
 Connects individual sortable lists with each other.
 Reference: http://devheart.org/articles/jquery-customizable-layout-using-drag-and-drop/
