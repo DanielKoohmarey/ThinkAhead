@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from darsplus.statics import SUCCESS, ERR_NO_RECORD_FOUND, ERR_RECORD_EXISTS
 from darsplus.forms import LoginForm, EmailForm, GradForm, MajorForm, CourseFormSet
-from darsplus.models import addUserProfile, getUserProfile, getCoursesTaken, getUnitsCompleted, majorToCollege, getCollegesToMajors, setEmail, setUserProfile, getPlanners, addCourseToPlanner, getAllCourses, removeCourseFromPlanner, getCourseInfo
+from darsplus.models import addUserProfile, getUserProfile, getCoursesTaken, getUnitsCompleted, majorToCollege, getCollegesToMajors, setEmail, setUserProfile, getPlanners, addCourseToPlanner, getAllCourses, removeCourseFromPlanner, getCourseInfo, totalUnitsPlanner
 from darsplus.requirementscode import remainingRequirements
 from django.template import RequestContext
 from django.contrib.auth.models import User
@@ -11,11 +11,26 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponseRedirect
 from django.forms.util import ErrorList
 from django.utils.datastructures import MultiValueDictKeyError
+import datetime
 import json
 import re
 
 majorJSON = json.dumps(getCollegesToMajors())
 
+""" ============= Functions required by decorators ========== """
+def registrationCheck(user):
+    """ Check whether or not a user has completed registration. 
+        Args: 
+            user (django.contrib.auth.models.User): The user to check for registration
+        Returns:
+            (bool) True if the user has registered, False if the user has not/ is not logged in.
+    """    
+    if not user.is_anonymous() and getUserProfile(user.username):
+        return True
+    else:
+        return False
+        
+""" ============ View functions called from urls ================= """        
 @csrf_exempt
 def splash(request):
     """ Load the splashpage if the user is not logged in, the registration page if they are logged in
@@ -65,18 +80,6 @@ def splash(request):
             return HttpResponseRedirect('/dashboard/')
             
     return render(request, 'splash.html',{'form':LoginForm()})
-
-def registrationCheck(user):
-    """ Check whether or not a user has completed registration. 
-        Args: 
-            user (django.contrib.auth.models.User): The user to check for registration
-        Returns:
-            (bool) True if the user has registered, False if the user has not/ is not logged in.
-    """    
-    if not user.is_anonymous() and getUserProfile(user.username):
-        return True
-    else:
-        return False
         
 @login_required
 @csrf_exempt
@@ -98,8 +101,97 @@ def userRegistration(request):
             return render(request, 'registration.html',{'errors':"Error adding user profile to database. Please try again later.", 'form0': EmailForm(), 'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})
     else:
         return render(request, 'registration.html', {'form0': EmailForm(), 'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})
+        
+@csrf_exempt
+def userLogout(request):
+    """ Logs out current user session if one exists, return to splashpage
+           Args:
+            request (HttpRequest): The request sent the Django server 
+        Returns:
+            (HttpResponse) The data containing the page the browser will server to the client 
+    """
+    if not request.user.is_anonymous() and request.user.is_authenticated():
+        #User was logged in and the logout button was pressed
+        logout(request)
+    return HttpResponseRedirect('/home/')
+        
+@login_required
+@user_passes_test(registrationCheck, login_url='/registration/')
+@csrf_exempt
+def dashboard(request):
+    """ Populates user profile associated with user with request POST data, 
+    then loads dashboard if no errors occurred on registration page. If the user
+    was not logged in, redirects to splash page.
+        Args:
+            request (HttpRequest): The request sent the Django server 
+        Returns:
+            (HttpResponse) The data containing the page the browser will server to the client 
+    """
+
+    dashboardContext = dashboardData(request)    
+    if not dashboardContext:
+        #Attempt to create user profile with data     
+        return HttpResponseRedirect('/registration/') #TODO: test if we can remove this, decorator now ensures user registered
+    elif (request.method == 'POST'): 
+        #Add/Remove courses from the planner
+        return handlePlannerData(request,dashboardContext)
+    else: # Get. Just display dashboard, no update
+        return render(request, 'dashboard.html',dashboardContext)
+
+@login_required
+@user_passes_test(registrationCheck, login_url='/registration/')
+def updateProfile(request):
+    """ Allow a user to update their profile
+        Args:
+            request (HttpRequest): The request sent the Django server 
+        Returns:
+            (HttpResponse) The data containing the page the browser will server to the client 
+    """
+    if request.method == 'POST': #updates user
+        newUser = register(request)
+        if not isinstance(newUser, list):
+            return newUser
+        response = setUserProfile(*newUser)
+        if response == SUCCESS:
+            return HttpResponseRedirect('/dashboard/',{'update':True})
+    else:
+        profile = getUserProfile(request.user)
 
 
+        initialData = []
+        for course in profile.coursesTaken:
+            initialData.append({'name':course.replace('.', ' ')}) # Revert our representation to a user-friendly one
+        initialData.sort()
+        formset = CourseFormSet(initial=initialData)
+
+        return render(request,'registration.html',{'form0': EmailForm({'email':User.objects.filter(username=request.user)[0].email}), 
+                                                   'form1': GradForm({'semester':profile.graduationSemester,'year':profile.graduationYear}),
+                                                   'form2':MajorForm(initial={'college':profile.college, 'major':profile.major}),#,'college_id':2,'major_id':2}), # Does not work. Has to be the index
+                                                   'form3':formset,
+                                                   'majorDict':majorJSON,
+                                                   'userCollege':profile.college,
+                                                   'userMajor':profile.major,
+                                                   }
+                                                   )
+
+def autocompleteCourse(request):
+    """ Allow a user to update their profile
+        Args:
+            request (HttpRequest): The request sent the Django server which contains user's input into CourseForm
+        Returns:
+            (HttpResponse) The data containing the list of courses matching user's input
+    """
+    term = request.GET.get('term')
+    courses = Courses.objects.filter(courseCode__contains=term)
+    results = []
+    for c in courses:
+        print c.courseCode
+        courseJSON = {'id': c.id, 'label': c.courseCode, 'value': c.courseCode}
+        results.append(courseJSON)
+    data = json.dumps(results)
+    return HttpResponse(data)
+
+""" ====================================== Support functions for the views ====================================== """
 
 def register(request):
     """ Saves user profile information for the user
@@ -139,8 +231,8 @@ def register(request):
             else:
                 continue #could not determine course format, skipping course
 
-    return [request.user.username, major, college, graduationSemester, graduationYear, coursesTaken]
-
+    return [request.user.username, major, college, graduationSemester, graduationYear, coursesTaken]    
+    
 def standardizeCourse(course):
     """ Converts a course name into the standardized form NAME.NUMBER
         Args:
@@ -336,43 +428,6 @@ def standardizeCourse(course):
             return ''
     return course
     
-        
-@csrf_exempt
-def userLogout(request):
-    """ Logs out current user session if one exists, return to splashpage
-           Args:
-            request (HttpRequest): The request sent the Django server 
-        Returns:
-            (HttpResponse) The data containing the page the browser will server to the client 
-    """
-    if not request.user.is_anonymous() and request.user.is_authenticated():
-        #User was logged in and the logout button was pressed
-        logout(request)
-    return HttpResponseRedirect('/home/')
-        
-@login_required
-@user_passes_test(registrationCheck, login_url='/registration/')
-@csrf_exempt
-def dashboard(request):
-    """ Populates user profile associated with user with request POST data, 
-    then loads dashboard if no errors occurred on registration page. If the user
-    was not logged in, redirects to splash page.
-        Args:
-            request (HttpRequest): The request sent the Django server 
-        Returns:
-            (HttpResponse) The data containing the page the browser will server to the client 
-    """
-
-    dashboardContext = dashboardData(request)    
-    if not dashboardContext:
-        #Attempt to create user profile with data     
-        return HttpResponseRedirect('/registration/') #TODO: test if we can remove this, decorator now ensures user registered
-    elif (request.method == 'POST'): 
-        #Add/Remove courses from the planner
-        return handlePlannerData(request,dashboardContext)
-    else: # Get. Just display dashboard, no update
-        return render(request, 'dashboard.html',dashboardContext)
-        
 def handlePlannerData(request,dashboardContext):
     """ Handles the user's planner action (add/remove) and updates their planner accordingly
        Args:
@@ -384,6 +439,9 @@ def handlePlannerData(request,dashboardContext):
     user = request.user.username
     plannerID = getUserProfile(user).plannerID
     index = request.POST['index']
+    if index not in [str(ele) for ele in range(16)]:
+        dashboardContext.update({'errors':{'index':"{}. Please enter a valid numeric number.".format(index+" is not a valid semester number" if index else "Index cannot be left blank.")}})
+        return render(request, 'dashboard.html',dashboardContext)
     courseName = standardizeCourse(request.POST['course'])
     try:
         if not courseName:
@@ -391,13 +449,10 @@ def handlePlannerData(request,dashboardContext):
         elif courseName in getCoursesTaken(user):
             dashboardContext.update({'errors':{'name':"You have already taken {}.".format(courseName)}})
         elif request.POST['change'] == 'add':
-            try:
-                if addCourseToPlanner(plannerID, index, courseName) in [ERR_NO_RECORD_FOUND, ERR_RECORD_EXISTS]:
-                    dashboardContext.update({'errors':{'index':"{} is not a valid course name or has already been added.".format(courseName)}})
-                else:
-                    dashboardContext = dashboardData(request)
-            except AttributeError:
-                dashboardContext.update({'errors':{'index':"{} is not a valid semester number. Please enter a valid numeric number.".format(index)}})
+            if addCourseToPlanner(plannerID, index, courseName) in [ERR_NO_RECORD_FOUND, ERR_RECORD_EXISTS]:
+                dashboardContext.update({'errors':{'index':"{} is not a valid course name or has already been added.".format(courseName)}})
+            else:
+                dashboardContext = dashboardData(request)    
         elif request.POST['change'] == 'remove':
             if removeCourseFromPlanner(plannerID, index, courseName) == ERR_NO_RECORD_FOUND:
                 dashboardContext.update({'errors':{'name':"{} is not a valid course name to remove.".format(courseName)}})
@@ -418,58 +473,50 @@ def dashboardData(request):
     userProfile = getUserProfile(username)
     plannerID = userProfile.plannerID
     userInformation = {}
-    userInformation['unitsCompleted'] = getUnitsCompleted(username)
+    userInformation['unitsCompleted'] = int(getUnitsCompleted(username))
     userInformation['major'] = userProfile.major
     userInformation['graduationSemester'] = userProfile.graduationSemester
     userInformation['graduationYear'] = userProfile.graduationYear
     allCourses = getCoursesTaken(username) #If a course is in the planner, should be excluded as well 
     allCourses += getAllCourses(plannerID)
     userInformation['requirements'] = remainingRequirements(allCourses, majorToCollege(userProfile.major), userProfile.major)
+    userInformation['planners'] = getPlanners(plannerID)
+    unitCount = []
+    currentSemester = getCurrentSemester()
+    semesterNames = [getNextSemester(currentSemester)]
+    for semester in range(1,len(userInformation['planners'])+1):
+        unitCount.append(totalUnitsPlanner(plannerID, semester))
+        semesterNames.append(getNextSemester(semesterNames[-1]))
 
-    userInformation['planners'] = getPlanners(userProfile.plannerID)  
+    semesterNames.pop() #remove extra name generated by loop
+    userInformation['planners'] = zip(semesterNames, userInformation['planners'],unitCount)
+    userInformation['previousUnits'] = int(userInformation['unitsCompleted']-sum(unitCount))
     userInformation['form'] = CourseFormSet()
 
-    #userInformation['magikarp'] = [{'plan':planner,'form':CourseFormSet()} for planner in userInformation['planners']]
     return userInformation
 
-
-@login_required
-@user_passes_test(registrationCheck, login_url='/registration/')
-def updateProfile(request):
-    """ Allow a user to update their profile
-        Args:
-            request (HttpRequest): The request sent the Django server 
-        Returns:
-            (HttpResponse) The data containing the page the browser will server to the client 
+def getCurrentSemester():
+    """ Get the current semester based on date
+    Args:
+    Returns:
+        (str) SEM YR the semester and year
     """
-    if request.method == 'POST': #updates user
-        """
-        newUser = addUserProfile(*register(request))
-        if newUser == SUCCESS:
-            return HttpResponseRedirect('/dashboard/')
-        else:
-            return newUser
-        """
-        newUser = register(request)
-        response = setUserProfile(*newUser)
-        if response == SUCCESS:
-            return HttpResponseRedirect('/dashboard/')
-    else:
-        profile = getUserProfile(request.user)
-
-
-        initialData = []
-        for course in profile.coursesTaken:
-            initialData.append({'name':course.replace('.', ' ')}) # Revert our representation to a user-friendly one
-        initialData.sort()
-        formset = CourseFormSet(initial=initialData)
-
-        return render(request,'registration.html',{'form0': EmailForm({'email':User.objects.filter(username=request.user)[0].email}), 
-                                                   'form1': GradForm({'semester':profile.graduationSemester,'year':profile.graduationYear}),
-                                                   'form2':MajorForm(initial={'college':profile.college, 'major':profile.major}),#,'college_id':2,'major_id':2}), # Does not work. Has to be the index
-                                                   'form3':formset,
-                                                   'majorDict':majorJSON,
-                                                   'userCollege':profile.college,
-                                                   'userMajor':profile.major,
-                                                   }
-                                                   )
+    month = datetime.datetime.now().strftime("%m")
+    semesters = {'Spring':['01','02','03','04','05'], 'Summer':['06','07','08'], 'Fall':['09','10','11','12']}
+    for semester,months in semesters.items():
+        if month in months:
+            return '{} {}'.format(semester,datetime.datetime.now().strftime("%y"))
+        
+def getNextSemester(semester):
+    """ Get the current semester based on date
+    Args:
+        semester (str): The current semester to get the next semester from
+    Returns:
+        (str) SEM YR the next semester and year
+    """
+    nextSemester = {'Fall':'Spring','Spring':'Summer','Summer':'Fall' }
+    semester,year = semester.split()
+    semester = nextSemester[semester]
+    if semester == 'Spring':
+        year = str(int(year)+1)
+    return '{} {}'.format(semester,year)

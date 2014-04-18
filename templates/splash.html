@@ -1,19 +1,5 @@
-<html>
-
-<head>
-	<title>Think Ahead</title>
-	{% load staticfiles %}
-	<link rel="stylesheet" type="text/css" href="{% static "style.css" %}">
-</head>
-
-<body>
-
-<div class="lightbulb" id="shift">
-<div class="login">  
-
-<h1 class="sectionHeader">Welcome to</h1>
-	<img class="resize" src="{% static "thinkAheadLogo.png" %}">
-
+{% extends "base.html" %}
+{% block body_block %}
 <form action="" method="post">
 	<div class="formGroup">
 		<label class="formLabel">
@@ -42,11 +28,7 @@
 
 	<input class="button" type="submit" name="login" value="Login">
 	<input class="button" type="submit" name="add" value="Create User">
-
+    <br/><br />
+    <a href="/password/reset/"><small>Forgot password?</small></a>
 </form>
-
-</div>
-</div>
-
-</body>
-</html>
+{% endblock %}

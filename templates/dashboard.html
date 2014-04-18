@@ -4,7 +4,10 @@
 	<title>Think Ahead</title>
 	{% load staticfiles %}
 	<script type="text/javascript" src="{% static "jquery-1.11.0.min.js" %}"></script>
-	<script type="text/javascript" src="{% static "regClient.js" %}"></script>
+	<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
+	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+	<script type="text/javascript" src="{% static "dashClient.js" %}"></script>
 	<link rel="stylesheet" type="text/css" href="{% static "style.css" %}">
 </head>
 
@@ -25,66 +28,41 @@
             </form>
         </div>
 	</header>
-	
+     <script> $(document).ready(function(){$("#profileNotification").click(function(){$(this).hide();}); $("#profileNotification").css('cursor','pointer'); if (document.referrer.indexOf("profile")!=-1){$("#profileNotification").show();}}); </script>
+	<img src = "{% static "profileNotification.png" %}" style="margin-left:-55%;display:none;" id="profileNotification"></img>
 	<div class="container">
-	
-		{% comment %}
-		Tentative way of adding and removing courses to Planner
-		{% endcomment %}
-		<form action="" method="post">
-		{% if "index" in errors %}
-		    <ul class="errorlist"><li>
-				{{ errors.index }}
-		    </ul></li>
-		{% endif %}
-		Semester Number: <input id="semester" type="text" name="index">
-		<br />
-
-		{% if "name" in errors %}
-		    <ul class="errorlist"><li>
-				{{ errors.name }}
-		    </ul></li>
-		{% endif %}
-		Course Name: <input id="coursename" type="text" name="course">
-		<br />
-		{% if "change" in errors %}
-		    <ul class="errorlist"><li>
-				{{ errors.change }}
-		    </ul></li>
-		{% endif %}
-
-		<input type="radio" name="change" value="add">Add <br>
-		<input type="radio" name="change" value="remove">Remove <br>
-		<input id="" type="submit" value="Update Planner" name="update">
-
-
+            <b>Total Unit Count: {{ unitsCompleted }} 
+            {% if previousUnits %}
+                <small><i>({{previousUnits}} units already completed.)</i></small>
+            {% endif %}
+            </b>          
+            <form>
+		<input id="" type="submit" value="Update Planner" class="button" name="update">
 		</form>
-	  
-
 		<table class="planner centered">
 			<tr>
-				{% for p in planners %}
+				{% for planner in planners %}
 					<td>
 							<div class="semesterLabel"> 
-								Semester {{ forloop.counter }}
+								{{ planner.0 }}
 							</div>
 							<div class="semesterCourseList">
-							<ul>
-								{% for course in p %}
-									<li>{{ course }}</li>
+							<ul id="planner{{ forloop.counter }}" class="sortableList">
+								{% for course in planner.1 %}
+									<li class="course">{{ course }}</li>
 								{% endfor %}
 							</ul>
 							</div>
+                                    <small>Unit count: {{planner.2}}</small>
 					</td>
 
-					{% if not forloop.last and forloop.counter == 3 or forloop.counter == 6 or forloop.counter == 9 or forloop.counter == 12 %}
+					{% if not forloop.last and forloop.counter|divisibleby:"3" %}
 			</tr>
 			<tr>
 					{% endif %}
 				{% endfor %}
 			</tr>
 		</table>
-		
 	</div>  
 
 
@@ -100,19 +78,23 @@
 				{% endif %}
 				<p class="reqDescription">Description: {{ r.reqDescription }} </p>
 
-				<ul>
-					{% if r.courseDone %}
-						{% for course in r.courseDone %}
-							<li class="course courseCompleted">{{ course }}</li>
-						{% endfor %}
-					{% endif %}
-					{% if r.courseLeft %}
-						{% for left in r.courseLeft %}
-							<li class="course">{{ left }}</li>
-						{% endfor %}
-					{% endif %}
-				</ul>
-				<br>
+				<div class="reqCoursesWrapper">
+					<ul>
+						{% if r.courseDone %}
+							{% for course in r.courseDone %}
+								<li class="course courseCompleted">{{ course }}</li>
+							{% endfor %}
+						{% endif %}
+					</ul>
+					<ul id="req{{ forloop.counter }}" class="sortableList">
+						{% if r.courseLeft %}
+							{% for left in r.courseLeft %}
+								<li class="course">{{ left }}</li>
+							{% endfor %}
+						{% endif %}
+					</ul>
+					<br>
+				</div>
 					
 			{% endfor %}
 		
@@ -123,5 +105,12 @@
 
 </div>	
 </body>
+
+
+<script>
+var numPlanners = {{ planners|length }};
+var numReqs = {{ requirements|length }};
+</script>
+
 
 </html>

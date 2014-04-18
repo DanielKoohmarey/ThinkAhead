@@ -50,10 +50,20 @@ CONFIGURING DATABASE
 	0) Install postgres
 	   a) Download postgres:
 	      sudo apt-get postgres
+
+	      If you are using OSX, follow the steps in this link:
+              http://russbrooks.com/2010/11/25/install-postgresql-9-on-os-x
+              https://coderwall.com/p/xezzaa
 	   b) Download the adaptor, psycopg:
 	      sudo apt-get install libpq-dev python-dev
 	      or try it manually:
 	      http://initd.org/psycopg/install/
+
+	      If you are using OSX and sees an error message along the lines of “Hard error in the future yada yada” do this before installing psycopg:
+	      export CFLAGS=-Qunused-arguments
+	      export CPPFLAGS=-Qunused-arguments
+	      sudo pip install pyscop2
+
 	   c) Install the library
 	      pip install djorm-ext-pgarray
 	      pip install djorm-ext-expressions
@@ -166,10 +176,15 @@ RUNNING TESTS
 UI TESTING
 ==========
 
-	For UI Testing, we are currently using XPresser.
+	For UI Testing, we are currently using Selenium.
 	Instructions for installing and running it can be found here:
-	https://wiki.ubuntu.com/Xpresser
+	http://docs.seleniumhq.org/
 
+	0) Running all the GUI tests
+	“python manage.py test darsplus.tests.testGUI”
+
+	1)Running a specific GUI test case:
+	“python manage.py test darsplus.tests.testGUI.testGUI.<function name>”
 
 
 ================
