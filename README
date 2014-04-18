@@ -20,8 +20,8 @@ TABLE OF CONTENTS
 -UI Testing
 -Running Coverage
 
-Last Update: 20 March 2014
-     	     10:00 PM
+Last Update: 2 April 2014
+     	     2:38 PM
 
 ** If you have any trouble with setting up database/local test/heroku/running tests, contact Marion **
 ======================================================================================================
@@ -198,6 +198,9 @@ RUNNING COVERAGE
 
 	4) In the terminal, do this to present it in a better way
 	   coverage report
+
+	5) If you want to have a list of line numbers that were not exectued, do
+	   coverage report -m
 
 
 
