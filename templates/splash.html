@@ -8,11 +8,14 @@
 		
 		{% if "user" in errors %}
         	{{ errors.user }}
-		{% endif %}
-		{% if "username" in errors %}
+		{% elif "username" in errors %}
         	<ul class="errorlist">
         		<li>Please input a valid username</li>
         	</ul> 
+            {% else %} 
+		<ul class="errorlist" style="opacity:0;">
+			<li></li>
+		</ul>
 		{% endif %}
 		{{ form.username }}
 		
@@ -21,7 +24,11 @@
 		{% if "password" in errors %}
 			<ul class="errorlist">
 				<li>Please input a valid password</li>
-			</ul> 
+			</ul>
+            {% else %} 
+			<ul class="errorlist" style="opacity:0;">
+				<li></li>
+			</ul>
 		{% endif %}
 		{{ form.password }}
 	</div>
