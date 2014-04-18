@@ -149,15 +149,11 @@ def updateProfile(request):
     """
     if request.method == 'POST': #updates user
         newUser = register(request)
-        if not isinstance(newUser, list):
-            return newUser
         response = setUserProfile(*newUser)
         if response == SUCCESS:
             return HttpResponseRedirect('/dashboard/',{'update':True})
     else:
         profile = getUserProfile(request.user)
-
-
         initialData = []
         for course in profile.coursesTaken:
             initialData.append({'name':course.replace('.', ' ')}) # Revert our representation to a user-friendly one

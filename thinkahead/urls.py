@@ -30,4 +30,6 @@ urlpatterns = patterns('',
     url(r'^registration/$',userRegistration),
     url(r'^dashboard/$', dashboard),
     url(r'^profile/$', updateProfile),
+    #url(r'^autocompleteCourse', autocompleteCourse),
+
 )

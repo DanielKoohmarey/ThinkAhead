@@ -176,10 +176,15 @@ RUNNING TESTS
 UI TESTING
 ==========
 
-	For UI Testing, we are currently using XPresser.
+	For UI Testing, we are currently using Selenium.
 	Instructions for installing and running it can be found here:
-	https://wiki.ubuntu.com/Xpresser
+	http://docs.seleniumhq.org/
 
+	0) Running all the GUI tests
+	“python manage.py test darsplus.tests.testGUI”
+
+	1)Running a specific GUI test case:
+	“python manage.py test darsplus.tests.testGUI.testGUI.<function name>”
 
 
 ================
