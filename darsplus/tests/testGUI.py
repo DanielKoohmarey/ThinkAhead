@@ -1,8 +1,18 @@
 import unittest
 from selenium import webdriver
+from django.contrib.auth.models import User
+from darsplus.models import UserProfile
+
+if not User.objects.filter(username='test'):
+    new_user = User.objects.create_user(username='test',password='test')
+    new_user.save()
+    UserProfile.addUserProfile("test","Computer Science",'College of Engineering',
+                                                     "Fall", "2014",[])
+testUser = User.objects.filter(username='selenium')
+if testUser:
+    User.delete(testUser[0])
 
 class testGUI(unittest.TestCase):
-    #Must manually form django admin panel delete created selenium user after every run
 
     def setUp(self):
         self.driver = webdriver.Firefox()
@@ -16,10 +26,41 @@ class testGUI(unittest.TestCase):
         elem.send_keys("pass")
         elem = self.driver.find_element_by_name("add")
         elem.click()
-        self.assertTrue(self.driver.find_element_by_id("createUser"))
+        self.driver.find_element_by_id("createUser")
+        elem = self.driver.find_element_by_name("logout")
+        elem.click()
+        self.assertIn("home",self.driver.current_url)
+        
+    def testLoginUserLogout(self):
+        self.driver.get("http://127.0.0.1:8000/")
+        self.assertIn("Think Ahead",self.driver.title)
+        elem = self.driver.find_element_by_name("username")
+        elem.send_keys("test")
+        elem = self.driver.find_element_by_name("password")
+        elem.send_keys("test")
+        elem = self.driver.find_element_by_name("login")
+        elem.click()
+        self.driver.find_element_by_name("update")
         elem = self.driver.find_element_by_name("logout")
         elem.click()
         self.assertIn("home",self.driver.current_url)
     
+    def testLoginUserUpdateProfile(self):    
+        self.driver.get("http://127.0.0.1:8000/")
+        self.assertIn("Think Ahead",self.driver.title)
+        elem = self.driver.find_element_by_name("username")
+        elem.send_keys("test")
+        elem = self.driver.find_element_by_name("password")
+        elem.send_keys("test")
+        elem = self.driver.find_element_by_name("login")
+        elem.click()
+        elem = self.driver.find_element_by_xpath("//a[@href='/profile']")
+        elem.click()
+        elem = self.driver.find_element_by_id("createUser")
+        elem.click()
+        self.assertIn("dashboard",self.driver.current_url)
+        elem = self.driver.find_element_by_name("logout")
+        elem.click()
+        
     def tearDown(self):
         self.driver.close()
