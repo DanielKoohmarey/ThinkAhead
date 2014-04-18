@@ -1,14 +1,14 @@
 from django.shortcuts import render
 from darsplus.statics import SUCCESS, ERR_NO_RECORD_FOUND, ERR_RECORD_EXISTS
 from darsplus.forms import LoginForm, EmailForm, GradForm, MajorForm, CourseFormSet
-from darsplus.models import addUserProfile, getUserProfile, getCoursesTaken, getUnitsCompleted, majorToCollege, getCollegesToMajors, setEmail, setUserProfile, getPlanners, addCourseToPlanner, getAllCourses, removeCourseFromPlanner, getCourseInfo, totalUnitsPlanner
+from darsplus.models import Courses, addUserProfile, getUserProfile, getCoursesTaken, getUnitsCompleted, majorToCollege, getCollegesToMajors, setEmail, setUserProfile, getPlanners, addCourseToPlanner, getAllCourses, removeCourseFromPlanner, getCourseInfo, totalUnitsPlanner
 from darsplus.requirementscode import remainingRequirements
 from django.template import RequestContext
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.forms.util import ErrorList
 from django.utils.datastructures import MultiValueDictKeyError
 import datetime
@@ -150,6 +150,8 @@ def updateProfile(request):
     if request.method == 'POST': #updates user
         newUser = register(request)
         response = setUserProfile(*newUser)
+        if not isinstance(newUser, list):
+            return newUser #User did not fill out every field, show errors
         if response == SUCCESS:
             return HttpResponseRedirect('/dashboard/',{'update':True})
     else:
@@ -170,6 +172,23 @@ def updateProfile(request):
                                                    }
                                                    )
 
+def autocompleteCourse(request):
+        """ Allow a user to update their profile
+    Args:
+    request (HttpRequest): The request sent the Django server which contains user's input into CourseForm
+    Returns:
+    (HttpResponse) The data containing the list of courses matching user's input
+    """
+        term = request.GET.get('term')
+        courses = Courses.objects.filter(courseCode__contains=term)
+        results = []
+        for c in courses:
+            print c.courseCode
+            courseJSON = {'id': c.id, 'label': c.courseCode, 'value': c.courseCode}
+            results.append(courseJSON)
+        data = json.dumps(results)
+        return HttpResponse(data)
+    
 """ ====================================== Support functions for the views ====================================== """
 
 def register(request):
