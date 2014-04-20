@@ -32,7 +32,6 @@ abbreviationDict = {'CS':'COMPSCI',
     'COMPARATIVE BIOCHEMISTRY': 'COMPBIO',
     'COMPARATIVE LITERATURE': 'COM.LIT',
     'COMPUTATIONAL BIOLOGY': 'CMPBIO',
-    'COMPUTER SCIENCE': 'COMPSCI',
     'CRITICAL THEORY GRADUATE GROUP': 'CRIT.TH',
     'CUNEIFORM': 'CUNEIF',
     'DEMOGRAPHY': 'DEMOG',
@@ -166,3 +165,5 @@ abbreviationDict = {'CS':'COMPSCI',
     'VISION SCIENCE': 'VIS.SCI',
     'VISUAL STUDIES': 'VIS.STD',
     'YIDDISH': 'YIDDISH'}#TODO: Build abbreviation table
+    
+reverseAbbreviationDict = dict (zip(abbreviationDict.values(), abbreviationDict.keys()))

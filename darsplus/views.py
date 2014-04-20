@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse, HttpResponseRedirect
 from django.forms.util import ErrorList
-from darsplus.abbreviations import abbreviationDict
+from darsplus.abbreviations import abbreviationDict, reverseAbbreviationDict
 import datetime
 import json
 import re
@@ -193,7 +193,8 @@ def autocompleteCourse(request):
     courses = Courses.objects.filter(courseCode__contains=term)
     results = []
     for c in courses:
-        courseJSON = {'id': c.id, 'label': c.courseCode, 'value': c.courseCode}
+        courseCode = dbToReadable(c.courseCode)
+        courseJSON = {'id': c.id, 'label': courseCode, 'value': courseCode}
         results.append(courseJSON)
     data = json.dumps(results)
     return HttpResponse(data)
@@ -272,7 +273,18 @@ def standardizeCourse(course):
         if getCourseInfo(course)==ERR_NO_RECORD_FOUND: #else possibly covnert to for loop for all possible conversions
             return ''
     return course
-    
+ 
+def dbToReadable(course):
+    """ Converts a course name from database format DPT.NUM to readable ABBREVIATION NUM
+    Args:
+    course (str): The course in DB readable format
+    Returns:
+    (str): The course in human readable format
+    """
+    courseCode = course.split('.')
+    courseCode = ' '.join([reverseAbbreviationDict[courseCode[0]]]+courseCode[1:]).upper()
+    return courseCode
+   
 def handlePlannerData(request,dashboardContext):
     """ Handles the user's planner action (add/remove) and updates their planner accordingly
        Args:
@@ -297,33 +309,6 @@ def handlePlannerData(request,dashboardContext):
     return HttpRedirect('/registration/')
     #return render(request,'dashboard.html',dashboardContext)
         
-    
-    """
-    if index not in [str(ele) for ele in range(16)]: #Not valid for new save planner will wait to integrate
-        dashboardContext.update({'errors':{'index':"{}. Please enter a valid numeric number.".format(index+" is not a valid semester number" if index else "Index cannot be left blank.")}})
-        return render(request, 'dashboard.html',dashboardContext)
-    
-    courseName = standardizeCourse(request.POST['course'])
-
-    try:
-        if not courseName:
-            dashboardContext.update({'errors':{'name':"{} is not a valid course name. Please ensure you are using the appropriate abbreviation of the major.".format(courseName)}})
-        elif courseName in getCoursesTaken(user):
-            dashboardContext.update({'errors':{'name':"You have already taken {}.".format(courseName)}})
-        elif request.POST['change'] == 'add':
-            if addCourseToPlanner(plannerID, index, courseName) in [ERR_NO_RECORD_FOUND, ERR_RECORD_EXISTS]:
-                dashboardContext.update({'errors':{'index':"{} is not a valid course name or has already been added.".format(courseName)}})
-            else:
-                dashboardContext = dashboardData(request)    
-        elif request.POST['change'] == 'remove':
-            if removeCourseFromPlanner(plannerID, index, courseName) == ERR_NO_RECORD_FOUND:
-                dashboardContext.update({'errors':{'name':"{} is not a valid course name to remove.".format(courseName)}})
-            else:
-                dashboardContext = dashboardData(request)
-    except MultiValueDictKeyError:
-        dashboardContext.update({'errors':{'change':"Please select either add or remove."}})
-    return render(request, 'dashboard.html',dashboardContext)
-    """
 
 def dashboardData(request):
     """ Retrieve user profile information and return context dictionary for dashboard. 
