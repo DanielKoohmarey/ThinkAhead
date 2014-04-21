@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse, HttpResponseRedirect
 from django.forms.util import ErrorList
-from darsplus.abbreviations import abbreviationDict, reverseAbbreviationDict
+from darsplus.abbreviations import abbreviationDict, reverseAbbreviationDict, shorthandDict, reverseShorthandDict
 import datetime
 import json
 import re
@@ -184,16 +184,22 @@ def autocompleteCourse(request):
     Returns:
     (HttpResponse) The data containing the list of courses matching user's input
     """
-    term = request.GET.get('term').upper().strip()
+    term = request.GET.get('term').upper().strip().replace(' ','.')
+    name = term[:term.rfind('.')]
     standardized = standardizeCourse(term)
-    if term in abbreviationDict:
-        term = abbreviationDict[term]
+    if term in shorthandDict:
+        term = shorthandDict[term]
+    elif name in shorthandDict:
+        term = shorthandDict[name]+term[term.rfind('.'):]
     elif standardized:
         term = standardized
     courses = Courses.objects.filter(courseCode__contains=term)
     results = []
     for c in courses:
-        courseCode = dbToReadable(c.courseCode)
+        try:
+            courseCode = dbToReadable(c.courseCode)
+        except:
+            courseCode = c.courseCode        
         courseJSON = {'id': c.id, 'label': courseCode, 'value': courseCode}
         results.append(courseJSON)
     data = json.dumps(results)
@@ -270,7 +276,9 @@ def standardizeCourse(course):
         name,number = course[:course.rfind('.')], course[course.rfind('.'):]
         if name in abbreviationDict:
             course = abbreviationDict[name]+number
-        if getCourseInfo(course)==ERR_NO_RECORD_FOUND: #else possibly covnert to for loop for all possible conversions
+        elif name in shorthandDict:
+            course = shorthandDict[name]+number
+        if getCourseInfo(course)==ERR_NO_RECORD_FOUND:
             return ''
     return course
  
@@ -281,8 +289,15 @@ def dbToReadable(course):
     Returns:
     (str): The course in human readable format
     """
-    courseCode = course.split('.')
-    courseCode = ' '.join([reverseAbbreviationDict[courseCode[0]]]+courseCode[1:]).upper()
+
+    if course.count('.') >1:
+        course = course.replace('.','',course.count('.')-1)
+    course = course.replace('.',' ') 
+    courseCode = course.split(' ')   
+    if courseCode[0] in reverseShorthandDict:
+        courseCode = ' '.join([reverseShorthandDict[courseCode[0]]]+courseCode[1:]).upper()
+    else:
+        courseCode = ' '.join(courseCode)
     return courseCode
    
 def handlePlannerData(request,dashboardContext):

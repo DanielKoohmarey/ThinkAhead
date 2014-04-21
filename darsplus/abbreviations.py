@@ -1,6 +1,4 @@
-abbreviationDict = {'CS':'COMPSCI',
-    'BIO':'BIOLOGY', 
-    'EE':'ELENG', 
+abbreviationDict = {
     'AEROSPACE STUDIES': 'AEROSPC',
     'AFRICAN AMERICAN STUDIES': 'AFRICAM',
     'AGRICULTURAL AND ENVIRON CHEMISTRY': 'AGR.CHM',
@@ -32,6 +30,7 @@ abbreviationDict = {'CS':'COMPSCI',
     'COMPARATIVE BIOCHEMISTRY': 'COMPBIO',
     'COMPARATIVE LITERATURE': 'COM.LIT',
     'COMPUTATIONAL BIOLOGY': 'CMPBIO',
+    'COMPUTER SCIENCE': 'COMPSCI',
     'CRITICAL THEORY GRADUATE GROUP': 'CRIT.TH',
     'CUNEIFORM': 'CUNEIF',
     'DEMOGRAPHY': 'DEMOG',
@@ -164,6 +163,14 @@ abbreviationDict = {'CS':'COMPSCI',
     'VIETNAMESE': 'VIETNMS',
     'VISION SCIENCE': 'VIS.SCI',
     'VISUAL STUDIES': 'VIS.STD',
-    'YIDDISH': 'YIDDISH'}#TODO: Build abbreviation table
+    'YIDDISH': 'YIDDISH'}
     
 reverseAbbreviationDict = dict (zip(abbreviationDict.values(), abbreviationDict.keys()))
+
+shorthandDict = {
+            'CS': 'COMPSCI',
+            'EE': 'EL.ENG',
+            'BIO': 'BIOLOGY'
+}
+
+reverseShorthandDict = dict (zip(shorthandDict.values(), shorthandDict.keys()))
