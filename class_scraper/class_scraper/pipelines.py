@@ -17,16 +17,10 @@ class CleanUnicodePipeline(object):
         return item
                 
 class WritePipeline(object):
-
     def process_item(self, item, spider):
-        if item:
-            f = open('courses.csv', 'a')
-            new_data = ''
-            for key in ['major','course_code','course_name', 'units', 'department', 'course_level', 'terms_offered']:
-                new_data +=u'{},'.format(item[key])
-            #print'{}\n'.format(new_data.rstrip(',')).encode('utf-8')
-            f.write('{}\n'.format(new_data.rstrip(',')).encode('utf-8'))
-            f.flush()
-        else:
-            print('Error scraping Data.')
-        
+        f = open('courses.csv', 'a')
+        new_data = ''
+        for key in ['major','course_code','course_name', 'units', 'department', 'course_level', 'terms_offered']:
+            new_data +=u'{},'.format(item[key])
+        f.write('{}\n'.format(new_data.rstrip(',')).encode('utf-8'))
+        f.flush()
