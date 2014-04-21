@@ -11,10 +11,9 @@ class UCBClassSpider(Spider):
     ]
 
     def parse(self, response):
-       """ Parse is initially called by default on the response(s) from start_urls """
+       """ Parse is initially called by default on the 
+       response(s) from start_urls """
        sel = Selector(response)
-       
-       #Iterate over all the markets, get the ids associated with a given market
        majors = sel.xpath('//div[@class="sitemap"]/ul/li')
        for major in majors:
            yield Request(response.url+major.xpath('a/@href').extract()[0].encode('utf-8').replace('/courses/',''),callback=self.parse_class) #'/courses/aerospc/'
