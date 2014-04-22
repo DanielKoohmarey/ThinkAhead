@@ -184,19 +184,27 @@ def autocompleteCourse(request):
     Returns:
     (HttpResponse) The data containing the list of courses matching user's input
     """
-    term = request.GET.get('term').upper().strip().replace(' ','.')
-    name = term[:term.rfind('.')]
+    term = request.GET.get('term').upper().strip()
+    name = term[:term.rfind(' ')].replace(' ','') if ' ' in term else term
     standardized = standardizeCourse(term)
+    #Convert shorthands cs ->COMPSCI
     if term in shorthandDict:
         term = shorthandDict[term]
+    #Convert shorthands ee 122 -> ELENG 122
     elif name in shorthandDict:
-        term = shorthandDict[name]+term[term.rfind('.'):]
+        term = shorthandDict[name]+term[term.rfind(' '):]
+    #Name like cs169 or cs 169 resolved to COMPSCI.169
     elif standardized:
         term = standardized
+    term = term.replace(' ','.') #Convert to database form
     courses = Courses.objects.filter(courseCode__contains=term)
+    #Only return courses matching the user's input department
+    if name in reverseAbbreviationDict:
+        courses = [elem for elem in courses if elem.courseCode.split('.')[0]==name]
     results = []
     for c in courses:
         try:
+            #Try to convert the name to something cleaner, COMPSCI.169 -> CS 169
             courseCode = dbToReadable(c.courseCode)
         except:
             courseCode = c.courseCode        
