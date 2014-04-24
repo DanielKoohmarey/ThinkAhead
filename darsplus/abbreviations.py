@@ -171,7 +171,16 @@ reverseAbbreviationDict = dict (zip(abbreviationDict.values(), abbreviationDict.
 shorthandDict = {
             'CS': 'COMPSCI',
             'EE': 'ELENG',
-            'BIO': 'BIOLOGY'
+            'BIO': 'BIOLOGY',
+            'EEP':'ENVECON',
+            'PMB':'PLANTBI',
+            'MCB':'MCELLBI',
+            'IB':'INTEGBI',
+            'ERG':'ENERES',
+            'E':'ENGIN',
+            'IEOR':'INDENG',
+            'PE':'PHYSED',
+            'TDPS':'THEATER'
 }
 
 reverseShorthandDict = dict (zip(shorthandDict.values(), shorthandDict.keys()))
