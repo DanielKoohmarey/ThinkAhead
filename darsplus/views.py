@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse, HttpResponseRedirect
 from django.forms.util import ErrorList
-from django.utils.datastructures import MultiValueDictKeyError
+from darsplus.abbreviations import abbreviationDict, reverseAbbreviationDict, shorthandDict, reverseShorthandDict
 import datetime
 import json
 import re
@@ -184,11 +184,31 @@ def autocompleteCourse(request):
     Returns:
     (HttpResponse) The data containing the list of courses matching user's input
     """
-    term = request.GET.get('term')
+    term = request.GET.get('term').upper().strip()
+    name = term[:term.rfind(' ')].replace(' ','') if ' ' in term else term
+    standardized = standardizeCourse(term)
+    #Convert shorthands cs ->COMPSCI
+    if term in shorthandDict:
+        term = shorthandDict[term]
+    #Convert shorthands ee 122 -> ELENG 122
+    elif name in shorthandDict:
+        term = shorthandDict[name]+term[term.rfind(' '):]
+    #Name like cs169 or cs 169 resolved to COMPSCI.169
+    elif standardized:
+        term = standardized
+    term = term.replace(' ','.') #Convert to database form
     courses = Courses.objects.filter(courseCode__contains=term)
+    #Only return courses matching the user's input department
+    if name in reverseAbbreviationDict:
+        courses = [elem for elem in courses if elem.courseCode.split('.')[0]==name]
     results = []
     for c in courses:
-        courseJSON = {'id': c.id, 'label': c.courseCode, 'value': c.courseCode}
+        try:
+            #Try to convert the name to something cleaner, COMPSCI.169 -> CS 169
+            courseCode = dbToReadable(c.courseCode)
+        except:
+            courseCode = c.courseCode        
+        courseJSON = {'id': c.id, 'label': courseCode, 'value': courseCode}
         results.append(courseJSON)
     data = json.dumps(results)
     return HttpResponse(data)
@@ -248,174 +268,6 @@ def standardizeCourse(course):
         Returns:
             (str) the standardized course name of form NAME.NUMBER
     """
-    abbreviations = {'CS':'COMPSCI',
-        'BIO':'BIOLOGY', 
-        'EE':'ELENG', 
-        'AEROSPACE STUDIES': 'AEROSPC',
-        'AFRICAN AMERICAN STUDIES': 'AFRICAM',
-        'AGRICULTURAL AND ENVIRON CHEMISTRY': 'AGR.CHM',
-        'AGRICULTURAL AND RESOURCE ECONOMICS': 'ARESEC',
-        'AMERICAN STUDIES': 'AMERSTD',
-        'ANCIENT HISTORY AND MED. ARCH.': 'AHMA',
-        'ANTHROPOLOGY': 'ANTHRO',
-        'APPLIED SCIENCE AND TECHNOLOGY': 'AST',
-        'ARABIC': 'ARABIC',
-        'ARCHITECTURE': 'ARCH',
-        'ASIAN AMERICAN STUDIES': 'ASAMST',
-        'ASIAN STUDIES': 'ASIANST',
-        'ASTRONOMY': 'ASTRON',
-        'BENGALI': 'BANGLA',
-        'BIBLIOGRAPHY': 'BIBLIOG',
-        'BIOENGINEERING': 'BIO.ENG',
-        'BIOLOGY': 'BIOLOGY',
-        'BIOPHYSICS': 'BIOPHY',
-        'CATALAN': 'CATALAN',
-        'CELTIC STUDIES': 'CELTIC',
-        'CHEMICAL & BIOMOLECULAR ENGINEERING': 'CHM.ENG',
-        'CHEMISTRY': 'CHEM',
-        'CHICANO STUDIES': 'CHICANO',
-        'CHINESE': 'CHINESE',
-        'CITY AND REGIONAL PLANNING': 'CY.PLAN','CIVIL AND ENVIRONMENTAL ENGINEERING': 'CIV.ENG',
-        'CLASSICS': 'CLASSIC',
-        'COGNITIVE SCIENCE': 'COG.SCI',
-        'COLLEGE WRITING PROGRAM': 'COLWRIT',
-        'COMPARATIVE BIOCHEMISTRY': 'COMPBIO',
-        'COMPARATIVE LITERATURE': 'COM.LIT',
-        'COMPUTATIONAL BIOLOGY': 'CMPBIO',
-        'COMPUTER SCIENCE': 'COMPSCI',
-        'CRITICAL THEORY GRADUATE GROUP': 'CRIT.TH',
-        'CUNEIFORM': 'CUNEIF',
-        'DEMOGRAPHY': 'DEMOG',
-        'DEVELOPMENT PRACTICE': 'DEVP',
-        'DEVELOPMENT STUDIES': 'DEV.STD',
-        'DUTCH': 'DUTCH',
-        'EARTH AND PLANETARY SCIENCE': 'EPS',
-        'EAST ASIAN LANGUAGES AND CULTURES': 'EA.LANG',
-        'EAST EUROPEAN STUDIES': 'EAEURST',
-        'ECONOMICS': 'ECON',
-        'EDUCATION': 'EDUC',
-        'EDUCATION IN LANGUAGE AND LITERACY': 'EDUC-LL',
-        'EDUCATIONAL ADMINISTRATION': 'EDUC-AE',
-        'EGYPTIAN': 'EGYPT',
-        'ELECTRICAL ENGINEERING': 'EL.ENG',
-        'ENERGY AND RESOURCES GROUP': 'ENE&#44;RES',
-        'ENGINEERING': 'ENGIN',
-        'ENGLISH': 'ENGLISH',
-        'ENVIRON SCI&#44; POLICY&#44; AND MANAGEMENT': 'ESPM',
-        'ENVIRONMENTAL DESIGN': 'ENV.DES',
-        'ENVIRONMENTAL ECONOMICS AND POLICY': 'ENVECON',
-        'ENVIRONMENTAL SCIENCES': 'ENV.SCI',
-        'ETHNIC STUDIES': 'ETH.STD',
-        'ETHNIC STUDIES GRADUATE GROUP': 'ETH.GRP',
-        'EURASIAN STUDIES': 'EURA.ST',
-        'EVE/WKND MASTERS IN BUS. ADM.': 'EWMBA',
-        'EXECUTIVE MASTERS IN BUS. ADM.': 'XMBA',
-        'FILIPINO': 'FILIPN',
-        'FILM AND MEDIA': 'FILM',
-        'FOLKLORE': 'FOLKLOR',
-        'FRENCH': 'FRENCH',
-        "GENDER AND WOMEN'S STUDIES": 'GWS',
-        'GEOGRAPHY': 'GEOG',
-        'GERMAN': 'GERMAN',
-        'GLOBAL METROPOLITAN STUDIES': 'GMS',
-        'GLOBAL POVERTY AND PRACTICE': 'GPP',
-        'GRAD STUDENT PROF DEVELOPMENT PGM': 'GSPDP',
-        'GREEK': 'GREEK',
-        'GROUP IN BUDDHIST STUDIES': 'BUDDSTD',
-        'HEALTH AND MEDICAL SCIENCES': 'HMEDSCI',
-        'HEBREW': 'HEBREW',
-        'HINDI-URDU': 'HIN-URD',
-        'HISTORY': 'HISTORY',
-        'HISTORY OF ART': 'HISTART',
-        'INDIGENOUS LANGUAGES OF AMERICAS': 'ILA',
-        'INDUSTRIAL ENGIN AND OPER RESEARCH': 'IND.ENG',
-        'INFORMATION': 'INFO',
-        'INTEGRATIVE BIOLOGY': 'INTEGBI',
-        'INTERDISCIPLINARY STUDIES FIELD MAJ': 'ISF',
-        'INTERNATIONAL AND AREA STUDIES': 'IAS',
-        'IRANIAN': 'IRANIAN',
-        'ITALIAN STUDIES': 'ITALIAN',
-        'JAPANESE': 'JAPAN',
-        'JEWISH STUDIES': 'JEWISH',
-        'JOURNALISM': 'JOURN',
-        'KHMER': 'KHMER',
-        'KOREAN': 'KOREAN',
-        'LANDSCAPE ARCHITECTURE': 'LD.ARCH',
-        'LANGUAGE PROFICIENCY PROGRAM': 'LAN.PRO',
-        'LATIN': 'LATIN',
-        'LATIN AMERICAN STUDIES': 'LATAMST',
-        'LEGAL STUDIES': 'LEGALST',
-        'LESBIAN GAY BISEXUAL TRANSGENDER ST': 'LGBT',
-        'LETTERS AND SCIENCE': 'L&S',
-        'LIBRARY AND INFORMATION STUDIES': 'LINFOST',
-        'LINGUISTICS': 'LINGUIS',
-        'MALAY/INDONESIAN': 'MALAY/I',
-        'MASTERS IN BUSINESS ADMINISTRATION': 'MBA',
-        'MASTERS IN FINANCIAL ENGINEERING': 'MFE',
-        'MATERIALS SCIENCE AND ENGINEERING': 'MAT.SCI',
-        'MATHEMATICS': 'MATH',
-        'MECHANICAL ENGINEERING': 'MEC.ENG',
-        'MEDIA STUDIES': 'MEDIAST',
-        'MEDIEVAL STUDIES': 'MED.ST',
-        'MIDDLE EASTERN STUDIES': 'M.E.STU',
-        'MILITARY AFFAIRS': 'MIL.AFF',
-        'MILITARY SCIENCE': 'MIL.SCI',
-        'MOLECULAR AND CELL BIOLOGY': 'MCELLBI',
-        'MUSIC': 'MUSIC',
-        'NANOSCALE SCIENCE AND ENGINEERING': 'NSE',
-        'NATIVE AMERICAN STUDIES': 'NATAMST',
-        'NATURAL RESOURCES': 'NAT.RES',
-        'NAVAL SCIENCE': 'NAV.SCI',
-        'NEAR EASTERN STUDIES': 'NE.STUD',
-        'NEUROSCIENCE': 'NEUROSC',
-        'NEW MEDIA': 'NWMEDIA',
-        'NUCLEAR ENGINEERING': 'NUC.ENG',
-        'NUTRITIONAL SCIENCES AND TOXICOLOGY': 'NUSCTX',
-        'OPTOMETRY': 'OPTOM',
-        'PEACE AND CONFLICT STUDIES': 'PACS',
-        'PERSIAN': 'PERSIAN',
-        'PH.D. IN BUSINESS ADMINISTRATION': 'PHDBA',
-        'PHILOSOPHY': 'PHILOS',
-        'PHYSICAL EDUCATION': 'PHYS.ED',
-        'PHYSICS': 'PHYSICS',
-        'PLANT AND MICROBIAL BIOLOGY': 'PLANTBI',
-        'POLITICAL ECONOMY': 'POLECON',
-        'POLITICAL SCIENCE': 'POL.SCI',
-        'PORTUGUESE': 'PORTUG',
-        'PRACTICE OF ART': 'ART',
-        'PSYCHOLOGY': 'PSYCH',
-        'PUBLIC HEALTH': 'PB.HLTH',
-        'PUBLIC POLICY': 'PUB.POL',
-        'PUNJABI': 'PUNJABI',
-        'RELIGIOUS STUDIES': 'RELIGST',
-        'RHETORIC': 'RHETOR',
-        'SANSKRIT': 'SANSKR',
-        'SCANDINAVIAN': 'SCANDIN',
-        'SCIENCE AND MATHEMATICS EDUCATION': 'SCMATHE',
-        'SCIENCE AND TECHNOLOGY STUDIES': 'STS',
-        'SEMITICS': 'SEMITIC',
-        'SLAVIC LANGUAGES AND LITERATURES': 'SLAVIC',
-        'SOCIAL WELFARE': 'SOC.WEL',
-        'SOCIOLOGY': 'SOCIOL',
-        'SOUTH AND SOUTHEAST ASIAN STUDIES': 'S&#44;SEASN',
-        'SOUTH ASIAN': 'S.ASIAN',
-        'SOUTHEAST ASIAN': 'SEASIAN',
-        'SPANISH': 'SPANISH',
-        'SPECIAL EDUCATION': 'EDUCSPE',
-        'STATISTICS': 'STAT',
-        'TAGALOG': 'TAGALG',
-        'TAMIL': 'TAMIL',
-        'TELUGU': 'TELUGU',
-        'THAI': 'THAI',
-        'THEATER&#44; DANCE&#44; AND PERFORMANCE ST': 'THEATER',
-        'TIBETAN': 'TIBETAN',
-        'TURKISH': 'TURKISH',
-        'UNDERGRAD INTERDISCIPLINARY STUDIES': 'UGIS',
-        'UNDERGRAD. BUSINESS ADMINISTRATION': 'UGBA',
-        'VIETNAMESE': 'VIETNMS',
-        'VISION SCIENCE': 'VIS.SCI',
-        'VISUAL STUDIES': 'VIS.STD',
-        'YIDDISH': 'YIDDISH'}#TODO: Build abbreviation table
     course = course.strip().upper()
     course = course.replace(' ','.')
     periods = course.count('.')
@@ -430,12 +282,32 @@ def standardizeCourse(course):
             course = ''
     if course:
         name,number = course[:course.rfind('.')], course[course.rfind('.'):]
-        if name in abbreviations:
-            course = abbreviations[name]+number
-        if getCourseInfo(course)==ERR_NO_RECORD_FOUND: #else possibly covnert to for loop for all possible conversions
+        if name in abbreviationDict:
+            course = abbreviationDict[name]+number
+        elif name in shorthandDict:
+            course = shorthandDict[name]+number
+        if getCourseInfo(course)==ERR_NO_RECORD_FOUND:
             return ''
     return course
-    
+ 
+def dbToReadable(course):
+    """ Converts a course name from database format DPT.NUM to readable ABBREVIATION NUM
+    Args:
+    course (str): The course in DB readable format
+    Returns:
+    (str): The course in human readable format
+    """
+
+    if course.count('.') >1:
+        course = course.replace('.','',course.count('.')-1)
+    course = course.replace('.',' ') 
+    courseCode = course.split(' ')   
+    if courseCode[0] in reverseShorthandDict:
+        courseCode = ' '.join([reverseShorthandDict[courseCode[0]]]+courseCode[1:]).upper()
+    else:
+        courseCode = ' '.join(courseCode)
+    return courseCode
+   
 def handlePlannerData(request,dashboardContext):
     """ Handles the user's planner action (add/remove) and updates their planner accordingly
        Args:
@@ -460,33 +332,6 @@ def handlePlannerData(request,dashboardContext):
     return HttpRedirect('/registration/')
     #return render(request,'dashboard.html',dashboardContext)
         
-    
-    """
-    if index not in [str(ele) for ele in range(16)]: #Not valid for new save planner will wait to integrate
-        dashboardContext.update({'errors':{'index':"{}. Please enter a valid numeric number.".format(index+" is not a valid semester number" if index else "Index cannot be left blank.")}})
-        return render(request, 'dashboard.html',dashboardContext)
-    
-    courseName = standardizeCourse(request.POST['course'])
-
-    try:
-        if not courseName:
-            dashboardContext.update({'errors':{'name':"{} is not a valid course name. Please ensure you are using the appropriate abbreviation of the major.".format(courseName)}})
-        elif courseName in getCoursesTaken(user):
-            dashboardContext.update({'errors':{'name':"You have already taken {}.".format(courseName)}})
-        elif request.POST['change'] == 'add':
-            if addCourseToPlanner(plannerID, index, courseName) in [ERR_NO_RECORD_FOUND, ERR_RECORD_EXISTS]:
-                dashboardContext.update({'errors':{'index':"{} is not a valid course name or has already been added.".format(courseName)}})
-            else:
-                dashboardContext = dashboardData(request)    
-        elif request.POST['change'] == 'remove':
-            if removeCourseFromPlanner(plannerID, index, courseName) == ERR_NO_RECORD_FOUND:
-                dashboardContext.update({'errors':{'name':"{} is not a valid course name to remove.".format(courseName)}})
-            else:
-                dashboardContext = dashboardData(request)
-    except MultiValueDictKeyError:
-        dashboardContext.update({'errors':{'change':"Please select either add or remove."}})
-    return render(request, 'dashboard.html',dashboardContext)
-    """
 
 def dashboardData(request):
     """ Retrieve user profile information and return context dictionary for dashboard. 

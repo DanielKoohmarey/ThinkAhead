@@ -340,12 +340,10 @@ class TestChem(TestCase):
 		self.assertEqual(5+8+9,len(ans))
 	def testCHEMMATSCI1(self):
 		ans= remainingRequirements([], "College of Chemistry", 'Chemical Engineering/Materials Science & Engineering')
-		#to be changed
-		self.assertEqual(5+8,len(ans))
+		self.assertEqual(5+8+20,len(ans))
 	def testCHEMNUCENG1(self):
 		ans= remainingRequirements([], "College of Chemistry", 'Chemical Engineering/Nuclear Engineering')
-		#to be changed
-		self.assertEqual(5+8,len(ans))
+		self.assertEqual(5+8+18,len(ans))
 
 class TestEnvironmentalDesign(TestCase):
 	def testARCH1(self):

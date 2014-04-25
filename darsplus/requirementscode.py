@@ -3717,6 +3717,92 @@ def remainingRequirements(takenClasses, college, major):
 			else:
 				ans.append({'reqName':'Technical Elective', 'reqCompleted':False, 'reqDescription':'You must take at least 15 units of electives either in Chemistry or included in the Allied Classes List','courseDone':[], 'courseLeft':['Any additional Chem Class (not 4A/B,112A/B,104A/B,120A/B,125,C182)']})
 			return ans
+		# Chemical Engineering and Materials Science and Engineering
+		elif(major=='CHEMMATSCI'):
+			#Eng 7, Introduction to Computer Programming for Scientists and Engineers
+			ans.append(basicReq(takenClasses, 'ENGIN.7', 'E 7', "The Introduction to Computer Programming requirement"))
+			#Physics 7C, Physics for Scientists and Engineers
+			ans.append(basicReq(takenClasses, 'PHYSICS.7C', 'Physics 7C', "The Physics for Scientists and Engineers requirement"))
+			#Chem Eng 140, Introduction to Chemical Process Analysis
+			ans.append(basicReq(takenClasses, 'CHMENG.140', 'ChemEng 140', "The Introduction to Chemical Process Analysis requirement"))
+			#Chem Eng 141, Chemical Engineering Thermodynamics
+			ans.append(basicReq(takenClasses, 'CHMENG.141', 'ChemEng 141', "The Chemical Engineering Thermodynamics requirement"))
+			#Chem Eng 150A, Transport Processes
+			ans.append(basicReq(takenClasses, 'CHMENG.150A', 'ChemEng 150A', "The Transport Processes requirement"))
+			#EE 100, Electronic Techniques for Engineering
+			ans.append(basicReq(takenClasses, 'ELENG.100', 'EE 100', "The Electronic Techniques for Engineering requirement"))
+			#Eng 45, Properties of Materials
+			ans.append(basicReq(takenClasses, 'ENGIN.45', 'E 45', "The Properties of Materials requirement"))
+			#Mat Sci 102, Bonding, Crystallography,and Crystal Defects
+			ans.append(basicReq(takenClasses, 'MATSCI.102', 'MatSci 102', "The Bonding, Crystallography,and Crystal Defects requirement"))
+			#Mat Sci 103, Phase Transformations and Kinetics
+			ans.append(basicReq(takenClasses, 'MATSCI.103', 'MatSci 103', "The Phase Transformations and Kinetics requirement"))
+			#Mat Sci Electives must include one course from Mat Sci 104, 111, 112, 113, 117, C118, or 151;
+			elecOne={'MATSCI.104':'MatSci 104', 'MATSCI.111':'MatSci 111', 'MATSCI.112':'MatSci 112', 'MATSCI.113':'MatSci 113', 'MATSCI.117':'MatSci 117', 'MATSCI.C118':'MatSci C118', 'MATSCI.151':'MatSci 151'}
+			ans.append(manyChoiceReq(takenClasses, 'Material Science Elective One', elecOne, 'Mat Sci Electives must include one course from Mat Sci 104, 111, 112, 113, 117, C118, or 151'))
+			#one course from Mat Sci 121, 122, 123, or 125.
+			elecTwo={'MATSCI.121':'MatSci 121', 'MATSCI.122':'MatSci 122', 'MATSCI.123':'MatSci 123', 'MATSCI.125':'MatSci 125'}
+			ans.append(manyChoiceReq(takenClasses, 'Material Science Elective Two', elecTwo, 'Mat Sci Electives must include one course from Mat Sci 104, 111, 112, 113, 117, C118, or 151'))
+			#Chemistry 120A, Physical Chemistry or Physics 137A,Quantum Mechanics
+			ans.append(twoChoiceReq(takenClasses, 'CHEM.120A', 'Chem 120A','PHYSICS.137A','Physics 137A', "The Physical Chemistry or Quantum Mechanics requirement"))
+			#Chem Eng 142, Chemical Kinetics and Reaction Engineering
+			ans.append(basicReq(takenClasses, 'MATSCI.103', 'MatSci 103', "The Phase Transformations and Kinetics requirement"))
+			#Chem Eng 150B, Transport and Separation Processes
+			ans.append(basicReq(takenClasses, 'CHMENG.150B', 'ChemEng 150B', "The Transport and Separation Processes requirement"))
+			#Chem Eng 185, Technical Communication
+			ans.append(basicReq(takenClasses, 'CHMENG.185', 'ChemEng 185', "The Technical Communication requirement"))
+			#Mat Sci 120, Materials Production
+			ans.append(basicReq(takenClasses, 'MATSCI.120', 'MatSci 120', "The Materials Production requirement"))
+			#Mat Sci 130, Experimental Materials Science
+			ans.append(basicReq(takenClasses, 'MATSCI.130', 'MatSci 130', "The Experimental Materials Science requirement"))
+			#Chem Eng 154, Chemical Engineering Laboratory
+			ans.append(basicReq(takenClasses, 'CHMENG.154', 'ChemEng 154', "The Chemical Engineering Laboratory requirement"))
+			#Chem Eng 160, Chemical Process Design
+			ans.append(basicReq(takenClasses, 'CHMENG.160', 'ChemEng 160', "The Chemical Process Design requirement"))
+			#Chem Eng 162, Dynamics and Control of Chemical Processes
+			ans.append(basicReq(takenClasses, 'CHMENG.162', 'ChemEng 162', "The Dynamics and Control of Chemical Processes requirement"))
+			return ans
+		# Chemical Engineering and Nuclear Engineering
+		elif(major=='CHEMNUCENG'):
+			#Eng 7, Introduction to Computer Programming for Scientists and Engineers
+			ans.append(basicReq(takenClasses, 'ENGIN.7', 'E 7', "The Introduction to Computer Programming requirement"))
+			#Physics 7C, Physics for Scientists and Engineers
+			ans.append(basicReq(takenClasses, 'PHYSICS.7C', 'Physics 7C', "The Physics for Scientists and Engineers requirement"))
+			#Chem Eng 140, Introduction to Chemical Process Analysis
+			ans.append(basicReq(takenClasses, 'CHMENG.140', 'ChemEng 140', "The Introduction to Chemical Process Analysis requirement"))
+			#Chem Eng 141, Chemical Engineering Thermodynamics
+			ans.append(basicReq(takenClasses, 'CHMENG.141', 'ChemEng 141', "The Chemical Engineering Thermodynamics requirement"))
+			#Chem Eng 150A, Transport Processes
+			ans.append(basicReq(takenClasses, 'CHMENG.150A', 'ChemEng 150A', "The Transport Processes requirement"))
+			#EE 100, Electronic Techniques for Engineering
+			ans.append(basicReq(takenClasses, 'ELENG.100', 'EE 100', "The Electronic Techniques for Engineering requirement"))
+			#Eng 117, Methods of Engineering Analysis
+			ans.append(basicReq(takenClasses, 'ENGIN.117', 'E 117', "The Methods of Engineering Analysis requirement"))
+			#Nuc Eng 101, Nuclear Reactions and Radiation
+			ans.append(basicReq(takenClasses, 'NUCENG.101', 'NucEng 101', "The Nuclear Reactions and Radiation requirement"))
+			#Nuc Eng 104, Radiation Detection and Nuclear Instrumentation Lab
+			ans.append(basicReq(takenClasses, 'NUCENG.104', 'NucEng 104', "The Radiation Detection and Nuclear Instrumentation Lab requirement"))
+			#Nuc Eng 150, Nuclear Reactor Theory
+			ans.append(basicReq(takenClasses, 'NUCENG.150', 'NucEng 150', "The Nuclear Reactor Theory requirement"))
+			#Chem Eng 142, Chemical Kinetics and Reaction Engineering
+			ans.append(basicReq(takenClasses, 'MATSCI.103', 'MatSci 103', "The Phase Transformations and Kinetics requirement"))
+			#Chem Eng 150B, Transport and Separation Processes
+			ans.append(basicReq(takenClasses, 'CHMENG.150B', 'ChemEng 150B', "The Transport and Separation Processes requirement"))
+			#Chem Eng 185, Technical Communication
+			ans.append(basicReq(takenClasses, 'CHMENG.185', 'ChemEng 185', "The Technical Communication requirement"))
+			#Nuc Eng Electives: Students select nine units of upper division Nuc Eng courses, including
+			#at least two courses selected from Nuc Eng 120, 124, or 161.
+			celec={'NUCENG.120':'NucEng 120', 'NUCENG.124':'NucEng 124', 'NUCENG.161':'NucEng 161'}
+			ans.append(doSomeManyChoiceReq(takenClasses, 'Nuclear Engineering Elective', celec, 'At least two courses selected from Nuc Eng 120, 124, or 161', 2))
+			#Chemistry 120A, Physical Chemistry or Physics 137A,Quantum Mechanics
+			ans.append(twoChoiceReq(takenClasses, 'CHEM.120A', 'Chem 120A','PHYSICS.137A','Physics 137A', "The Physical Chemistry or Quantum Mechanics requirement"))
+			#Chem Eng 154, Chemical Engineering Laboratory
+			ans.append(basicReq(takenClasses, 'CHMENG.154', 'ChemEng 154', "The Chemical Engineering Laboratory requirement"))
+			#Chem Eng 160, Chemical Process Design
+			ans.append(basicReq(takenClasses, 'CHMENG.160', 'ChemEng 160', "The Chemical Process Design requirement"))
+			#Chem Eng 162, Dynamics and Control of Chemical Processes
+			ans.append(basicReq(takenClasses, 'CHMENG.162', 'ChemEng 162', "The Dynamics and Control of Chemical Processes requirement"))
+			return ans
 		# Chemical Engineering
 		elif(major=='CHEMENG'):
 			#CBE. 40, 140, 141, 150A
