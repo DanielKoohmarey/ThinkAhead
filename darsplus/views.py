@@ -579,13 +579,3 @@ def diffDates(oldSemester, oldYear, newSemester, newYear):
             diff = ((newYear - 1) + 1 - (oldYear + 1)) * 3 # Number of semesters 
             return fill + diff
 
-def diffSemesters(oldSemester, newSemester):
-    """ Finds the number of semesters in between the two semesters
-    
-    Args:
-        oldSemester (str): current semester
-        newSemester (str): graduation year
-    Returns:
-        (int) Difference between number of semesters
-    """
-    semesters = ['Spring', 'Summer', 'Fall']
