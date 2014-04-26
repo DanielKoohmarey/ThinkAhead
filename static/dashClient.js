@@ -5,6 +5,10 @@ Makes a POST request to save current planners state represented as list of lists
 function savePlanners() {
 	var planners = getPlanners();
 	$.post( "/dashboard/", { 'planners[]': planners } );
+        window.setTimeout(function() {
+            location.reload(true);
+        }, 1000);
+      
 }
 
 /*

@@ -246,6 +246,11 @@ li.courseCompleted {
 .sortableList {
 	min-height: 20px;
 }
+
+.sortableList {
+	min-height: 20px;
+}
+
 .reqCoursesWrapper {
 	width: 240px;
 }

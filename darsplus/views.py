@@ -133,9 +133,11 @@ def dashboard(request):
     if not dashboardContext:
         #Attempt to create user profile with data     
         return HttpResponseRedirect('/registration/') #TODO: test if we can remove this, decorator now ensures user registered
-    elif (request.is_ajax()) :#and request.method == 'POST': 
+    elif (request.is_ajax()) and request.method == 'POST': 
         #Add/Remove courses from the planner
-        return handlePlannerData(request,dashboardContext)
+        handlePlannerData(request,dashboardContext)
+        #dashboardContext = dashboardData(request)
+        #return render(request, 'dashboard.html',dashboardContext)
     else: # Get. Just display dashboard, no update
         return render(request, 'dashboard.html',dashboardContext)
 
@@ -288,9 +290,9 @@ def standardizeCourse(course):
 def dbToReadable(course):
     """ Converts a course name from database format DPT.NUM to readable ABBREVIATION NUM
     Args:
-    course (str): The course in DB readable format
+        course (str): The course in DB readable format
     Returns:
-    (str): The course in human readable format
+        (str): The course in human readable format
     """
 
     if course.count('.') >1:
@@ -309,7 +311,7 @@ def handlePlannerData(request,dashboardContext):
         request (HttpRequest): The request sent the Django server 
         dashboardContext (dict): The user information for the dashboard template
     Returns:
-        (HttpResponse) The data containing the page the browser will server to the client 
+        None
     """
     user = request.user.username
     plannerID = getUserProfile(user).plannerID
@@ -323,7 +325,7 @@ def handlePlannerData(request,dashboardContext):
         setPlanner(plannerID, index+1, courses)
     #request.method = 'GET' # prevent infinite loop because request is still ajax
     #dashboardContext = dashboardData(request) # Updates context
-    return HttpRedirect('/registration/')
+    
     #return render(request,'dashboard.html',dashboardContext)
         
 
@@ -345,6 +347,9 @@ def dashboardData(request):
     allCourses = getCoursesTaken(username) #If a course is in the planner, should be excluded as well 
     allCourses += getAllCourses(plannerID)
     userInformation['requirements'] = remainingRequirements(allCourses, majorToCollege(userProfile.major), userProfile.major)
+    for requirement in userInformation['requirements']:
+        requirement['courseDone'] = [dbToReadable(course) for course in requirement['courseDone']]
+        requirement['courseLeft'] = [dbToReadable(course) for course in requirement['courseDone']]
     userInformation['planners'] = getPlanners(plannerID)
     readablePlanner = []
     for planner in range(len(userInformation['planners'])):

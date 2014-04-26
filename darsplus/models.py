@@ -457,6 +457,7 @@ class Planner(models.Model):
         account = matches[0] 
         semester = 'semester'+str(index)
         courseList = getattr(account, semester)
+        courseList = filter(lambda courseList: courseList != '', courseList)
         unitCount = 0.0
         for i in range(0, len(courseList)):
             units = float(Courses.getCourseUnits(courseList[i]))
