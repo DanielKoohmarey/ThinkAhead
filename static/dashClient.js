@@ -7,7 +7,7 @@ function savePlanners() {
 	$.post( "/dashboard/", { 'planners[]': planners } );
         window.setTimeout(function() {
             location.reload(true);
-        }, 1000);
+        }, 500);
       
 }
 
