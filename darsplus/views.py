@@ -348,8 +348,8 @@ def dashboardData(request):
     allCourses += getAllCourses(plannerID)
     userInformation['requirements'] = remainingRequirements(allCourses, majorToCollege(userProfile.major), userProfile.major)
     for requirement in userInformation['requirements']:
-        requirement['courseDone'] = [dbToReadable(course) for course in requirement['courseDone']]
-        requirement['courseLeft'] = [dbToReadable(course) for course in requirement['courseDone']]
+        requirement['courseDone'] = [dbToReadable(course) if '.' in course else course for course in requirement['courseDone']]
+        requirement['courseLeft'] = [dbToReadable(course) if '.' in course else course for course in requirement['courseLeft']]
     userInformation['planners'] = getPlanners(plannerID)
     readablePlanner = []
     for planner in range(len(userInformation['planners'])):
