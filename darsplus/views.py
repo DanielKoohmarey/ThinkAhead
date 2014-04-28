@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import HttpResponse, HttpResponseRedirect, StreamingHttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.forms.util import ErrorList
 from darsplus.abbreviations import abbreviationDict, reverseAbbreviationDict, shorthandDict, reverseShorthandDict
 import datetime
