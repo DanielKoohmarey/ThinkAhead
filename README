@@ -62,7 +62,7 @@ CONFIGURING DATABASE
 	      If you are using OSX and sees an error message along the lines of “Hard error in the future yada yada” do this before installing psycopg:
 	      export CFLAGS=-Qunused-arguments
 	      export CPPFLAGS=-Qunused-arguments
-	      sudo pip install pyscop2
+	      sudo pip install psycopg2
 
 	   c) Install the library
 	      pip install djorm-ext-pgarray
