@@ -96,23 +96,8 @@ def userRegistration(request):
     elif request.method == 'POST':
         registered = register(request)
         if not isinstance(registered, list):
-            email = request.POST['email']     
-            major = request.POST['major']
-            college = request.POST['college']
-            graduationSemester = request.POST['semester'] 
-            graduationYear = request.POST['year'] 
-            courseInfo = CourseFormSet(request.POST)
-            courseInfo.is_valid()
-            coursesTaken = []
-            for form in courseInfo:
-                course = form.cleaned_data.get('name')
-                if course:
-                    valid = standardizeCourse(course)
-                    if valid:
-                        coursesTaken.append(valid)
-                    else:
-                        continue #could not determine course format, skipping course
-
+            major,college,graduationSemester,graduationYear,coursesTaken = getRegistrationData(request)[1:]
+            email = request.POST['email']
             initialData = []
             for course in coursesTaken:
                 initialData.append({'name':course.replace('.', ' ')}) # Revert our representation to a user-friendly one
@@ -250,7 +235,6 @@ def register(request):
     """
     emailInfo = EmailForm(request.POST)
     majorInfo = MajorForm(request.POST)
-    courseInfo = CourseFormSet(request.POST)
     errors = {}
 
     if emailInfo.errors:
@@ -261,8 +245,18 @@ def register(request):
         errors.update({'major':majorForm_errors})
     if errors:
         return errors 
-    
-    setEmail(request.user.username,request.POST['email'])     
+    setEmail(request.user.username,request.POST['email'])  
+    return getRegistrationData(request)
+
+def getRegistrationData(request):   
+    """ Extracts the registration data from the form fields of the POST request
+    Args:
+        request (HTTPResponse): Contains Post Registration Form Data
+    Returns:
+        (list) [request.user.username, major, college, graduationSemester, graduationYear, coursesTaken]
+    """
+
+    courseInfo = CourseFormSet(request.POST)
     major = request.POST['major']
     college = request.POST['college']
     graduationSemester = request.POST['semester'] 
@@ -279,8 +273,7 @@ def register(request):
                 coursesTaken.append(valid)
             else:
                 continue #could not determine course format, skipping course
-
-    return [request.user.username, major, college, graduationSemester, graduationYear, coursesTaken]    
+    return [request.user.username, major, college, graduationSemester, graduationYear, coursesTaken]
     
 def standardizeCourse(course):
     """ Converts a course name into the standardized form NAME.NUMBER
