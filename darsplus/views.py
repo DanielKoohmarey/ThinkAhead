@@ -458,4 +458,5 @@ def diffDates(oldSemester, oldYear, newSemester, newYear):
             fill = len(semesters) - semesters.index(oldSemester)
             fill += semesters.index(newSemester)
             diff = ((newYear - 1) + 1 - (oldYear + 1)) * 3 # Number of semesters 
+
             return fill + diff
