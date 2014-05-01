@@ -4660,7 +4660,12 @@ def remainingRequirements(takenClasses, college, major):
 	# College of Letters and Sciences
 	elif (college=='LettersAndSciences'):
 		# College Requirements
-		return ans
+		if (major=='COMPSCI'):
+			
+			return ans
+		else:
+			ans.append({'reqName':'I am sorry this major is not yet supported', 'reqCompleted':False, 'reqDescription':'','courseDone':[], 'courseLeft':[]})
+			return ans
 	# Haas School of Business
 	elif (college=='Haas'):
 		#no need for college requirements because there is only one major
