@@ -3744,7 +3744,7 @@ def remainingRequirements(takenClasses, college, major):
 			elecTwo={'MATSCI.121':'MatSci 121', 'MATSCI.122':'MatSci 122', 'MATSCI.123':'MatSci 123', 'MATSCI.125':'MatSci 125'}
 			ans.append(manyChoiceReq(takenClasses, 'Material Science Elective Two', elecTwo, 'Mat Sci Electives must include one course from Mat Sci 104, 111, 112, 113, 117, C118, or 151'))
 			#Chemistry 120A, Physical Chemistry or Physics 137A,Quantum Mechanics
-			ans.append(twoChoiceReq(takenClasses, 'CHEM.120A', 'Chem 120A','PHYSICS.137A','Physics 137A', "The Physical Chemistry or Quantum Mechanics requirement"))
+			ans.append(twoChoiceReq(takenClasses,'Physics', 'CHEM.120A', 'Chem 120A','PHYSICS.137A','Physics 137A', "The Physical Chemistry or Quantum Mechanics requirement"))
 			#Chem Eng 142, Chemical Kinetics and Reaction Engineering
 			ans.append(basicReq(takenClasses, 'MATSCI.103', 'MatSci 103', "The Phase Transformations and Kinetics requirement"))
 			#Chem Eng 150B, Transport and Separation Processes
