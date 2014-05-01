@@ -81,6 +81,18 @@ header {
 	padding-right: 50px;
 }
 
+
+.activeButton {
+	width: auto;
+	min-width: 100px;
+	height: 30px;
+	border-radius: 5px;
+	border: none;
+	background: #00B0DA;
+     color: white;
+	cursor: pointer; 
+}
+
 .button {
 	background: #FDB515;
 	width: auto;
