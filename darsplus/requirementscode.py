@@ -4507,22 +4507,92 @@ def remainingRequirements(takenClasses, college, major):
 		#Nutritional Science: Physiology & Metabolism
 		elif(major=='NSPM'):
 			#14 additional units of course work in American Cultures, Arts & Literature, Historical Studies, International Studies, Philosophy & Values, Social & Behavioral Sciences, or Foreign Language
+			humanity=0
+			for item in takenClasses:
+				if 'AC' in item:
+					humanity+=units(item)
+			humanityCourses=artAndLit
+			for item in historicalStudies:
+				if item not in humanityCourses:
+					humanityCourses.append(item)
+			for item in international:
+				if item not in humanityCourses:
+					humanityCourses.append(item)
+			for item in philosophyValues:
+				if item not in humanityCourses:
+					humanityCourses.append(item)
+			for item in physicalScience:
+				if item not in humanityCourses:
+					humanityCourses.append(item)
+			for item in socialBehavioralScience:
+				if item not in humanityCourses:
+					humanityCourses.append(item)
+			for item in humanityCourses:
+				if ('AC' not in item) and (item in takenClasses):
+					humanity+=units(item)
+			if(humanity>=14):
+				ans.append({'reqName':'Humanities Courses', 'reqCompleted':True, 'reqDescription':'14 additional units of course work in American Cultures, Arts & Literature, Historical Studies, International Studies, Philosophy & Values, Social & Behavioral Sciences, or Foreign Language','courseDone':[], 'courseLeft':[]})
+			else:
+				ans.append({'reqName':'Humanities Courses', 'reqCompleted':False, 'reqDescription':'14 additional units of course work in American Cultures, Arts & Literature, Historical Studies, International Studies, Philosophy & Values, Social & Behavioral Sciences, or Foreign Language','courseDone':[], 'courseLeft':[]})
 			#Math 16A and Math 16B and Stats 2 (Intro to Statistics)(10) OR  Math 1A and Stats 2 (8) OR Math 10A and Math 10B (8)
-			#Chem 1A, General Chemistry (3)  Chem 1AL General Chemistry Lab (1)
-			#Chem 3A, Organic Chemistry (3)  Chem 3AL, Organic Chemistry Lab (2)
-			# Chem 3B, Organic Chemistry (3)  Chem 3BL, Organic Chemistry Lab (2)
-			# Physics 8A Introductory Physics (4)
+			if (('MATH.16A'in takenClasses)and ('MATH.16B'in takenClasses)and ('STAT.2'in takenClasses)) or (('MATH.1A'in takenClasses)and ('STAT.2'in takenClasses)) or (('MATH.10A'in takenClasses)and ('MATH.10B'in takenClasses)):
+				ans.append({'reqName':'Math Courses', 'reqCompleted':True, 'reqDescription':'Math 16A and Math 16B and Stats 2 (Intro to Statistics)(10) OR  Math 1A and Stats 2 (8) OR Math 10A and Math 10B (8)','courseDone':[], 'courseLeft':[]})
+			else:
+				ans.append({'reqName':'Math Courses', 'reqCompleted':False, 'reqDescription':'Math 16A and Math 16B and Stats 2 (Intro to Statistics)(10) OR  Math 1A and Stats 2 (8) OR Math 10A and Math 10B (8)','courseDone':[], 'courseLeft':[]})
+			#Chemistry 1A (4 units) effective Summer 2011: Chem 1A (3 units) & Chem 1AL (1 unit) 
+			ans.append(twoReq(takenClasses,'Chemistry', 'CHEM.1A', 'Chem 1A','CHEM.1AL', 'Chem 1AL', "The freshman year Chemistry requirement of Chem 1A and 1AL"))
+			# Chemistry 3A and lab (5 units)
+			ans.append(twoReq(takenClasses,'Chemistry', 'CHEM.3A', 'Chem 3A','CHEM.3AL', 'Chem 3AL', "The freshman year Chemistry requirement of Chem 3A and 3AL"))
+			# Chemistry 3B and lab (5 units)
+			ans.append(twoReq(takenClasses,'Chemistry', 'CHEM.3B', 'Chem 3B','CHEM.3BL', 'Chem 3BL', "The freshman year Chemistry requirement of Chem 3B and 3BL"))
+			#Physics 8A: 4 units
+			ans.append(basicReq(takenClasses,'PHYSICS.8A', 'Physics 8A', 'Requirement of PHYSICS 8A'))
 			#NST 10, Intro to Human Nutrition (3)(F,SP)
-			#MCB 32, Human Physiology (3)(F)  MCB 32L, Human Physiology Lab (2)(F) (IB 132/132L is also acceptable)
+			ans.append(basicReq(takenClasses,'NUSCTX.10', 'NutriSci 10', 'Requirement of NutriSci 10'))
+			#MCB 32, Human Physiology and  MCB 32L, Human Physiology Lab (2)(F) (IB 132/132L is also acceptable)
+			temp1=twoReq(takenClasses,'', 'MCELLBI.32', 'MCB 32','MCELLBI.32L', 'MCB 32L','')
+			temp2=twoReq(takenClasses,'', 'INTEGBI.132', 'IB 132','INTEGBI.132L', 'IB 132L','')
+			if (temp1['reqCompleted']):
+				ans.append({'reqName':'Human Physiology', 'reqCompleted':True, 'reqDescription':'Requirement of MCB 32, Human Physiology and MCB 32L, Human Physiology Lab','courseDone':['MCB 32','MCB 32L'], 'courseLeft':[]})
+			elif (temp1['reqCompleted']):
+				ans.append({'reqName':'Human Physiology', 'reqCompleted':True, 'reqDescription':'Requirement of IB 132/132L','courseDone':['IB 132','IB 132L'], 'courseLeft':[]})
+			else:
+				ans.append({'reqName':'Human Physiology', 'reqCompleted':False, 'reqDescription':'Requirement of MCB 32, Human Physiology and  MCB 32L, Human Physiology Lab (2)(F) (IB 132/132L is also acceptable)','courseDone':temp1['courseDone']+temp2['courseDone'], 'courseLeft':temp1['courseLeft']+temp2['courseLeft']})
 			#Bio 1A, General Biology (3)(F,SP)  Bio 1AL, General Biology Lab (2)(F,SP)
-			# MCB102 Principles of Biochemistry & Molecular Biology (4) (F,SP)
-			# NST 103 Nutrient Function & Metabolism (3)(F)
-			# NST 160 Metabolic Bases of Human Health and Diseases (4)(SP)
-			# NST 170 Experimental Nutrition Laboratory (4)(SP)
-			# NST 190 Introduction to Research in Nutritional Science (1)(F,SP)
+			ans.append( twoReq(takenClasses,'General Biology', 'BIOLOGY.1A', 'Bio 1A', 'BIOLOGY.1AL', 'Bio 1AL', "The sophomore year biology requirement of both Bio 1A and 1AL"))
+			#MCB 102 Principles of Biochemistry & Molecular Biology (4) (F,SP)
+			ans.append(basicReq(takenClasses,'MCELLBI.102', 'MCB 102', 'Requirement of MCB 102 Principles of Biochemistry & Molecular Biology'))
+			#NST 103 Nutrient Function & Metabolism (3)(F)
+			ans.append(basicReq(takenClasses,'NUSCTX.103', 'NutriSci 103', 'Requirement of NutriSci 103 Nutrient Function & Metabolism'))
+			#NST 160 Metabolic Bases of Human Health and Diseases (4)(SP)
+			ans.append(basicReq(takenClasses,'NUSCTX.160', 'NutriSci 160', 'Requirement of NutriSci 160 Metabolic Bases of Human Health and Diseases'))
+			#NST 170 Experimental Nutrition Laboratory (4)(SP)
+			ans.append(basicReq(takenClasses,'NUSCTX.170', 'NutriSci 170', 'Requirement of NutriSci 170 Experimental Nutrition Laboratory'))
+			#NST 190 Introduction to Research in Nutritional Science (1)(F,SP)
+			ans.append(basicReq(takenClasses,'NUSCTX.190', 'NutriSci 190', 'Requirement of NutriSci 190 Introduction to Research in Nutritional Science'))
 			#Approved Electives List (20 Units Required):
-			elec={'':'NST 104, NST 108A, NST 110 , NST C114, NST 115, NST 161A, NST 161B , NST 166, NST 193, NST H196 , NST 199 , PMB C103, PMB C112 , PMB 162A , PMB C114 , IB 117, IB 123, IB 128, IB 131, IB 140 , MCB 104 , MCB 130A , MCB 132, MCB 135 A-V, PH 170B, UGIS 192C'}
+			elec={'NUSCTX.104':'NST 104', 'NUSCTX.108A':'NST 108A', 'NUSCTX.110':'NST 110' , 'NUSCTX.C114':'NST C114', 'NUSCTX.115':'NST 115', 'NUSCTX.161A':'NST 161A', 'NUSCTX.161B':'NST 161B' , 'NUSCTX.166':'NST 166', 'NUSCTX.193':'NST 193', 'NUSCTX.H196':'NST H196' , 'NUSCTX.199':'NST 199' , 'PBHLTH.C103':'PMB C103', 'PBHLTH.C112':'PMB C112' , 'PBHLTH.162A':'PMB 162A' , 'PBHLTH.C114':'PMB C114' , 'INTEGBI.117':'IB 117', 'INTEGBI.123':'IB 123', 'INTEGBI.128':'IB 128', 'INTEGBI.131':'IB 131', 'INTEGBI.140':'IB 140' , 'MCELLBI.104':'MCB 104' , 'MCELLBI.130A':'MCB 130A' , 'MCELLBI.132':'MCB 132', 'MCELLBI.135A':'MCB 135A','MCELLBI.135B':'MCB 135B','MCELLBI.135C':'MCB 135C','MCELLBI.135D':'MCB 135D','MCELLBI.135E':'MCB 135E','MCELLBI.135F':'MCB 135F','MCELLBI.135G':'MCB 135G','MCELLBI.135H':'MCB 135H','MCELLBI.135I':'MCB 135I','MCELLBI.135J':'MCB 135J','MCELLBI.135K':'MCB 135K','MCELLBI.135L':'MCB 135L','MCELLBI.135M':'MCB 135M','MCELLBI.135N':'MCB 135N','MCELLBI.135O':'MCB 135O','MCELLBI.135P':'MCB 135P','MCELLBI.135Q':'MCB 135Q','MCELLBI.135R':'MCB 135R','MCELLBI.135S':'MCB 135S','MCELLBI.135T':'MCB 135T','MCELLBI.135U':'MCB 135U','MCELLBI.135V':'MCB 135V','PBHLTH.170B':'PH 170B','UGIS.192C':'UGIS 192C'}
 			#up to 10 units of Dietetic courses: NST 104, NST 108A, NST 161A, NST 161B, and NST 166.
+			dietic={'NUSCTX.104':'NST 104', 'NUSCTX.108A':'NST 108A', 'NUSCTX.161A':'NST 161A', 'NUSCTX.161B':'NST 161B', 'NUSCTX.166':'NST 166'}
+			dunit=0
+			eunit=0
+			aeTaken=[]
+			aeLeft=[]
+			for item in dietic:
+				if item in takenClasses:
+					dunit+=units(item)
+			for item in elec:
+				if item in takenClasses:
+					eunit+=units(item)
+					aeTaken.append(elec[item])
+				else:
+					aeLeft.append(elec[item])
+			if (dunit>=10):
+				eunit=eunit-dunit+10
+			if eunit>=20:
+				ans.append({'reqName':'Electives', 'reqCompleted':True, 'reqDescription':'Approved Electives List (20 Units Required) and only up to 10 units of Dietetic courses','courseDone':aeTaken, 'courseLeft':aeLeft})
+			else:
+				ans.append({'reqName':'Electives', 'reqCompleted':False, 'reqDescription':'Approved Electives List (20 Units Required) and only up to 10 units of Dietetic courses','courseDone':aeTaken, 'courseLeft':aeLeft})
 			return ans
 		#Nutritional Science: Dietetics
 		elif(major=='NSD'):
