@@ -260,7 +260,6 @@ input {
 	width: 200px;
 }
 
-
 ul.errorlist {
     margin: 0;
     padding: 0;
@@ -276,4 +275,29 @@ ul.errorlist {
     border: 2px solid #FDB515;
     border-radius: 25px;
     font-family: arial;
+}
+
+/*For Collapseable Icons*/
+.plus {
+	background: url('plus.png') left no-repeat;
+	background-size: 16px;
+	padding-left:20px;
+}
+
+.plus:hover {
+	background: url('plusLight.png') left no-repeat;
+	background-size: 16px;
+	padding-left:20px;
+}
+
+.minus {
+	background: url('minus.png') left no-repeat;
+	background-size: 16px;
+	padding-left:20px;
+}
+
+.minus:hover {
+	background: url('minusLight.png') left no-repeat;
+	background-size: 16px;
+	padding-left:20px;
 }
