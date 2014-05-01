@@ -30,6 +30,9 @@
 		</header>
 	     <script> $(document).ready(function(){$("#profileNotification").click(function(){$(this).hide();}); $("#profileNotification").css('cursor','pointer'); {% if update %} $("#profileNotification").show(); {%endif%}}); </script>
 		<img src = "{% static "profileNotification.png" %}" style="margin-left:-55%;display:none;" id="profileNotification"></img>
+		
+	</div>	
+	
 		<div class="container">
 	            <b>Total Unit Count: {{ unitsPlanner }} 
 	            {% if unitsCompleted %}
@@ -64,8 +67,6 @@
 				</tr>
 			</table>
 		</div>  
-	</div>	
-
 
 
 	<div class="container">
