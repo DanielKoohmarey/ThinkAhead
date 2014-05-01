@@ -1606,7 +1606,7 @@ def abbreviateMajor(major):
 	'MT':'Molecular Toxicology','NSPM':'Nutritional Science (Physiology)', 
 	'NSD':'Nutritional Science (Dieletics)', 'SE':'Society & Environment',
 
-	'BSCHEM':'B.S. Chemistry','BACHEM':'B.A. Chemistry',
+	'BSCHEM':'Chemistry B.S.','BACHEM':'Chemistry B.A.',
 	'CHEMENG':'Chemical Engineering', 'CHEMBIO':'Chemical Biology',
 	'CHEMMATSCI':'Chemical Engineering/Materials Science & Engineering',
 	'CHEMNUCENG':'Chemical Engineering/Nuclear Engineering',
