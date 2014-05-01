@@ -180,7 +180,28 @@ shorthandDict = {
             'E':'ENGIN',
             'IEOR':'INDENG',
             'PE':'PHYSED',
-            'TDPS':'THEATER'
+            'TDPS':'THEATER',
+            'NST':'NUSCTX',
+            'NES':'NESTUD',
+            'LING':'LINGUIS',
+            'HIST':'HISTORY',
+            'BUDD':'BUDDSTD',
+            'EALC':'EALANG',
+            'MUS':'MUSIC',
+            'PS':'POLSCI',
+            'REL ST':'RELIGST',
+            'REL':'RELIGST',
+            'RELST':'RELIGST',
+            'SOC':'SOCIOL',
+            'PHIL':'PHILOS',
+            'PHILO':'PHILOS',
+            'CRP':'CYPLAN',
+            'DS':'DEVST',
+            'MES':'MESTU',
+            'LAS':'LATAMST',
+            'AAS':'AFRICAM',
+            'ES':'ETHSTD',
+            'SW':'SOCWEL'
 }
 
 reverseShorthandDict = dict (zip(shorthandDict.values(), shorthandDict.keys()))
