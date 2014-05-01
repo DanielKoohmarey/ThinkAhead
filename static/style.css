@@ -205,8 +205,8 @@ body.noScroll {
 	border-radius: 5px;
 	margin: 5px;
 	padding: 5px;
-	height: 100px;
-	width: 150px;
+	min-height: 100px;
+	min-width: 150px;
 	word-wrap: break-word;
 	overflow: hidden;
 	overflow-y: auto;
@@ -229,16 +229,16 @@ ul {
 	margin-bottom: 1px;
 }
 li.course {
-	padding-left: 20px;
-}
-
-li.course:hover{
-	background-color:#D7D7D8;
+	margin-left: 20px;
+     float:left;
+	background-color:#003262;
+     border-color: #FDB515;
 	border-style:solid;
-	border-width:1px;
-	border-color:#A7A7A8;
+	border-width:3px;
 	border-radius: 5px;
-	cursor: move;
+     color: white;
+     cursor: move;
+     padding:3px;
 }
 
 li.courseCompleted {
@@ -265,7 +265,7 @@ li.courseCompleted {
 }
 
 .reqCoursesWrapper {
-	width: 240px;
+
 }
 
 
