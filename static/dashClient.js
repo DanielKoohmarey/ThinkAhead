@@ -39,8 +39,11 @@ http://stackoverflow.com/questions/12480838/use-jquery-to-expand-collapse-ul-lis
 */
 $('.reqComplete ul').hide();
 $('.reqComplete .reqDescription').hide();
+$('.req ul').hide();
+$('.req .reqDescription').hide();
 
 $('.reqTitle').click(function() {
+	$(this).parent().find('.reqTitle').toggleClass('minus');
     $(this).parent().find('ul').slideToggle();
     $(this).parent().find('.reqDescription').slideToggle();
 });

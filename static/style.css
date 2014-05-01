@@ -60,6 +60,7 @@ header {
 .userBar a:hover {
     color: #999999;
     cursor: hand;
+    text-decoration:underline;
 }
 .userBar form {
 	display: inline;
@@ -88,6 +89,7 @@ header {
 	border-radius: 5px;
 	border: none;
 }
+
 .button:hover {
 	background: #999999;
 	cursor: pointer; 
@@ -229,10 +231,21 @@ ul {
 li.course {
 	padding-left: 20px;
 }
+
+li.course:hover{
+	background-color:#D7D7D8;
+	border-style:solid;
+	border-width:1px;
+	border-color:#A7A7A8;
+	border-radius: 5px;
+	cursor: move;
+}
+
 li.courseCompleted {
 	color: #C0C0C0;
 	background: url('thinkAheadCheck.png') left no-repeat;
 	background-size: 16px;
+	padding-left:20px;
 }
 .courseUsed {
 	color: #C0C0C0;
@@ -260,7 +273,6 @@ input {
 	width: 200px;
 }
 
-
 ul.errorlist {
     margin: 0;
     padding: 0;
@@ -276,4 +288,34 @@ ul.errorlist {
     border: 2px solid #FDB515;
     border-radius: 25px;
     font-family: arial;
+}
+
+/*For Collapseable Icons*/
+.plus {
+	background: url('plus.png') left no-repeat;
+	background-size: 16px;
+	padding-left:20px;
+	cursor: hand;
+}
+
+.plus:hover {
+	cursor: hand;
+	background: url('plusLight.png') left no-repeat;
+	background-size: 16px;
+	padding-left:20px
+}
+
+.minus {
+	background: url('minus.png') left no-repeat;
+	background-size: 16px;
+	padding-left:20px;
+	cursor: hand;
+
+}
+
+.minus:hover {
+	background: url('minusLight.png') left no-repeat;
+	background-size: 16px;
+	padding-left:20px;
+	cursor: hand;
 }
