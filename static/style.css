@@ -60,6 +60,7 @@ header {
 .userBar a:hover {
     color: #999999;
     cursor: hand;
+    text-decoration:underline;
 }
 .userBar form {
 	display: inline;
@@ -88,6 +89,7 @@ header {
 	border-radius: 5px;
 	border: none;
 }
+
 .button:hover {
 	background: #999999;
 	cursor: pointer; 
@@ -293,22 +295,27 @@ ul.errorlist {
 	background: url('plus.png') left no-repeat;
 	background-size: 16px;
 	padding-left:20px;
+	cursor: hand;
 }
 
 .plus:hover {
+	cursor: hand;
 	background: url('plusLight.png') left no-repeat;
 	background-size: 16px;
-	padding-left:20px;
+	padding-left:20px
 }
 
 .minus {
 	background: url('minus.png') left no-repeat;
 	background-size: 16px;
 	padding-left:20px;
+	cursor: hand;
+
 }
 
 .minus:hover {
 	background: url('minusLight.png') left no-repeat;
 	background-size: 16px;
 	padding-left:20px;
+	cursor: hand;
 }
