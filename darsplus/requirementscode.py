@@ -1603,8 +1603,8 @@ def abbreviateMajor(major):
 	'CRS':'Conservation & Resource Studies', 'ES':'Environmental Sciences',
 	'FNR':'Forestry & Natural Resources','GPB': 'Genetics & Plant Biology',
 	'MB':'Microbial Biology','MEB':'Molecular & Environmental Biology',
-	'MT':'Molecular Toxicology','NSPM':'Nutritional Science: Physiology & Metabolism',
-	'NSD':'Nutritional Science - Dietetics', 'SE':'Society & Environment',
+	'MT':'Molecular Toxicology','NSPM':'Nutritional Science (Physiology)', 
+	'NSD':'Nutritional Science (Dieletics)', 'SE':'Society & Environment',
 
 	'BSCHEM':'B.S. Chemistry','BACHEM':'B.A. Chemistry',
 	'CHEMENG':'Chemical Engineering', 'CHEMBIO':'Chemical Biology',
