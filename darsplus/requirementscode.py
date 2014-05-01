@@ -4091,18 +4091,66 @@ def remainingRequirements(takenClasses, college, major):
 		# Conservation and Resource Studies
 		if (major=='CRS'):
 			#ESPM Environmental Sci Core: 1 from ESPM 2, ESPM 6, ESPM C10 (L&S C30V), or ESPM 15 (formerly ES 10)
+			core={'ESPM.2':'ESPM 2', 'ESPM.6':'ESPM 6', 'ESPM.C10':'ESPM C10', 'ESPM.15':'ESPM 15','L&S.C30V':'L&S C30V'}
+			ans.append(manyChoiceReq(takenClasses, 'ESPM Environmental Science Core', core, 'For the ESPM Environmental Sci Core you must complete one from ESPM 2, ESPM 6, ESPM C10 (L&S C30V), or ESPM 15'))
 			#ESPM Social Science Core: 1 course from ESPM C11 (L&S C30U), ESPM C12, ESPM 50AC or ESPM 60
+			socialcore={'ESPM.50AC':'ESPM 50AC', 'ESPM.C12':'ESPM C12', 'ESPM.C11':'ESPM C11', 'ESPM.60':'ESPM 60','L&S.C30U':'L&S C30U'}
+			ans.append(manyChoiceReq(takenClasses, 'ESPM Social Science Core', socialcore, 'For the ESPM Social Science Core you must complete one from ESPM C11 (L&S C30U), ESPM C12, ESPM 50AC or ESPM 60'))
 			#One course in General Biology with lab from the following list: Biology 1A: Molecular & Cellular Biology, Biology 1B: Plants/Ecology/Evolution, or Biology 11: Introduction to the Science of Living Organisms.
+			genbio={'BIOLOGY.1A':'Bio 1A','BIOLOGY.1B':'Bio 1B','BIOLOGY.11':'Bio 11'}
+			ans.append(manyChoiceReq(takenClasses, 'General Biology', genbio, 'You must take one general biology class out of 1A, 1B, and 11'))
+			#Breadth
+			temp=sevenBreadth(takenClasses)
+			one=False
+			oneTaken=[]
+			oneNotTaken=[]
+			two=False
+			twoTaken=[]
+			twoNotTaken=[]
+			three=False
+			threeTaken=[]
+			threeNotTaken=[]
+			for item in sevenBreadth:
+				if item['reqName'] in ['International Studies Breadth','Social and Behavioral Science Breadth'] :
+					one= one or item['reqCompleted']
+					oneTaken= oneTaken + item['courseDone']
+					oneNotTaken= oneNotTaken + item['courseLeft']
+				elif item['reqName'] is 'Physical Science Breadth':
+					two= two or item['reqCompleted']
+					twoTaken= twoTaken + item['courseDone']
+					twoNotTaken= twoNotTaken + item['courseLeft']
+				elif item['reqName'] in ['Art and Literature Breadth','Historical Studies Breadth','Philosophy and Values Breadth'] :
+					three= three or item['reqCompleted']
+					threeTaken= threeTaken + item['courseDone']
+					threeNotTaken= threeNotTaken + item['courseLeft']
 			#One course (3-4 units) in Social & Behavioral Sciences or International Studies
+				if one:
+					ans.append({'reqName':'Social & Behavioral Sciences or International Studies Breadth', 'reqCompleted':True, 'reqDescription':'You must take one social & behavioral sciences or international studies course. For more info see: http://http://ls-advise.berkeley.edu/requirement/7breadth.html','courseDone':oneTaken, 'courseLeft':oneNotTaken})
+				else:
+					ans.append({'reqName':'Social & Behavioral Sciences or International Studies Breadth', 'reqCompleted':False, 'reqDescription':'You must take one social & behavioral sciences or international studies course. For more info see: http://http://ls-advise.berkeley.edu/requirement/7breadth.html','courseDone':[], 'courseLeft':oneNotTaken})
 			#One course (3-4 units) in Physical Sciences
+				if two:
+					ans.append({'reqName':'Physical Sciences Breadth', 'reqCompleted':True, 'reqDescription':'You must take one physical sciences course. For more info see: http://http://ls-advise.berkeley.edu/requirement/7breadth.html','courseDone':twoTaken, 'courseLeft':twoNotTaken})
+				else:
+					ans.append({'reqName':'Physical Sciences Breadth', 'reqCompleted':False, 'reqDescription':'You must take one physical sciences course. For more info see: http://http://ls-advise.berkeley.edu/requirement/7breadth.html','courseDone':[], 'courseLeft':twoNotTaken})
 			#One course (3-4 units) in Arts & Literature, Historical Studies, or Philosophy & Values
+				if three:
+					ans.append({'reqName':'Arts & Literature, Historical Studies, or Philosophy & Values Breadth', 'reqCompleted':True, 'reqDescription':'You must take one Arts & Literature, Historical Studies, or Philosophy & Values course. For more info see: http://http://ls-advise.berkeley.edu/requirement/7breadth.html','courseDone':threeTaken, 'courseLeft':threeNotTaken})
+				else:
+					ans.append({'reqName':'Arts & Literature, Historical Studies, or Philosophy & Values Breadth', 'reqCompleted':False, 'reqDescription':'You must take one Arts & Literature, Historical Studies, or Philosophy & Values course. For more info see: http://http://ls-advise.berkeley.edu/requirement/7breadth.html','courseDone':[], 'courseLeft':threeNotTaken})
 			#One Calculus or Statistics course: Math 16A, 16B, 1A or 1B; Statistics 2, 20, 25, 131A, or PH 142A.
+			math={'MATH.16A':'Math 16A','MATH.16B':'Math 16B','MATH.1A':'Math 1A','MATH.1B':'Math 1B','STAT.2':'Stats 2','STAT.20':'Stats 20','STAT.25':'Stats 25','STAT.131A':'Stats 131A','PBHLTH.142A':'Public Health 142A'}
+			ans.append(manyChoiceReq(takenClasses, 'General Math', math, 'You must take One Calculus or Statistics course: Math 16A, 16B, 1A or 1B; Statistics 2, 20, 25, 131A, or PH 142AOne Calculus or Statistics course: Math 16A, 16B, 1A or 1B; Statistics 2, 20, 25, 131A, or PH 142A'))
 			#ESPM 90: Introduction to the CRS Major. Students design Area of Interest statement and declare the major in this class. This course should be taken spring of sophomore year or fall of junior year.
+			ans.append(basicReq(takenClasses, 'ESPM.90', 'ESPM 90', "Introduction to the CRS Major. Students design Area of Interest statement and declare the major in this class.This course should be taken spring of sophomore year or fall of junior year."))
 			#Two Preparatory Courses to the Area of Interest
+			ans.append({'reqName':'Preparatory Courses to the Area of Interest', 'reqCompleted':True, 'reqDescription':'You must take Two Preparatory Courses to the Area of Interest. However, there is no standard set of courses so we must assume you have done this','courseDone':[], 'courseLeft':[]})
 			#ESPM 100 (Fall only) Environmental Problem Solving (4)
-			#ESPM 194A: Senior Seminar in Conservation & Resource Studies (2).
+			ans.append(basicReq(takenClasses, 'ESPM.100', 'ESPM 100', "Environmental Problem Solving"))
+			#ESPM 194A: Senior Seminar in Conservation & Resource Studies (2)
+			ans.append(basicReq(takenClasses, 'ESPM.194A', 'ESPM 194A', "Senior Seminar in Conservation & Resource Studies"))
 			#Eight student-designed Area of Interest Classes (Completely Unspecified)
-
+			ans.append({'reqName':'Area of Interest', 'reqCompleted':True, 'reqDescription':'You must take Eight student-designed Area of Interest Classes. However, there is no standard set of courses so we must assume you have done this','courseDone':[], 'courseLeft':[]})
 			return ans
 		# Environmental Sciences
 		elif(major=='ES'):
@@ -4130,17 +4178,61 @@ def remainingRequirements(takenClasses, college, major):
 		# Forestry and Natural Resources
 		elif(major=='FNR'):
 			#ESPM Environmental Sci Core: 1 from ESPM 2, ESPM 6, ESPM C10 (L&S C30V), or ESPM 15 (formerly ES 10)
+			core={'ESPM.2':'ESPM 2', 'ESPM.6':'ESPM 6', 'ESPM.C10':'ESPM C10', 'ESPM.15':'ESPM 15','L&S.C30V':'L&S C30V'}
+			ans.append(manyChoiceReq(takenClasses, 'ESPM Environmental Science Core', core, 'For the ESPM Environmental Sci Core you must complete one from ESPM 2, ESPM 6, ESPM C10 (L&S C30V), or ESPM 15'))
 			#ESPM Social Science Core: 1 course from ESPM C11 (L&S C30U), ESPM C12, ESPM 50AC or ESPM 60
-			#One course (3-4 units) in Social & Behavioral Sciences or International Studies 
-			#One course (3-4 units) in Arts & Literature, Historical Studies or Philosophy & Values
+			socialcore={'ESPM.50AC':'ESPM 50AC', 'ESPM.C12':'ESPM C12', 'ESPM.C11':'ESPM C11', 'ESPM.60':'ESPM 60','L&S.C30U':'L&S C30U'}
+			ans.append(manyChoiceReq(takenClasses, 'ESPM Social Science Core', socialcore, 'For the ESPM Social Science Core you must complete one from ESPM C11 (L&S C30U), ESPM C12, ESPM 50AC or ESPM 60'))
+			#Breadth
+			temp=sevenBreadth(takenClasses)
+			one=False
+			oneTaken=[]
+			oneNotTaken=[]
+			two=False
+			twoTaken=[]
+			twoNotTaken=[]
+			three=False
+			threeTaken=[]
+			threeNotTaken=[]
+			for item in sevenBreadth:
+				if item['reqName'] in ['International Studies Breadth','Social and Behavioral Science Breadth'] :
+					one= one or item['reqCompleted']
+					oneTaken= oneTaken + item['courseDone']
+					oneNotTaken= oneNotTaken + item['courseLeft']
+				elif item['reqName'] is 'Physical Science Breadth':
+					two= two or item['reqCompleted']
+					twoTaken= twoTaken + item['courseDone']
+					twoNotTaken= twoNotTaken + item['courseLeft']
+				elif item['reqName'] in ['Art and Literature Breadth','Historical Studies Breadth','Philosophy and Values Breadth'] :
+					three= three or item['reqCompleted']
+					threeTaken= threeTaken + item['courseDone']
+					threeNotTaken= threeNotTaken + item['courseLeft']
+			#One course (3-4 units) in Social & Behavioral Sciences or International Studies
+				if one:
+					ans.append({'reqName':'Social & Behavioral Sciences or International Studies Breadth', 'reqCompleted':True, 'reqDescription':'You must take one social & behavioral sciences or international studies course. For more info see: http://http://ls-advise.berkeley.edu/requirement/7breadth.html','courseDone':oneTaken, 'courseLeft':oneNotTaken})
+				else:
+					ans.append({'reqName':'Social & Behavioral Sciences or International Studies Breadth', 'reqCompleted':False, 'reqDescription':'You must take one social & behavioral sciences or international studies course. For more info see: http://http://ls-advise.berkeley.edu/requirement/7breadth.html','courseDone':[], 'courseLeft':oneNotTaken})
+			#One course (3-4 units) in Arts & Literature, Historical Studies, or Philosophy & Values
+				if three:
+					ans.append({'reqName':'Arts & Literature, Historical Studies, or Philosophy & Values Breadth', 'reqCompleted':True, 'reqDescription':'You must take one Arts & Literature, Historical Studies, or Philosophy & Values course. For more info see: http://http://ls-advise.berkeley.edu/requirement/7breadth.html','courseDone':threeTaken, 'courseLeft':threeNotTaken})
+				else:
+					ans.append({'reqName':'Arts & Literature, Historical Studies, or Philosophy & Values Breadth', 'reqCompleted':False, 'reqDescription':'You must take one Arts & Literature, Historical Studies, or Philosophy & Values course. For more info see: http://http://ls-advise.berkeley.edu/requirement/7breadth.html','courseDone':[], 'courseLeft':threeNotTaken})
 			#Chemistry (4 units): Chem 1A/1AL; Biology (4 units): Biology 1B; Calculus (6-8 units): Math 16A-B or Math 1A-B; Statistics (4 units): Stat 2 or 20; Economics (4 units): EEP C1 (rec), Econ 1 or 2; Physical Science (4 units): EPS 50, Geog 1 or 40
 				#or Physical Science: One course from Physical Sciences; Biology (3-4 units): Biology 1B or 11; Mathematics (3-4 units): Math 16A, 1A, or 32; Statistics (4 units): Stat 2, 20, Poli Sci 3 or Soc 5; Economics (3-4 units): EEP C1 (rec), Econ 1 or 2, or UGBA 10
 			#ESPM 105A: Sierra Nevada Ecology (4),ESPM 105B: Forest Measurements (1), ESPM 105C: Silviculture and Utilization (3), ESPM 105D: Forest Management and Assessment (3), or ESPM C107: Biology & Geomorphology of Tropical Islands
+			field={'ESPM.105A':'ESPM 105A','ESPM.105B':'ESPM.105B','ESPM.105C':'ESPM.105C','ESPM.105D':'ESPM 105D','ESPM.C107':'ESPM C107'}
+			ans.append(manyChoiceReq(takenClasses, 'Field Study', field, "One field study course from the list below"))
 			#ESPM 102A: Terrestrial Resource Ecology (4) F
+			ans.append(basicReq(takenClasses, 'ESPM.102A', 'ESPM 102A', "The Terrestrial Resource Ecology requirement"))
 			#ESPM 102B/L: Natural Resource Sampling (2/2) F
+			ans.append(basicReq(takenClasses, 'ESPM.102B', 'ESPM 102B', "The Natural Resource Sampling requirement"))
+			ans.append(basicReq(takenClasses, 'ESPM.102BL', 'ESPM 102BL', "The Natural Resource Sampling Lab requirement"))
 			#ESPM 72: Geographic Information Systems (3) Sp
-			#ESPM 102C: Resource Management (4) Sp
+			ans.append(basicReq(takenClasses, 'ESPM.72', 'ESPM 72', "The Geographic Information Systems requirement"))
+			#ESPM 102C: Resource Management (4) 
+			ans.append(basicReq(takenClasses, 'ESPM.102C', 'ESPM 102C', "The Resource Management requirement"))
 			#ESPM 102D: Resource & Environ Policy (4) Sp
+			ans.append(basicReq(takenClasses, 'ESPM.102D', 'ESPM 102D', "The Resource & Environ Policy requirement"))
 			#PROFESSIONAL FORESTRY SPECIALIZATION:ESPM 108A: Trees-Taxonomy, Growth & Structures (3) F; ESPM 134: Fire, Insects, and Diseases in Forest Ecosystems (3) Sp;ESPM 182: Forest Operations Management (3) F;ESPM 183: Forest Ecosystem Management (4) Sp;ESPM 185: Applied Forest Ecology (4) F;Plus one additional course from one of the following subject categories: PE or MM.
 				#or Two courses each from both the E and the PE subject categories, plus one additional course from each of the following: MM and MP.
 				#or one from each category plus two from anywhere: Ecology (E) Physical Environment (PE) Monitoring & Measurement (MM) Management (MP)
@@ -4148,26 +4240,131 @@ def remainingRequirements(takenClasses, college, major):
 			pe={'ESPM.120':'ESPM 120','ESPM.121':'ESPM 121', 'ESPM.C128':'ESPM C128','ESPM.C129':'ESPM C129', 'EPS.117':'EPS 117', 'GEOG.140A':'GEOG 140A' }
 			mm={'ESPM.172':'ESPM 172', 'ESPM.174':'ESPM 174', 'ANTHRO.169A':'ANTH 169A', 'ANTHRO.169B':'ANTH 169B', 'ARCH.110':'ARCH 110', 'EPS.C120':'EPS C120', 'GEOG.187':'GEOG 187', 'LDARCH.110':'LD ARCH 110','LDARCH.C188':'LD ARCH C188' }
 			mp={'ESPM.155':'ESPM 155','ESPM.165':'ESPM 165','ESPM.168':'ESPM 168','ESPM.169':'ESPM 169','ESPM.181A':'ESPM 181A','ESPM.182':'ESPM 182','ESPM.183':'ESPM 183','ESPM.184':'ESPM 184','ESPM.185':'ESPM 185','ESPM.186':'ESPM 186','ESPM.188':'ESPM 188','CYPLAN.112A':'CY PLAN 112A'}
+			enum=0
+			penum=0
+			mmnum=0
+			mpnum=0
+			pfsTaken=[]
+			pfsNotTaken=[]
+			for item in e:
+				if item in takenClasses:
+					enum=enum+1
+					pfsTaken.append(e[item])
+				else:
+					pfsNotTaken.append(e[item])
+			for item in pe:
+				if item in takenClasses:
+					penum=penum+1
+					pfsTaken.append(pe[item])
+				else:
+					pfsNotTaken.append(pe[item])
+			for item in mm:
+				if item in takenClasses:
+					mmnum=mmnum+1
+					pfsTaken.append(mm[item])
+				else:
+					pfsNotTaken.append(mm[item])
+			for item in mp:
+				if item in takenClasses:
+					mpnum=mpnum+1
+					pfsTaken.append(mp[item])
+				else:
+					pfsNotTaken.append(mp[item])
+			if (enum>=2) and (penum>=2) and (mmnum>=1) and (mpnum>=1):
+				ans.append({'reqName':'PROFESSIONAL FORESTRY SPECIALIZATION', 'reqCompleted':True, 'reqDescription':'Specialization through Two courses each from both the E and the PE subject categories, plus one additional course from each of the following: MM and MP','courseDone':pfsTaken, 'courseLeft':pfsNotTaken})
+			elif (enum>=1) and (penum>=1) and (mmnum>=1) and (mpnum>=1) and (enum+penum+mmnum+mpnum>=6):
+				ans.append({'reqName':'PROFESSIONAL FORESTRY SPECIALIZATION', 'reqCompleted':True, 'reqDescription':'Specialization through one from each category plus two from anywhere: Ecology (E) Physical Environment (PE) Monitoring & Measurement (MM) Management (MP)','courseDone':pfsTaken, 'courseLeft':pfsNotTaken})
+			elif ('ESPM.108A' in takenClasses) and ('ESPM.134' in takenClasses) and ('ESPM.180' in takenClasses) and ('ESPM.183' in takenClasses) and ('ESPM.185' in takenClasses) and ((penum>=1) or (mmnum>=1)):
+				ans.append({'reqName':'PROFESSIONAL FORESTRY SPECIALIZATION', 'reqCompleted':True, 'reqDescription':'Specialization through ESPM 108A: Trees-Taxonomy, Growth & Structures (3) F; ESPM 134: Fire, Insects, and Diseases in Forest Ecosystems (3) Sp;ESPM 182: Forest Operations Management (3) F;ESPM 183: Forest Ecosystem Management (4) Sp;ESPM 185: Applied Forest Ecology (4) F;Plus one additional course from one of the following subject categories: PE or MM.','courseDone':pfsTaken, 'courseLeft':pfsNotTaken})
+			else:
+				ans.append({'reqName':'PROFESSIONAL FORESTRY SPECIALIZATION', 'reqCompleted':False, 'reqDescription':'Three options (ESPM 108A: Trees-Taxonomy, Growth & Structures (3) F; ESPM 134: Fire, Insects, and Diseases in Forest Ecosystems (3) Sp;ESPM 182: Forest Operations Management (3) F;ESPM 183: Forest Ecosystem Management (4) Sp;ESPM 185: Applied Forest Ecology (4) F;Plus one additional course from one of the following subject categories: PE or MM.) or (Two courses each from both the E and the PE subject categories, plus one additional course from each of the following: MM and MP.) or (one from each category plus two from anywhere: Ecology (E) Physical Environment (PE) Monitoring & Measurement (MM) Management (MP))','courseDone':pfsTaken, 'courseLeft':pfsNotTaken})
 			return ans
 		#Genetics and Plant Biology
 		elif(major=='GPB'):
 			#Math 16A/1A: Calculus I [3-4]
+			ans.append(twoChoiceReq(takenClasses, 'Calculus I', 'MATH.16A', 'Math 16A', 'MATH.1A', 'Math 1A', 'You must take an Intro Calculus course either math 16A or 1A'))
 			#Math 16B/1B: Calculus II [3-4]
+			ans.append(twoChoiceReq(takenClasses, 'Calculus II', 'MATH.16B', 'Math 16B', 'MATH.1B', 'Math 1B', 'You must take an Intermediate Calculus course either math 16B or 1B'))
 			#Stat 2, 20, 131A: Probability & Statistics [4]
+			prob={'STAT.2':'Stats 2','STAT.20':'Stats 20','STAT.131A':'Stats 131A'}
+			ans.append(manyChoiceReq(takenClasses, 'Probability & Statistics', prob, 'The Probability & Statistics requirement of one of Stat 2, 20, 131A'))
 			#Chem 1A/L: General Chemistry [4]
+			ans.append(twoReq(takenClasses,'General Chemistry', 'CHEM.1A', 'Chem 1A', 'CHEM.1AL', 'Chem 1AL', "The General Chemistry requirement"))
 			#Chem 3A/L: Organic Chemistry I [5]
+			ans.append(twoReq(takenClasses,'Organic Chemistry I', 'CHEM.3A', 'Chem 3A', 'CHEM.3AL', 'Chem 3AL', "The Organic Chemistry I requirement"))
 			#Chem 3B/L: Organic Chemistry II [5]
+			ans.append(twoReq(takenClasses,'Organic Chemistry II', 'CHEM.3B', 'Chem 3B', 'CHEM.3BL', 'Chem 3BL', "The Organic Chemistry II requirement"))
 			#Bio 1A/L: General Biology [5]
+			ans.append(twoReq(takenClasses,'General Biology', 'BIOLOGY.1A', 'Bio 1A', 'BIOLOGY.1AL', 'Bio 1AL', "The General Biology requirement"))
 			#Bio 1B: General Biology [4]
-			#15 units of coursework taken from L&S breadth list,excluding biological and physical science courses maximum of 6 foreign language units
+			ans.append(basicReq(takenClasses, 'BIOLOGY.1B', 'Bio 1B', 'The General Biology requirement'))
+			#15 units of coursework taken from L&S breadth list,excluding biological and physical science courses
+			breadthTaken=[]
+			bnum=0
+			breadthNotTaken=[]
+			for item in socialBehavioralScience:
+				if (item in takenClasses) and (not(socialBehavioralScience[item] in breadthTaken)):
+					breadthTaken.append(socialBehavioralScience[item])
+					bnum=bnum+units()
+				else:
+					breadthNotTaken.append(socialBehavioralScience[item])
+			for item in philosophyValues:
+				if (item in takenClasses) and (not(philosophyValues[item] in breadthTaken)):
+					breadthTaken.append(philosophyValues[item])
+					bnum=bnum+units()
+				else:
+					breadthNotTaken.append(philosophyValues[item])
+			for item in international:
+				if (item in takenClasses) and (not(international[item] in breadthTaken)):
+					breadthTaken.append(international[item])
+					bnum=bnum+units()
+				else:
+					breadthNotTaken.append(international[item])
+			for item in historicalStudies:
+				if (item in takenClasses) and (not(historicalStudies[item] in breadthTaken)):
+					breadthTaken.append(historicalStudies[item])
+					bnum=bnum+units()
+				else:
+					breadthNotTaken.append(historicalStudies[item])
+			for item in artAndLit:
+				if (item in takenClasses) and (not(artAndLit[item] in breadthTaken)):
+					breadthTaken.append(artAndLit[item])
+					bnum=bnum+units()
+				else:
+					breadthNotTaken.append(artAndLit[item])
+			if (bnum>=15):
+				ans.append( {'reqName':'Breadth', 'reqCompleted':True, 'reqDescription':'15 units of coursework taken from L&S breadth list,excluding biological and physical science courses','courseDone':breadthTaken, 'courseLeft':breadthNotTaken})
+			else:
+				ans.append( {'reqName':'Breadth', 'reqCompleted':False, 'reqDescription':'15 units of coursework taken from L&S breadth list,excluding biological and physical science courses','courseDone':breadthTaken, 'courseLeft':breadthNotTaken})
 			#Physics 8A: Introductory Physics [4]
+			ans.append(basicReq(takenClasses, 'PHYSICS.8A', 'Physics 8A', 'The Introductory Physics requirement'))
 			# PMB 101L: Experimental Plant Biology Lab [3]
+			ans.append(basicReq(takenClasses, 'PLANTBI.101L', 'PMB 101L', 'The Experimental Plant Biology Lab requirement'))
 			#PMB C107L: Principles of Plant Morphology and Lab [5]
+			ans.append(basicReq(takenClasses, 'PLANTBI.C107L', 'PMB C107L', 'The Principles of Plant Morphology and Lab requirement'))
 			#PMB 135: Physiology and Biochemistry of Plants [3]
+			ans.append(basicReq(takenClasses, 'PLANTBI.135', 'PMB 135', 'The Physiology and Biochemistry of Plants requirement'))
 			#PMB 150: Plant Cell Biology [3]
+			ans.append(basicReq(takenClasses, 'PLANTBI.150', 'PMB 150', 'The Plant Cell Biology requirement'))
 			#PMB 160: Plant Molecular Genetics [3]
-			#Choose any five courses for a minimum of 15 units from the Plant Biology Tracks below
-			tracks={'':'BioE 131, BioE 143, Ene Res, ESPM 108A, ESPM 108B, ESPM 131, ESPM 149, ESPM 152, ESPM 162, IB 102LF, IB 117/L, IB 151, IB 154, IB 157, IB 160, IB 161, IB 162, IB 163, IB 168L, IB 181, MCB 102, MCB 130A, PMB 110/L, PMB 113, PMB 120/L, PMB 122, PMB 142, PMB 165, PMB 170, PMB 180, PMB 185, PMB C102L, PMB C103, PMB C112, PMB C112L, PMB C114, PMB C116, PMB C124, PMB C134, PMB C144(L),  PMB C148, PMB H196/199, Stat C143'}
+			ans.append(basicReq(takenClasses, 'PLANTBI.160', 'PMB 160', 'The  requirement'))
+			#Choose any five courses for a minimum of 15 units from the Plant Biology Tracks below                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+			tracks={'BIOENG.131':'BioE 131', 'BIOENG.143':'BioE 143', 'ESPM.108A':'ESPM 108A', 'ESPM.108B':'ESPM 108B', 'ESPM.131':'ESPM 131', 'ESPM.149':'ESPM 149', 'ESPM.152':'ESPM 152', 'ESPM.162':'ESPM 162', 'INTEGBI.102LF':'IB 102LF', 'INTEGBI.117':'IB 117','INTEGBI.117L':'IB 117L', 'INTEGBI.151':'IB 151', 'INTEGBI.154':'IB 154', 'INTEGBI.157':'IB 157', 'INTEGBI.160':'IB 160', 'INTEGBI.161':'IB 161', 'INTEGBI.162':'IB 162', 'INTEGBI.163':'IB 163', 'INTEGBI.168L':'IB 168L', 'INTEGBI.181':'IB 181', 'MCELLBI.102':'MCB 102', 'MCELLBI.130A':'MCB 130A', 'PLANTBI.110':'PMB 110', 'PLANTBI.110L':'PMB 110L','PLANTBI.113':'PMB 113', 'PLANTBI.120':'PMB 120','PLANTBI.120L':'PMB 120L', 'PLANTBI.122':'PMB 122', 'PLANTBI.142':'PMB 142', 'PLANTBI.165':'PMB 165', 'PLANTBI.170':'PMB 170', 'PLANTBI.180':'PMB 180', 'PLANTBI.185':'PMB 185', 'PLANTBI.C102L':'PMB C102L', 'PLANTBI.C103':'PMB C103', 'PLANTBI.C112':'PMB C112', 'PLANTBI.C112L':'PMB C112L', 'PLANTBI.C114':'PMB C114', 'PLANTBI.C116':'PMB C116', 'PLANTBI.C124':'PMB C124', 'PLANTBI.C134':'PMB C134', 'PLANTBI.C144':'PMB C144','PLANTBI.C144L':'PMB C144L',  'PLANTBI.C148':'PMB C148', 'PLANTBI.H196':'PMB H196','PLANTBI.199':'PMB 199', 'STAT.143':'Stat C143'}
+			classes=0
+			tracknum=0
+			trackTaken=[]
+			trackNotTaken=[]
+			for item in tracks:
+				if item in takenClasses:
+					classes=classes+1
+					tracknum=tracknum+units(item)
+					trackTaken.append(tracks[item])
+				else:
+					trackNotTaken.append(tracks[item])
+			if (tracknum>=15) and (classes>=5):
+				ans.append( {'reqName':'Plant Biology Tracks', 'reqCompleted':True, 'reqDescription':'Choose any five courses for a minimum of 15 units from the Plant Biology Tracks below','courseDone':trackTaken, 'courseLeft':trackNotTaken})
+			else:
+				ans.append( {'reqName':'Plant Biology Tracks', 'reqCompleted':False, 'reqDescription':'Choose any five courses for a minimum of 15 units from the Plant Biology Tracks below','courseDone':trackTaken, 'courseLeft':trackNotTaken})
 			return ans
 		#Microbial Biology
 		elif(major=='MB'):
@@ -4207,24 +4404,105 @@ def remainingRequirements(takenClasses, college, major):
 		#Molecular Toxicology
 		elif(major=='MT'):
 			#14 additional units of course work in American Cultures, Arts & Literature, Historical Studies, International Studies, Philosophy & Values, Social & Behavioral Sciences, or Foreign Language
+			humanity=0
+			for item in takenClasses:
+				if 'AC' in item:
+					humanity+=units(item)
+			humanityCourses=artAndLit
+			for item in historicalStudies:
+				if item not in humanityCourses:
+					humanityCourses.append(item)
+			for item in international:
+				if item not in humanityCourses:
+					humanityCourses.append(item)
+			for item in philosophyValues:
+				if item not in humanityCourses:
+					humanityCourses.append(item)
+			for item in physicalScience:
+				if item not in humanityCourses:
+					humanityCourses.append(item)
+			for item in socialBehavioralScience:
+				if item not in humanityCourses:
+					humanityCourses.append(item)
+			for item in humanityCourses:
+				if ('AC' not in item) and (item in takenClasses):
+					humanity+=units(item)
+			if(humanity>=14):
+				ans.append({'reqName':'Humanities Courses', 'reqCompleted':True, 'reqDescription':'14 additional units of course work in American Cultures, Arts & Literature, Historical Studies, International Studies, Philosophy & Values, Social & Behavioral Sciences, or Foreign Language','courseDone':[], 'courseLeft':[]})
+			else:
+				ans.append({'reqName':'Humanities Courses', 'reqCompleted':False, 'reqDescription':'14 additional units of course work in American Cultures, Arts & Literature, Historical Studies, International Studies, Philosophy & Values, Social & Behavioral Sciences, or Foreign Language','courseDone':[], 'courseLeft':[]})
 			#Math 16A and Math 16B and Stats 2 (Intro to Statistics)(10) OR  Math 1A and Stats 2 (8) OR Math 10A and Math 10B (8)
-			#Chem 1A, General Chemistry (3)  Chem 1AL General Chemistry Lab (1)
-			#Chem 3A, Organic Chemistry (3)  Chem 3AL, Organic Chemistry Lab (2)
-			# Chem 3B, Organic Chemistry (3)  Chem 3BL, Organic Chemistry Lab (2)
-			# Physics 8A Introductory Physics (4)
+			if (('MATH.16A'in takenClasses)and ('MATH.16B'in takenClasses)and ('STAT.2'in takenClasses)) or (('MATH.1A'in takenClasses)and ('STAT.2'in takenClasses)) or (('MATH.10A'in takenClasses)and ('MATH.10B'in takenClasses)):
+				ans.append({'reqName':'Math Courses', 'reqCompleted':True, 'reqDescription':'Math 16A and Math 16B and Stats 2 (Intro to Statistics)(10) OR  Math 1A and Stats 2 (8) OR Math 10A and Math 10B (8)','courseDone':[], 'courseLeft':[]})
+			else:
+				ans.append({'reqName':'Math Courses', 'reqCompleted':False, 'reqDescription':'Math 16A and Math 16B and Stats 2 (Intro to Statistics)(10) OR  Math 1A and Stats 2 (8) OR Math 10A and Math 10B (8)','courseDone':[], 'courseLeft':[]})
+			#Chemistry 1A (4 units) effective Summer 2011: Chem 1A (3 units) & Chem 1AL (1 unit) 
+			ans.append(twoReq(takenClasses,'Chemistry', 'CHEM.1A', 'Chem 1A','CHEM.1AL', 'Chem 1AL', "The freshman year Chemistry requirement of Chem 1A and 1AL"))
+			# Chemistry 3A and lab (5 units)
+			ans.append(twoReq(takenClasses,'Chemistry', 'CHEM.3A', 'Chem 3A','CHEM.3AL', 'Chem 3AL', "The freshman year Chemistry requirement of Chem 3A and 3AL"))
+			# Chemistry 3B and lab (5 units)
+			ans.append(twoReq(takenClasses,'Chemistry', 'CHEM.3B', 'Chem 3B','CHEM.3BL', 'Chem 3BL', "The freshman year Chemistry requirement of Chem 3B and 3BL"))
+			#Physics 8A: 4 units
+			ans.append(basicReq(takenClasses,'PHYSICS.8A', 'Physics 8A', 'Requirement of PHYSICS 8A'))
 			#NST 11, Introduction to Toxicology (3)(SP)
+			ans.append(basicReq(takenClasses,'NUSCTX.11', 'NutriSci 11', 'Requirement of NutriSci 11'))
 			#MCB 32, Human Physiology and  MCB 32L, Human Physiology Lab (2)(F) (IB 132/132L is also acceptable)
+			temp1=twoReq(takenClasses,'', 'MCELLBI.32', 'MCB 32','MCELLBI.32L', 'MCB 32L','')
+			temp2=twoReq(takenClasses,'', 'INTEGBI.132', 'IB 132','INTEGBI.132L', 'IB 132L','')
+			if (temp1['reqCompleted']):
+				ans.append({'reqName':'Human Physiology', 'reqCompleted':True, 'reqDescription':'Requirement of MCB 32, Human Physiology and MCB 32L, Human Physiology Lab','courseDone':['MCB 32','MCB 32L'], 'courseLeft':[]})
+			elif (temp1['reqCompleted']):
+				ans.append({'reqName':'Human Physiology', 'reqCompleted':True, 'reqDescription':'Requirement of IB 132/132L','courseDone':['IB 132','IB 132L'], 'courseLeft':[]})
+			else:
+				ans.append({'reqName':'Human Physiology', 'reqCompleted':False, 'reqDescription':'Requirement of MCB 32, Human Physiology and  MCB 32L, Human Physiology Lab (2)(F) (IB 132/132L is also acceptable)','courseDone':temp1['courseDone']+temp2['courseDone'], 'courseLeft':temp1['courseLeft']+temp2['courseLeft']})
 			#Bio 1A, General Biology and Bio 1AL, General Biology Lab (2)(F,SP)
+			ans.append( twoReq(takenClasses,'General Biology', 'BIOLOGY.1A', 'Bio 1A', 'BIOLOGY.1AL', 'Bio 1AL', "The sophomore year biology requirement of both Bio 1A and 1AL"))
 			#MCB 102 Biochemistry &Molecular Biology (4)(F,SP)
+			ans.append(basicReq(takenClasses,'MCELLBI.102', 'MCB 102', 'Requirement of MCB 102 Biochemistry & Molecular Biology'))
 			#MCB 104 Genetics (4)(F,SP) or IB 141 (3, offered Summer Session only)
+			ans.append(twoChoiceReq(takenClasses,'Genetics', 'MCELLBI.104', 'MCB 104', 'INTEGBI.141', 'IB 141', 'Requirement of MCB 104 Genetics (4)(F,SP) or IB 141 (3, offered Summer Session only)'))
 			#PMB/MCB C112 General Microbiology (4) (F) OR PH 162A Public Health Microbiology (3) (F)
+			micro={'PLANTBI.C112':'PMB C112','MCELLBI.C112':'MCB C112','PBHLTH.162A':'Public Health 162A'}
+			ans.append(manyChoiceReq(takenClasses, 'Microbiology', micro, "Requirement of PMB/MCB C112 General Microbiology (4) (F) OR PH 162A Public Health Microbiology (3) (F)"))
 			#Microbiology Lab PMB/MCB C112L(F,SP) (2) OR PH 162L (1) (F)*
+			microl={'PLANTBI.C112L':'PMB C112L','MCELLBI.C112L':'MCB C112L','PBHLTH.162L':'Public Health 162L'}
+			ans.append(manyChoiceReq(takenClasses, 'Microbiology Lab', microl, "Requirement of PMB/MCB C112L General Microbiology Lab(F,SP) (2) OR PH 162L (1)"))
 			#NST 110 Toxicology (4) (F)
+			ans.append(basicReq(takenClasses,'NUSCTX.110', 'NutriSci 110', 'Requirement of NutriSci 110 Toxicology'))
 			#NST 121 Computational Toxicology (3) (SP)
+			ans.append(basicReq(takenClasses,'NUSCTX.121', 'NutriSci 121', 'Requirement of NutriSci 121 Computational Toxicology'))
 			#NST 171 Nutrition and Toxicology Laboratory (4) (F)
+			ans.append(basicReq(takenClasses,'NUSCTX.171', 'NutriSci 171', 'Requirement of NutriSci 171 Nutrition and Toxicology Laboratory'))
 			#NST 193 Introduction to Research in Toxicology (1)(SP)
-			#36 total units including above requirements:Approved Electives List:Civ Eng 114 Environmental Microbiology (3), Civ Eng 115 Water Chemistry (3), ESPM 100 Environmental Problem Solving (4), ESPM 119 Chemical Ecology (2), ESPM 126 Environmental Soil Chemistry (3), ESPM 162 Bioethics (4), ESPM C180 Air Pollution (3), IB 117 Medical Ethnobotany (2), IB 131 Human Anatomy (3),, IB 152 Environmental Toxicology (4), NST 103 Nutrient Function and Metabolism (3)(F), NST C114/ESPM C148 Pesticide Chemistry & Toxicology (3)(SP), NST C115 Principles of Drug Action (2)(SP), NST 160 Metabolic Bases of Human Health & Diseases (4)(SP), NST H196 Honors Research (4), NST 199 Independent Study Research (1-4), PH 150A Introduction to Epidemiology & Human Disease (3), PH 150B Introduction to Environmental Health (3), PH 170B Toxicology (3), UGIS 192C Research Biological Sciences (1-4), Any other Approved NS-PM Elective Courses, Other IB, MCB, and PMB lecture or lab courses also accepted
-			
+			ans.append(basicReq(takenClasses,'NUSCTX.193', 'NutriSci 193', 'Requirement of NutriSci 193 Introduction to Research in Toxicology'))
+			#36 total units including above requirements:Approved Electives List:Civ Eng 114 Environmental Microbiology (3), Civ Eng 115 Water Chemistry (3), 
+			#ESPM 100 Environmental Problem Solving (4), ESPM 119 Chemical Ecology (2), ESPM 126 Environmental Soil Chemistry (3), ESPM 162 Bioethics (4), 
+			#ESPM C180 Air Pollution (3), IB 117 Medical Ethnobotany (2), IB 131 Human Anatomy (3),, IB 152 Environmental Toxicology (4), 
+			#NST 103 Nutrient Function and Metabolism (3)(F), NST C114/ESPM C148 Pesticide Chemistry & Toxicology (3)(SP), NST C115 Principles of Drug Action (2)(SP), 
+			#NST 160 Metabolic Bases of Human Health & Diseases (4)(SP), NST H196 Honors Research (4), NST 199 Independent Study Research (1-4), 
+			#PH 150A Introduction to Epidemiology & Human Disease (3), PH 150B Introduction to Environmental Health (3), PH 170B Toxicology (3), 
+			#UGIS 192C Research Biological Sciences (1-4), Any other Approved NS-PM Elective Courses, Other IB, MCB, and PMB lecture or lab courses also accepted
+			upperdiv=['MCELLBI.104','MCELLBI.102','PLANTBI.C112','MCELLBI.C112','PBHLTH.162A','PLANTBI.C112L','MCELLBI.C112L','PBHLTH.162L','NUSCTX.110','NUSCTX.121','NUSCTX.171','NUSCTX.193']
+			upperdivunits=0
+			for item in upperdiv:
+				if (item in takenClasses):
+					upperdivunits+=units(item)
+			approvedElec={'CIVENG.114':'CivEng 114','CIVENG.115':'CivEng 115','ESPM.100':'ESPM 100','ESPM.119':'ESPM 119','ESPM.126':'ESPM 126','ESPM.C148':'ESPM C148','ESPM.162':'ESPM 162','ESPM.C180':'ESPM C180',
+				'INTEGBI.117':'IB 117','INTEGBI.131':'IB 131','INTEGBI.152':'IB 152','NUSCTX.103':'NutriSci 103','NUSCTX.C114':'NutriSci C114','NUSCTX.C115':'NutriSci C115','NUSCTX.160':'NutriSci 160','NUSCTX.H196':'NutriSci H196','NUSCTX.199':'NutriSci 199',
+				'PBHLTH.150A':'PublicHealth 150A','PBHLTH.150B':'PublicHealth 150B','PBHLTH.170B':'PublicHealth 170B','UGIS.192C':'UGIS 192C'}
+			approvedElecUnits=0
+			approvedElecTaken=[]
+			approvedElecLeft=[]
+			for item in approvedElec:
+				if (item in takenClasses):
+					approvedElecUnits+=units(item)
+					approvedElecTaken.append(approvedElec[item])
+				else:
+					approvedElecLeft.append(approvedElec[item])
+			if(approvedElecUnits+upperdivunits>=36):
+				ans.append({'reqName':'Approved Elective', 'reqCompleted':True, 'reqDescription':'36 total units including above requirements and classes from the Approved Electives List as well as  Any other Approved NS-PM Elective Courses, Other IB, MCB, and PMB lecture or lab courses also accepted','courseDone':approvedElecTaken, 'courseLeft':approvedElecLeft})
+			else:
+				ans.append({'reqName':'Approved Elective', 'reqCompleted':False, 'reqDescription':'36 total units including above requirements and classes from the Approved Electives List as well as  Any other Approved NS-PM Elective Courses, Other IB, MCB, and PMB lecture or lab courses also accepted','courseDone':approvedElecTaken, 'courseLeft':approvedElecLeft})
 			return ans
 		#Nutritional Science: Physiology & Metabolism
 		elif(major=='NSPM'):
