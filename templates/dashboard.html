@@ -35,21 +35,37 @@
 	</div>		
 
 		<div class="container">
-	            <b>Total Unit Count: {{ unitsPlanner }} 
-	            {% if unitsCompleted %}
-	                <small><i>({{unitsCompleted}} units already completed.)</i></small>
-	            {% endif %}
-	            </b> 
+	        <b>Total Unit Count: {{ unitsPlanner }} 
+	        {% if unitsCompleted %}
+	            <small><i>({{unitsCompleted}} units already completed.)</i></small>
+	        {% endif %}
+	        </b>
+	        <br>
 
-		      <input id="savePlanners" class="button" type="submit" value="Save Planner" onClick="savePlanners()">         
-		      
-		      <br><br><br>
+	       	<table class="plannerUtil centered">
+				<tr>
+					<td>
+						<div>
+							<input id="addPlannerCourse" type="text">
+							<input class="button" type="submit" value="Add Class" onClick="newCourseItem()">
+						</div>
+					</td>
 
-		      <div> 
-			<input id="addPlannerCourse" type="text">  
-			<input class="button" type="submit" value="Add Class" onClick="newCourseItem()"> 
-		      </div> 
-		      <ul id="newCourseUL"> </ul>
+					<td>
+						<div id="deletePlannerCourse">
+							Drag courses here to delete them.
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<ul id="newCourseUL">
+						</ul>
+					</td>
+				</tr>
+			</table>
+
+		    <input id="savePlanners" class="button" type="submit" value="Save Planner" onClick="savePlanners()">  
 
 			<table class="planner centered">
 				<tr>

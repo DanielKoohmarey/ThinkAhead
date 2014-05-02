@@ -32,8 +32,18 @@ function getPlanners() {
 function newCourseItem() { 
     var course = $("#addPlannerCourse").val(); 
     if (course != '') {
-	$('#newCourseUL').append('<li class="course">' + course + '</li>'); 
+		$('#newCourseUL').append('<li class="course">' + course + '</li>'); 
     }
+}
+
+function deleteCourseItem(event, ui) {
+	var draggable = ui.draggable;
+	draggable.remove();
+}
+
+function handleDropEvent( event, ui ) {
+  var draggable = ui.draggable;
+  alert( 'The square with ID "' + draggable.attr('id') + '" was dropped onto me!' );
 }
 
 /* On page load, run the following code. */
@@ -79,13 +89,13 @@ for (var i = 0; i < numReqs; i++) {
 	});
 }
 
-    $("#newCourseUL").sortable({
+$("#newCourseUL").sortable({
 	connectWith: '.sortableList', 
 	cursor: 'move',
 	placeholder: 'coursePreview'
-    });
+});
 
-    $("#addPlannerCourse").autocomplete({ 
+$("#addPlannerCourse").autocomplete({ 
 	source: "/autocompleteCourse/", 
 	minLength: 2, 
 	change: function(event,ui) { 
@@ -94,6 +104,10 @@ for (var i = 0; i < numReqs; i++) {
 		$(this).focus(); 
 	    }
 	} 
-    });
+});
+
+$("#deletePlannerCourse").droppable( {
+	drop: deleteCourseItem
+});
 
 });
