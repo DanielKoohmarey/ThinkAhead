@@ -136,12 +136,13 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
+"""
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'thinkaheadapp@gmail.com'
 EMAIL_HOST_PASSWORD = 'darsplus'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-
+"""
 
 #POSTMARK_API_KEY    = '2b2b59f2-e382-462d-82fb-ed705ffd550e'
 #POSTMARK_SENDER     = 'thinkaheadapp@gmail.com'
