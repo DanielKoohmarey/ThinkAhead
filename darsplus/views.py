@@ -423,8 +423,8 @@ def getCurrentSemester():
             return '{} {}'.format(semester,datetime.datetime.now().strftime("%y"))
         
 def getNextSemester(semester):
-    """ Get the current semester based on date
-    Args:
+    """ Get the current semester based on date   
+ Args:
         semester (str): The current semester to get the next semester from
     Returns:
         (str) SEM YR the next semester and year

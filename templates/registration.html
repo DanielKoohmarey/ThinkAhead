@@ -21,10 +21,12 @@
 	</a>
     <div class="userBar">
         {% if "profile" in request.path %}
-            Hello,
-            <a href="/profile">
-        		<div class="userIcon"></div>
-            	{{ user.username }}</a>.
+	           <form action="/profile">
+	               <input class="activeButton" type="submit" name="profile" value="Profile">
+	           </form>
+	           <form action="/dashboard">
+	               <input class="button" type="submit" name="dashboard" value="Dashboard">
+	           </form>
         {% endif %}
         <form action="/logout">
             <input class="button" type="submit" name="logout" value="Logout">

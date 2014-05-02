@@ -12,59 +12,62 @@
 </head>
 
 <body class="noScroll">
-<div class="wrapper">
+	<div class="wrapper">
+
+		<header>
+	        <a href="/home/">
+	        	<div class="logoHead"></div>
+	        </a>
+	        <div class="userBar">
+	           <form action="/profile">
+	               <input class="button" type="submit" name="profile" value="Profile">
+	           </form>
+	           <form action="/dashboard">
+	               <input class="activeButton" type="submit" name="dashboard" value="Dashboard">
+	           </form>	           
+	            <form action="/logout">
+	                <input class="button" type="submit" name="logout" value="Logout">
+	            </form>
+	        </div>
+		</header>
+	     <script> {% if update %} $.modal("<div>Your profile has been updated.</div>"); $("#simplemodal-container").css('border-color','#003262');{%endif%}</script>
+           <script> $(document).ready(function(){if (document.referrer.contains("registration")){ $.modal("<div>To get started, you can expand one of your remaining requirements from the right, and drag classes to fill your planner on the left!</div>"); $("#simplemodal-container").css('border-color','#003262');}}); </script>
+	</div>		
 	
-	<header>
-        <a href="/home/">
-        	<div class="logoHead"></div>
-        </a>
-        <div class="userBar">
-            Hello,
-            <a href="/profile">
-            	<div class="userIcon"></div>
-            	{{ user.username }}</a>.
-            <form action="/logout">
-                <input class="button" type="submit" name="logout" value="Logout">
-            </form>
-        </div>
-	</header>
-     <script> $(document).ready(function(){$("#profileNotification").click(function(){$(this).hide();}); $("#profileNotification").css('cursor','pointer'); {% if update %} $("#profileNotification").show(); {%endif%}}); </script>
-	<img src = "{% static "profileNotification.png" %}" style="margin-left:-55%;display:none;" id="profileNotification"></img>
-	<div class="container">
-            <b>Total Unit Count: {{ unitsPlanner }} 
-            {% if unitsCompleted %}
-                <small><i>({{unitsCompleted}} units already completed.)</i></small>
-            {% endif %}
-            </b> 
+		<div class="container">
+	            <b>Total Unit Count: {{ unitsPlanner }} 
+	            {% if unitsCompleted %}
+	                <small><i>({{unitsCompleted}} units already completed.)</i></small>
+	            {% endif %}
+	            </b> 
 
-	      <input id="savePlanners" class="button" type="submit" value="Save Planner" onClick="savePlanners()">         
+		      <input id="savePlanners" class="button" type="submit" value="Save Planner" onClick="savePlanners()">         
 
-		<table class="planner centered">
-			<tr>
-				{% for planner in planners %}
-					<td>
-							<div class="semesterLabel"> 
-								{{ planner.0 }}
-							</div>
-							<div class="semesterCourseList">
-							<ul id="planner{{ forloop.counter }}" class="sortableList">
-								{% for course in planner.1 %}
-									<li class="course">{{ course }}</li>
-								{% endfor %}
-							</ul>
-							</div>
-                                    <small>Unit count: {{planner.2}}</small>
-					</td>
+			<table class="planner centered">
+				<tr>
+					{% for planner in planners %}
+						<td>
+								<div class="semesterLabel"> 
+									{{ planner.0 }}
+								</div>
+								<div class="semesterCourseList">
+								<ul id="planner{{ forloop.counter }}" class="sortableList plannerMinHeight">
+									{% for course in planner.1 %}
+										<li class="course">{{ course }}</li>
+									{% endfor %}
+								</ul>
+								</div>
+	                                    <small>Unit count: {{planner.2}}</small>
+						</td>
 
-					{% if not forloop.last and forloop.counter|divisibleby:"3" %}
-			</tr>
-			<tr>
-					{% endif %}
-				{% endfor %}
-			</tr>
-		</table>
-	</div>  
-
+						{% if not forloop.last and forloop.counter|divisibleby:"3" %}
+				</tr>
+				<tr>
+						{% endif %}
+					{% endfor %}
+				</tr>
+			</table>
+		</div>  
 
 
 	<div class="container">
@@ -74,10 +77,10 @@
 			{% for r in requirements %}
 				{% if r.reqCompleted %}
 				<li class="req reqComplete">
-					<h3 class="reqTitle">{{ r.reqName }} (Completed)</h3>
+					<h3 class="reqTitle plus">{{ r.reqName }} (Completed)</h3>
 				{% else %}
 					<li class="req">
-					<h3 class="reqTitle">{{ r.reqName }}</h3>
+					<h3 class="reqTitle plus">{{ r.reqName }}</h3>
 				{% endif %}
 				<p class="reqDescription">Description: {{ r.reqDescription }} </p>
 
@@ -85,11 +88,12 @@
 					<ul>
 						{% if r.courseDone %}
 							{% for course in r.courseDone %}
-								<li class="course courseCompleted">{{ course }}</li>
+								<li class="courseCompleted">{{ course }}</li>
 							{% endfor %}
+                                  <br/>
 						{% endif %}
 					</ul>
-					<ul id="req{{ forloop.counter }}" class="sortableList">
+					<ul id="req{{ forloop.counter }}" class="sortableList courseMaxHeight">
 						{% if r.courseLeft %}
 							{% for left in r.courseLeft %}
 								<li class="course">{{ left }}</li>
@@ -108,7 +112,7 @@
 		{% endif %}
 	</div>
 
-</div>	
+
 </body>
 
 
