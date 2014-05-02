@@ -13,7 +13,7 @@
 
 <body class="noScroll">
 	<div class="wrapper">
-		
+
 		<header>
 	        <a href="/home/">
 	        	<div class="logoHead"></div>
@@ -30,10 +30,9 @@
 	            </form>
 	        </div>
 		</header>
-	     <script> $(document).ready(function(){$("#profileNotification").click(function(){$(this).hide();}); $("#profileNotification").css('cursor','pointer'); {% if update %} $("#profileNotification").show(); {%endif%}}); </script>
-		<img src = "{% static "profileNotification.png" %}" style="margin-left:-55%;display:none;" id="profileNotification"></img>
-		
-	</div>	
+	     <script> {% if update %} $.modal("<div>Your profile has been updated.</div>"); $("#simplemodal-container").css('border-color','#003262');{%endif%}</script>
+           <script> $(document).ready(function(){if (document.referrer.contains("registration")){ $.modal("<div>To get started, you can expand one of your remaining requirements from the right, and drag classes to fill your planner on the left!</div>"); $("#simplemodal-container").css('border-color','#003262');}}); </script>
+	</div>		
 	
 		<div class="container">
 	            <b>Total Unit Count: {{ unitsPlanner }} 
@@ -41,8 +40,8 @@
 	                <small><i>({{unitsCompleted}} units already completed.)</i></small>
 	            {% endif %}
 	            </b> 
-        
-		      <input id="savePlanners" class="button" type="submit" value="Save Planner" style="margin: 0 0 25px 25px;" onClick="savePlanners()">         
+
+		      <input id="savePlanners" class="button" type="submit" value="Save Planner" onClick="savePlanners()">         
 
 			<table class="planner centered">
 				<tr>
@@ -91,9 +90,10 @@
 							{% for course in r.courseDone %}
 								<li class="courseCompleted">{{ course }}</li>
 							{% endfor %}
+                                  <br/>
 						{% endif %}
 					</ul>
-					<ul id="planner{{ forloop.counter }}" class="sortableList plannerMinHeight">
+					<ul id="req{{ forloop.counter }}" class="sortableList">
 						{% if r.courseLeft %}
 							{% for left in r.courseLeft %}
 								<li class="course">{{ left }}</li>
