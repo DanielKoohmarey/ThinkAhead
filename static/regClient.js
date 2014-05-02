@@ -101,7 +101,96 @@ function getDropdownOptions(){
 }
 
 
+// Checks all forms for non-empty and valid options selected.
+function checkEmail() {
+    var emailVal = $("#id_email").val()
+    if (emailVal == '') {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function checkGradDate() {
+    var semesterVal = $("#id_semester").val();
+    var yearVal = $("#id_year").val();
+    
+    var now = new Date();
+    var month = now.getMonth()+1;
+    var year = now.getFullYear();
+    
+    // Check if current year is selected as GradDate that semester hasn't passed yet
+    if (year == parseInt(yearVal)) {
+        if (semesterVal == 'Spring') {
+            // Current month needs to be in Spring
+            if (month >= 1 && month <= 5) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (semesterVal == 'Summer') {
+            // Current month needs to be in Spring or Summer
+            if (month >= 1 && month <= 8) {
+                return true;
+            } else {
+                return false;
+            }
+        } else{
+            return true;
+        }
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function checkMajor() {
+    var collegeVal = $("#id_college").val();
+    var majorVal = $("#id_major").val();
+    if (collegeVal == 0 || collegeVal == -1) {
+        return false;
+    } else if (majorVal == 0 || majorVal == -1) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function validateProfile() {
+    var errors = [];
+    if (!checkEmail()) {
+        //return false;
+        errors.push('Please submit a valid email.');
+    }
+    if (!checkGradDate()) {
+        errors.push("Please select an intended graduation date that hasn't passed.")
+        //return false;
+    }
+    if (!checkMajor()) {
+        //return false;
+        errors.push("Please select a college and major.")
+    }
+    //return true;
+    return errors;
+}
+
+
 $(document).ready(function(){
+
+// On form submit, validate forms and cancel submission if validation fails
+$("form").submit(function(event) {
+    var valid = validateProfile();
+    if (valid.length == 0) {
+        return;
+    }
+    var message = 'Please correct the following:';
+    for (var i = 0; i < valid.length; i++) {
+        message += '\n- ';
+        message += valid[i];
+    }
+    alert(message);
+    return false;
+});
 
 // Update/check TOTAL_FORMS
 var formCount = $('.addCourseForm').length; // Get all the forms
