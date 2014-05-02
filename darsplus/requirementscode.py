@@ -4113,7 +4113,7 @@ def remainingRequirements(takenClasses, college, major):
 			three=False
 			threeTaken=[]
 			threeNotTaken=[]
-			for item in sevenBreadth:
+			for item in temp:
 				if item['reqName'] in ['International Studies Breadth','Social and Behavioral Science Breadth'] :
 					one= one or item['reqCompleted']
 					oneTaken= oneTaken + item['courseDone']
@@ -4197,7 +4197,7 @@ def remainingRequirements(takenClasses, college, major):
 			three=False
 			threeTaken=[]
 			threeNotTaken=[]
-			for item in sevenBreadth:
+			for item in temp:
 				if item['reqName'] in ['International Studies Breadth','Social and Behavioral Science Breadth'] :
 					one= one or item['reqCompleted']
 					oneTaken= oneTaken + item['courseDone']
