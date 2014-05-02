@@ -4384,21 +4384,66 @@ def remainingRequirements(takenClasses, college, major):
 			return ans
 		#Molecular Environmental Biology
 		elif(major=='MEB'):
-			#ESPM Environmental Science Core: 1 course from ES 10, ESPM 2, 6, C10 (L&S C30V), or 15 
-			#ESPM Social Science Core: 1 course from ESPM C11 (L&S C30U), C12 (ENG C77), 50AC or 60
-			#One course (3-4 units) in Arts & Literature, Historical Studies, or Philosophy & Values
+			#ESPM Environmental Sci Core: 1 from ESPM 2, ESPM 6, ESPM C10 (L&S C30V), or ESPM 15 (formerly ES 10)
+			core={'ESPM.2':'ESPM 2', 'ESPM.6':'ESPM 6', 'ESPM.C10':'ESPM C10', 'ESPM.15':'ESPM 15','L&S.C30V':'L&S C30V'}
+			ans.append(manyChoiceReq(takenClasses, 'ESPM Environmental Science Core', core, 'For the ESPM Environmental Sci Core you must complete one from ESPM 2, ESPM 6, ESPM C10 (L&S C30V), or ESPM 15'))
+			#ESPM Social Science Core: 1 course from ESPM C11 (L&S C30U), ESPM C12, ESPM 50AC or ESPM 60
+			socialcore={'ESPM.50AC':'ESPM 50AC', 'ESPM.C12':'ESPM C12', 'ESPM.C11':'ESPM C11', 'ESPM.60':'ESPM 60','L&S.C30U':'L&S C30U'}
+			ans.append(manyChoiceReq(takenClasses, 'ESPM Social Science Core', socialcore, 'For the ESPM Social Science Core you must complete one from ESPM C11 (L&S C30U), ESPM C12, ESPM 50AC or ESPM 60'))
+			#Breadth
+			temp=sevenBreadth(takenClasses)
+			one=False
+			oneTaken=[]
+			oneNotTaken=[]
+			two=False
+			twoTaken=[]
+			twoNotTaken=[]
+			three=False
+			threeTaken=[]
+			threeNotTaken=[]
+			for item in sevenBreadth:
+				if item['reqName'] in ['International Studies Breadth','Social and Behavioral Science Breadth'] :
+					one= one or item['reqCompleted']
+					oneTaken= oneTaken + item['courseDone']
+					oneNotTaken= oneNotTaken + item['courseLeft']
+				elif item['reqName'] is 'Physical Science Breadth':
+					two= two or item['reqCompleted']
+					twoTaken= twoTaken + item['courseDone']
+					twoNotTaken= twoNotTaken + item['courseLeft']
+				elif item['reqName'] in ['Art and Literature Breadth','Historical Studies Breadth','Philosophy and Values Breadth'] :
+					three= three or item['reqCompleted']
+					threeTaken= threeTaken + item['courseDone']
+					threeNotTaken= threeNotTaken + item['courseLeft']
 			#One course (3-4 units) in Social & Behavioral Sciences or International Studies
+				if one:
+					ans.append({'reqName':'Social & Behavioral Sciences or International Studies Breadth', 'reqCompleted':True, 'reqDescription':'You must take one social & behavioral sciences or international studies course. For more info see: http://http://ls-advise.berkeley.edu/requirement/7breadth.html','courseDone':oneTaken, 'courseLeft':oneNotTaken})
+				else:
+					ans.append({'reqName':'Social & Behavioral Sciences or International Studies Breadth', 'reqCompleted':False, 'reqDescription':'You must take one social & behavioral sciences or international studies course. For more info see: http://http://ls-advise.berkeley.edu/requirement/7breadth.html','courseDone':[], 'courseLeft':oneNotTaken})
+			#One course (3-4 units) in Arts & Literature, Historical Studies, or Philosophy & Values
+				if three:
+					ans.append({'reqName':'Arts & Literature, Historical Studies, or Philosophy & Values Breadth', 'reqCompleted':True, 'reqDescription':'You must take one Arts & Literature, Historical Studies, or Philosophy & Values course. For more info see: http://http://ls-advise.berkeley.edu/requirement/7breadth.html','courseDone':threeTaken, 'courseLeft':threeNotTaken})
+				else:
+					ans.append({'reqName':'Arts & Literature, Historical Studies, or Philosophy & Values Breadth', 'reqCompleted':False, 'reqDescription':'You must take one Arts & Literature, Historical Studies, or Philosophy & Values course. For more info see: http://http://ls-advise.berkeley.edu/requirement/7breadth.html','courseDone':[], 'courseLeft':threeNotTaken})
 			#Chemistry 1A (4 units) effective Summer 2011: Chem 1A (3 units) & Chem 1AL (1 unit) 
-			# Chemistry 3A and lab (5 units) 
+			ans.append(twoReq(takenClasses,'Chemistry', 'CHEM.1A', 'Chem 1A','CHEM.1AL', 'Chem 1AL', "The freshman year Chemistry requirement of Chem 1A and 1AL"))
+			# Chemistry 3A and lab (5 units)
+			ans.append(twoReq(takenClasses,'Chemistry', 'CHEM.3A', 'Chem 3A','CHEM.3AL', 'Chem 3AL', "The freshman year Chemistry requirement of Chem 3A and 3AL"))
 			# Chemistry 3B and lab (5 units)
+			ans.append(twoReq(takenClasses,'Chemistry', 'CHEM.3B', 'Chem 3B','CHEM.3BL', 'Chem 3BL', "The freshman year Chemistry requirement of Chem 3B and 3BL"))
 			#Biology 1A and lab (5 units) and 
-			#Biology 1B (4 units) NOTE: Bio 1B may be taken prior to Bio 1A. 
-			#Math 16A (or 1A)  
+			ans.append( twoReq(takenClasses,'General Biology', 'BIOLOGY.1A', 'Bio 1A', 'BIOLOGY.1AL', 'Bio 1AL', "The sophomore year biology requirement of both Bio 1A and 1AL"))
+			#Biology 1B (4 units) NOTE: Bio 1B may be taken prior to Bio 1A.
+			ans.append(basicReq(takenClasses, 'BIOLOGY.1B', 'Bio 1B', 'Required general biology course'))
 			#Math 16B (or 1B) Math 16B/1B may be replaced by Statistics 2, 20, 25, PH 142A or Stat 131A.
+			calcTwo= {'MATH.1B':'Math 1B', 'MATH.16B':'Math 16B','STAT.2':'Stats 2','STAT.20':'Stats 20','STAT.25':'Stats 25','STAT.131A':'Stats 131A','PBHLTH.142A':'Public Health 142A'}
+			ans.append(manyChoiceReq(takenClasses, 'Calculus Two', calcTwo, "Requirement of Math 16B/1B that may be replaced by Statistics 2, 20, 25, PH 142A or Stat 131A"))
+			#Math 16A (or 1A) 
+			ans.append(twoChoiceReq(takenClasses, 'MATH.1A', 'Math 1A', 'MATH.16A', 'Math 16A', "Part of the freshman year Calculus requirement of beginning calculus"))			
 			#Physics 8A: 4 units
+			ans.append(basicReq(takenClasses, 'Basic Physics',  'PHYSICS.8A', 'Physics 8A', 'Requirement of PHYSICS 8A'))
 			#Biological Core: select one course from each of the seven categories below
-			"""here"""
-
+			#Area of Concentration Requirement: Select 12 units from one concentration below. View courses on the back side of this form. Up to four independent study units (e.g., ESPM 199, ESPM H196) may be applied to the concentration.
+			ans.append({'reqName':'Biological Core and Area of Concentration', 'reqCompleted':True, 'reqDescription':'Select one course from each of the seven categories; Select 12 units from one concentration','courseDone':[], 'courseLeft':[]})
 
 			return ans
 		#Molecular Toxicology
@@ -4622,7 +4667,7 @@ def remainingRequirements(takenClasses, college, major):
 			#UGBA 102A, Intro to Financial Accounting
 			#NST 160, Metabolic Bases of Human Health and Diseases 
 			#UGBA 105, Intro to Organizational Behavior  
-
+			ans.append({'reqName':'I am sorry this major is not yet supported', 'reqCompleted':False, 'reqDescription':'','courseDone':[], 'courseLeft':[]})
 			return ans
 		#Society and Environment
 		elif(major=='SE'):
@@ -4638,7 +4683,7 @@ def remainingRequirements(takenClasses, college, major):
 			#One course in Environmental or Political Economics: POL SCI 126A or 139B; GEOG C110, C112, or 156; DEV STD C100; ECON C125; ENVECON 100, C101, 131, 140AC, 153, 161, or C180; ERG C180; ISF C101; PEIS 100 or 101; GPP 115/IAS 115; PUB POL C103
 			#Capstone Presentation. ESPM 194B (1-2) Research or poster presentation (Final semester of the senior year)
 			#Seven courses from the Area of Concentration requirement
-			
+			ans.append({'reqName':'I am sorry this major is not yet supported', 'reqCompleted':False, 'reqDescription':'','courseDone':[], 'courseLeft':[]})
 			return ans
 		#Environmental Economics and Policy
 		elif(major=='EEP'):
@@ -4651,8 +4696,7 @@ def remainingRequirements(takenClasses, college, major):
 			#Quantitative Methods: EEP C115 or EEP C118
 			#At least 5 courses to form an Area of Concentration: 3 of these must be upper-division EEP courses
 			#A total of at least 5 upper division EEP courses (not 195-199)
-			
-			
+			ans.append({'reqName':'I am sorry this major is not yet supported', 'reqCompleted':False, 'reqDescription':'','courseDone':[], 'courseLeft':[]})
 			return ans
 		#Should not occur but in the case that the major given does not match
 		else:
