@@ -4,6 +4,7 @@
 	<title>Think Ahead</title>
 	{% load staticfiles %}
 	<script type="text/javascript" src="{% static "jquery-1.11.0.min.js" %}"></script>
+     <script type="text/javascript" src="{% static "jquery.simplemodal-1.4.4.js" %}"></script>
 	<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
 	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
 
@@ -30,9 +31,8 @@
 	            </form>
 	        </div>
 		</header>
-	     <script> $(document).ready(function(){$("#profileNotification").click(function(){$(this).hide();}); $("#profileNotification").css('cursor','pointer'); {% if update %} $("#profileNotification").show(); {%endif%}}); </script>
-		<img src = "{% static "profileNotification.png" %}" style="margin-left:-55%;display:none;" id="profileNotification"></img>
-		
+	     <script> {% if update %} $.modal("<div>Your profile has been updated.</div>"); $("#simplemodal-container").css('border-color','#003262');{%endif%}</script>
+           <script> $(document).ready(function(){if (document.referrer.contains("registration")){ $.modal("<div>To get started, you can expand one of your remaining requirements from the right, and drag classes to fill your planner on the left!</div>"); $("#simplemodal-container").css('border-color','#003262');}}); </script>
 	</div>	
 	
 		<div class="container">
