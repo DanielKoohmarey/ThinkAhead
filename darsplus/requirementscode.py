@@ -10,6 +10,8 @@ class MyError(Exception):
 def main():
 	print 'hello'
 #http://ls-advise.berkeley.edu/requirement/breadth7/al.html
+
+
 artAndLit={'AFRICAM.4A':'AfricanAmerican 4A','AFRICAM.5A':'AfricanAmerican 5A','AFRICAM.5B':'AfricanAmerican 5B','AFRICAM.26':'AfricanAmerican 26','AFRICAM.29AC':'AfricanAmerican 29AC','AFRICAM.39A':'AfricanAmerican 39A','AFRICAM.39G':'AfricanAmerican 39G',
 	'AFRICAM.100':'AfricanAmerican 100','AFRICAM.142A':'AfricanAmerican 142A','AFRICAM.142B':'AfricanAmerican 142B','AFRICAM.142AC':'AfricanAmerican 142AC','AFRICAM.142C':'AfricanAmerican 142C','AFRICAM.142D':'AfricanAmerican 142D',
 	'AFRICAM.150A':'AfricanAmerican 150A','AFRICAM.150B':'AfricanAmerican 150B','AFRICAM.N150B':'AfricanAmerican N150B','AFRICAM.151B':'AfricanAmerican 151B','AFRICAM.152A':'AfricanAmerican 152A','AFRICAM.152E':'AfricanAmerican 152E','AFRICAM.152F':'AfricanAmerican 152F','AFRICAM.153C':'AfricanAmerican 153C','AFRICAM.154':'AfricanAmerican 154','AFRICAM.155':'AfricanAmerican 155',
@@ -883,6 +885,7 @@ socialBehavioralScience={
 	'SOCIOL.180E':'Sociology 180E', 'SOCIOL.180I':'Sociology 180I', 'SOCIOL.180P':'Sociology 180P', 'SOCIOL.181':'Sociology 181', 'SOCIOL.182':'Sociology 182', 'SOCIOL.183':'Sociology 183', 'SOCIOL.C184':'Sociology C184', 'SOCIOL.185':'Sociology 185', 'SOCIOL.186':'Sociology 186',
 	'SOCIOL.189':'Sociology 189', 'SOCIOL.C189':'Sociology C189', 'SOCIOL.189G':'Sociology 189G', 'SOCIOL.190':'Sociology 190', 'SOCIOL.190AC':'Sociology 190AC', 'SOCIOL.H190A':'Sociology H190A', 'SOCIOL.H190B':'Sociology H190B', 'SOCIOL.191':'Sociology 191', 'SOCIOL.192':'Sociology 192',
 	'SOCIOL.194':'Sociology 194', 'SOCIOL.195':'Sociology 195', 'SOCIOL.C196A':'Sociology C196A', 'SOCIOL.C196B':'Sociology C196B', 'SOCIOL.C196W':'Sociology C196W', 'SOCIOL.197':'Sociology 197', 'SOCIOL.198':'Sociology 198', 'SOCIOL.199':'Sociology 199'} 
+
 """
 Determines the number of units each course is through accessing the database of classes and units
 For now it just returns 4 for the sake of testing
@@ -925,7 +928,7 @@ def twoReq(takenClasses, requirement, req, reqName, req1, reqName1, description)
 	if ((req in takenClasses)and (req1 in takenClasses)):
 		return {'reqName':requirement, 'reqCompleted':True, 'reqDescription':description,'courseDone':[reqName, reqName1], 'courseLeft':[]}
 	elif (req1 in takenClasses):
-		return {'reqName':requirement, 'reqCompleted':False, 'reqDescription':description,'courseDone':[reqName1], 'courseLeft':[reqName]}
+                return {'reqName':requirement, 'reqCompleted':False, 'reqDescription':description,'courseDone':[reqName1], 'courseLeft':[reqName]}
 	elif (req in takenClasses):
 		return {'reqName':requirement, 'reqCompleted':False, 'reqDescription':description,'courseDone':[reqName], 'courseLeft':[reqName1]}
 	else:

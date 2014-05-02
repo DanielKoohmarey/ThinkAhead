@@ -85,10 +85,10 @@ class TestRequirements(TestCase):
 		self.assertEqual('Electronics',ans['reqName'])
 		self.assertEqual("Engineering class",ans['reqDescription'])
 	def testTwoChoiceReq6(self):
-		ans  = twoChoiceReq(['ELENG.40', 'ELENG.20'], 'Electronics', 'COMPSCI.61A', 'COMPSCI 61A', 'ELENG.40', 'EE 40', "Engineering class")
+		ans  = twoReq(['ELENG.40'], 'Electronics', 'COMPSCI.61A', 'COMPSCI 61A', 'ELENG.40', 'EE 40', "Engineering class")
 		self.assertIn('EE 40', ans['courseDone'])
+		self.assertIn('COMPSCI 61A', ans['courseLeft'])
 		self.assertFalse(ans['reqCompleted'])
-		self.asssertIn('COMPSCI 61A', ans['courseLeft'])
 
 	def testManyChoiceReq1(self):
 		listelec={'ELENG.20':'EE 20','ELENG.40':'EE 40','ELENG.100':'EE 100'}
@@ -374,6 +374,8 @@ class TestNaturalResources(TestCase):
 	def testSE1(self):
 		self.assertEqual(1,1)
 
+
+
 class TestBreadth(TestCase):
 	def testBreadth1(self):
 		self.assertEqual(7,len(sevenBreadth([])))
@@ -404,3 +406,56 @@ class TestBreadth(TestCase):
 		temp=sevenBreadth(['AFRICAM.4A','AFRICAM.5A','ANTHRO.1','AFRICAM.4B','BUDDHST.39A','ANTHRO.131','AFRICAM.5B'])
 		for i in range(7):
 			self.assertTrue (temp[i]['reqCompleted'])
+
+	def testBreadth6Marion(self): #Marion TODO
+		courses = ['THEATER.151B','THEATER.151A'] #overlaps History and arts
+		temp = sevenBreadth(courses)
+		self.assertTrue(temp[6]['reqCompleted'])
+		
+		print "intern"
+		print overlap(historicalStudies, international)
+		courses = ['IAS.C145','CHICANO.161'] #overlaps history and international
+
+		print "philosophy"
+		print overlap(historicalStudies, philosophyValues)
+		courses = ['RELIGST.123','RELIGST.125'] #overlaps history and philosophy
+
+		print "physical"
+		print overlap(historicalStudies, physicalScience)
+		courses = ['L&S.16','ANTHRO.134']
+
+		print "social"
+		print overlap(historicalStudies, socialBehavioralScience)
+		courses = ['HISTORY.4A', 'HISTORY.4B']
+		
+		
+		#temp = sevenBreadth
+		#self.assertTrue(temp[0]['reqCompleted'])
+      		print "bio"
+		
+allCourses = [artAndLit, biologicalScience, international, philosophyValues, physicalScience, socialBehavioralScience,historicalStudies]
+
+# Helper functions to check which 7breadth has overlapping courses 
+def overlap(req, other):
+     shared = []
+     for item in req:
+          if item in other:
+               shared += [item]
+     return shared
+
+"""
+0
+Biological Science Breadth
+1
+International Studies Breadth
+2
+Philosophy and Values Breadth
+3
+Physical Science Breadth
+4
+Social and Behavioral Science Breadth
+5
+Art and Literature Breadth
+6
+Historical Studies Breadth
+"""
