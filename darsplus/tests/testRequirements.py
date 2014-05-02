@@ -482,30 +482,72 @@ class TestBreadth(TestCase):
 		for i in range(7):
 			self.assertTrue (temp[i]['reqCompleted'])
 
-	def testBreadth6Marion(self): #Marion TODO
-		
+	def testBreadth6Marion(self): #Marion TODO (Historical Study)
 		courses = ['IAS.C145','CHICANO.161'] #overlaps history and international
 		temp = sevenBreadth(courses)
-		self.assertTrue(temp[1]['reqCompleted'])
+		self.assertTrue(temp[5]['reqCompleted'])
 
 		courses = ['RELIGST.123','RELIGST.125'] #overlaps history and philosophy
 		temp = sevenBreadth(courses)
-		self.assertTrue(temp[2]['reqCompleted'])
+		self.assertTrue(temp[5]['reqCompleted'])
 
-		courses = ['L&S.16','ANTHRO.134']
+		courses = ['L&S.16','ANTHRO.134'] #overlaps history and physical
 		temp = sevenBreadth(courses)
-		self.assertTrue(temp[3]['reqCompleted'])
+		self.assertTrue(temp[5]['reqCompleted'])
 		
-		courses = ['HISTORY.4A', 'HISTORY.4B']
+		courses = ['HISTORY.4A', 'HISTORY.4B'] #overlaps history and social
 		temp = sevenBreadth(courses)
-		self.assertTrue(temp[4]['reqCompleted'])
+		self.assertTrue(temp[5]['reqCompleted'])
 		
 		courses = ['THEATER.151B','THEATER.151A'] #overlaps History and arts
 		temp = sevenBreadth(courses)
 		self.assertTrue(temp[5]['reqCompleted'])
-		self.assertTrue(temp[6]['reqCompleted'])
 		
+	def testBreadth7Marion(self): #Marion TODO (Social behavioral)
+		x = socialBehavioralScience
+		print "art"
+		print overlap(artAndLit, x)
 		
+		print "bio"
+		print overlap(biologicalScience, x)
+
+		print "intern"
+		print overlap(international, x)
+		
+		print "phil"
+		print overlap(philosophyValues, x)
+
+		print "physcal"
+		print overlap(physicalScience, x)
+		
+		print "hist"
+		print overlap(x, historicalStudies)
+
+		courses = ['L&S.126','PSYCH.125'] #overlaps with bio
+		temp = sevenBreadth(courses)
+		self.assertTrue(temp[4]['reqCompleted'])
+
+		courses = ['PACS.N127A','JAPAN.80'] #overlaps international
+		temp = sevenBreadth(courses)
+		self.assertTrue(temp[4]['reqCompleted'])
+
+		courses = ['EALANG.C126','MILAFF.144','NESTUD.C92'] #overlaps philosophy
+		temp = sevenBreadth(courses)
+		self.assertTrue(temp[4]['reqCompleted'])
+
+		courses = ['ANTRHO.134','ANTHRO.133','ENERES.102','ENERES.100','ENERES.141','EPS.170AC','ENVSCI.10'] #overlaps physical
+		temp = sevenBreadth(courses)
+		self.assertTrue(temp[4]['reqCompleted'])
+		
+		courses = ['HISTORY.4A', 'HISTORY.4B','HISTORY.141B','SPANISH.C178','HISTORY.119A','HISTORY.134A','HISTORY.165A'] #overlaps history
+		temp = sevenBreadth(courses)
+		#self.assertTrue(temp[4]['reqCompleted'])
+		
+		courses = ['ISF.C160','ANTHRO.160AC'] #overlaps arts
+		temp = sevenBreadth(courses)
+		self.assertTrue(temp[4]['reqCompleted'])
+
+
 allCourses = [artAndLit, biologicalScience, international, philosophyValues, physicalScience, socialBehavioralScience,historicalStudies]
 
 # Helper functions to check which 7breadth has overlapping courses 
