@@ -4368,18 +4368,79 @@ def remainingRequirements(takenClasses, college, major):
 			return ans
 		#Microbial Biology
 		elif(major=='MB'):
-			#ESPM Environmental Sci Core: 1 from ESPM 2, ESPM 6, ESPM C10 (L&S C30V), or ESPM 15 (formerly ES 10)
-			#ESPM Social Science Core: 1 course from ESPM C11 (L&S C30U), ESPM C12, ESPM 50AC or ESPM 60
-			#One course in General Biology with lab from the following list: Biology 1A: Molecular & Cellular Biology, Biology 1B: Plants/Ecology/Evolution, or Biology 11: Introduction to the Science of Living Organisms. NOTE: Biology 1B is recommended.
-			#One course (3-4 units) in Social & Behavioral Sciences or International Studies chosen from the "Seven Breadth" listing: http://ls-advise.berkeley.edu/requirements/lsreq.html#7breadth
-			#One course (3-4 units) in Physical Sciences chosen from the "Seven Breadth" listing: http://ls-advise.berkeley.edu/requirements/lsreq.html#7breadth
-			#One course (3-4 units) in Arts & Literature, Historical Studies, or Philosophy & Values chosen from the "Seven Breadth" listing: http://ls-advise.berkeley.edu/requirements/lsreq.html#7breadth.
-			#One Calculus or Statistics course: Math 16A, 16B, 1A or 1B; Statistics 2, 20, 25, 131A, or PH 142A.
-			#ESPM 90: Introduction to the CRS Major. Students design Area of Interest statement and declare the major in this class.
-			#Two Preparatory Courses to the Area of Interest (6-8 units), chosen in consultation with advisor
-			#ESPM 100 (Fall only) Environmental Problem Solving (4)
-			#ESPM 194A: Senior Seminar in Conservation & Resource Studies
-			#Eight student-designed Area of Interest Classes (for a minimum of 24 units)
+			#Math 16A/1A: Calculus I [3-4]
+			ans.append(twoChoiceReq(takenClasses, 'Calculus I', 'MATH.16A', 'Math 16A', 'MATH.1A', 'Math 1A', 'You must take an Intro Calculus course either math 16A or 1A'))
+			#Math 16B/1B: Calculus II [3-4]
+			ans.append(twoChoiceReq(takenClasses, 'Calculus II', 'MATH.16B', 'Math 16B', 'MATH.1B', 'Math 1B', 'You must take an Intermediate Calculus course either math 16B or 1B'))
+			#Stat 2, 20, 131A: Probability & Statistics [4]
+			prob={'STAT.2':'Stats 2','STAT.20':'Stats 20','STAT.131A':'Stats 131A'}
+			ans.append(manyChoiceReq(takenClasses, 'Probability & Statistics', prob, 'The Probability & Statistics requirement of one of Stat 2, 20, 131A'))
+			#Chem 1A/L: General Chemistry [4]
+			ans.append(twoReq(takenClasses,'General Chemistry', 'CHEM.1A', 'Chem 1A', 'CHEM.1AL', 'Chem 1AL', "The General Chemistry requirement"))
+			#Chem 3A/L: Organic Chemistry I [5]
+			ans.append(twoReq(takenClasses,'Organic Chemistry I', 'CHEM.3A', 'Chem 3A', 'CHEM.3AL', 'Chem 3AL', "The Organic Chemistry I requirement"))
+			#Chem 3B/L: Organic Chemistry II [5]
+			ans.append(twoReq(takenClasses,'Organic Chemistry II', 'CHEM.3B', 'Chem 3B', 'CHEM.3BL', 'Chem 3BL', "The Organic Chemistry II requirement"))
+			#Bio 1A/L: General Biology [5]
+			ans.append(twoReq(takenClasses,'General Biology', 'BIOLOGY.1A', 'Bio 1A', 'BIOLOGY.1AL', 'Bio 1AL', "The General Biology requirement"))
+			#Bio 1B: General Biology [4]
+			ans.append(basicReq(takenClasses, 'BIOLOGY.1B', 'Bio 1B', 'The General Biology requirement'))
+			#15 units of coursework taken from L&S breadth list,excluding biological and physical science courses
+			breadthTaken=[]
+			bnum=0
+			breadthNotTaken=[]
+			for item in socialBehavioralScience:
+				if (item in takenClasses) and (not(socialBehavioralScience[item] in breadthTaken)):
+					breadthTaken.append(socialBehavioralScience[item])
+					bnum=bnum+units()
+				else:
+					breadthNotTaken.append(socialBehavioralScience[item])
+			for item in philosophyValues:
+				if (item in takenClasses) and (not(philosophyValues[item] in breadthTaken)):
+					breadthTaken.append(philosophyValues[item])
+					bnum=bnum+units()
+				else:
+					breadthNotTaken.append(philosophyValues[item])
+			for item in international:
+				if (item in takenClasses) and (not(international[item] in breadthTaken)):
+					breadthTaken.append(international[item])
+					bnum=bnum+units()
+				else:
+					breadthNotTaken.append(international[item])
+			for item in historicalStudies:
+				if (item in takenClasses) and (not(historicalStudies[item] in breadthTaken)):
+					breadthTaken.append(historicalStudies[item])
+					bnum=bnum+units()
+				else:
+					breadthNotTaken.append(historicalStudies[item])
+			for item in artAndLit:
+				if (item in takenClasses) and (not(artAndLit[item] in breadthTaken)):
+					breadthTaken.append(artAndLit[item])
+					bnum=bnum+units()
+				else:
+					breadthNotTaken.append(artAndLit[item])
+			if (bnum>=15):
+				ans.append( {'reqName':'Breadth', 'reqCompleted':True, 'reqDescription':'15 units of coursework taken from L&S breadth list,excluding biological and physical science courses','courseDone':breadthTaken, 'courseLeft':breadthNotTaken})
+			else:
+				ans.append( {'reqName':'Breadth', 'reqCompleted':False, 'reqDescription':'15 units of coursework taken from L&S breadth list,excluding biological and physical science courses','courseDone':breadthTaken, 'courseLeft':breadthNotTaken})
+			#Physics 8A: Introductory Physics [4]
+			ans.append(basicReq(takenClasses, 'PHYSICS.8A', 'Physics 8A', 'The Introductory Physics requirement'))
+			#MCB C100A, 100B, 102, or 110: Biochemistry
+			biochem={'MCELLBI.C100A':'MCB C100A','MCELLBI.100B':'MCB 100B','MCELLBI.102':'MCB 102','MCELLBI.110':'MCB 110'}
+			ans.append(manyChoiceReq(takenClasses, 'Biochemistry', biochem, 'The biochemistry Requirement of MCB C100A, 100B, 102, or 110'))
+			#PMB C148: Microbial Genomics & Genetics
+			ans.append(basicReq(takenClasses, 'PLANTBI.C148', 'PMB C148', 'The Microbial Genomics & Genetics requirement'))
+			#PMB C112/L: General Microbiology
+			ans.append(twoReq(takenClasses,'General Microbiology', 'PLANTBI.C112', 'PMB C112', 'PLANTBI.C112L', 'PMB C112L', "The General Microbiology requirement"))
+			#Choose 2 courses: Discovery Research in Microbiology [2], PMB C103: Bacterial Pathogenesis [3] or*, IB 118: Host-Pathogen Interactions [3] or*,PH 162A: Public Health Microbiology [3], PMB 110/L: Biology of Fungi [4],• PMB 113: California Mushrooms [3], PMB C114: Comparative Virology [4], PMB C116: Microbial Diversity [3], PMB 120/L: Biology of Algae [4], BioE 135: Frontiers in Microbial Systems Biology [4], ESPM 112: Microbial Ecology [3] or*,ESPM 131: Soil Microbial Ecology [3],
+			disc={'PLANTBI.C103':'PMB C112'}
+			discor={}
+			#Microbial Biology Tracks: Choose from Option 1 or 2: Option 1: Choose a track from below and select four courses. One of the four courses may be selected from the Upper Division Core Electives listed above. This course may not be counted for both the Upper Division Core Electives and your track.; Option 2 (General Microbiology Track): Choose any four courses from the Microbial Biology Tracks (below) and/or the Upper Division Core Electives (above). Courses selected in Option 2 may not overlap with the two courses used for the Upper Division Core Electives.
+			#Host-Pathogen Interactions:  PMB 185: Techniques in Light Microscopy [3], PMB 135/L: Physiology & Biochemistry of Plants [4] or*,MCB 150: Molecular Immunology [4], PMB 150/L: Plant Cell Biology [4] or*,MCB 104: Genetics, Genomics & Cell Biology [4], PMB 160/L: Plant Molecular Genetics [4] or*,MCB 140: General Genetics [4], BioE 100: Ethics in Science & Engineering [3] or*,ESPM 162: Bioethics & Society [4], IB 115: Intro to Systems in Biology & Medicine [4], IB 119: Evaluating Scientific Evidence in Medicine [3], PH 150A: Intro to Epidemiology & Human Disease [3], PH 150B: Intro to Environmental Health Sciences [3], PMB H196/199: Research [3-4],
+			#Evolution/Computational Genomics: PMB C144: Intro to Protein Informatics [4] or*,PMB C144L: Protein Informatics Lab [2], BioE 131: Intro to Computational Molecular & Cell Biology [4] or*,CS 61A: The Structure & Interpretation of Computer Programs [4] or*,CS 61B: Data Structures [4], BioE 135: Frontiers in Microbial Systems Biology [4], BioE 143: Computational Methods in Biology [4] or*,Math 127: Mathematical & Computational Methods in Molecular Biology [4], IB 160: Evolution [4] or*,IB 161: Population & Evolutionary Genetics [4], IB 166: Evolutionary Biogeography [4], MCB 111: Intro to Structural Biology [3], MCB 140: General Genetics [4], MCB 143: Evolution of Genomes, Cells & Development [3], PMB H196/199: Research [3-4],
+			#Ecology & Environmental Microbiology: BioE 100: Ethics in Science & Engineering [3] or*, ESPM 162: Bioethics & Society [4], BioE 135: Frontiers in Microbial Systems Biology [4], ESPM 134: Insects, Fire & Diseases in Forest Ecosystems [3], ESPM 192: Molecular Approaches to Environmental Problem Solving [2], IB 153: Ecology [3] or*,IB 153LF: Lab in Population & Community Ecology [3], IB 161: Population & Evolutionary Genetics [4], IB 162: Ecological Genetics [4], IB 166: Evolutionary Biogeography [4], MCB 137: Computer Simulation in Biology [3], PMB H196/199: Research [3-4],
+			#Microbial Biotechnology: PMB 122: Bioenergy [2], PMB C124: Lectures on Energy: Energy from Biomass [3], PMB 150/L: Plant Cell Biology [4] or*,MCB 104: Genetics, Genomics & Cell Biology [4], PMB 170: Modern Applications of Plant Biotechnology [2], BioE 22/L: Biotechnology [5], BioE 100: Ethics in Science & Enginerring [3] or*,ESPM 162: Bioethics & Society [4], BioE 135: Frontiers in Microbial Systems Biology [4], ESPM 192: Molecular Approaches to Environmental Problem Solving [2], MCB 111: Intro to Structural Biology [3], MCB 137: Computer Simulation in Biology [3], MCB 140: General Genetics [4], PMB H196/199: Research [3-4],
+			ans.append({'reqName':'Microbial Biology Tracks', 'reqCompleted':True, 'reqDescription':'Choose from Option 1 or 2: Option 1: Choose a track from below and select four courses. One of the four courses may be selected from the Upper Division Core Electives listed above. This course may not be counted for both the Upper Division Core Electives and your track.; Option 2 (General Microbiology Track): Choose any four courses from the Microbial Biology Tracks (below) and/or the Upper Division Core Electives (above). Courses selected in Option 2 may not overlap with the two courses used for the Upper Division Core Electives.','courseDone':[], 'courseLeft':[]})
 
 			return ans
 		#Molecular Environmental Biology
