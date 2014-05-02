@@ -18,15 +18,16 @@ html_escape_table = {
 
 def unescape(x):
     return html_escape_table[x]
-"""
-def htmlEscape(text):
-    return text.replace('&#44;', ' ').replace('&amp;',' ').replace('&apos;',"")
-    #return escape(text, html_escape_table)    
-"""
 
 def htmlEscape(text):
     for htmlElem in html_escape_table:
-        text.replace(unescape(htmlElem), htmlElem)
+        text = text.replace(unescape(htmlElem), htmlElem)
+        if "SEASN" in text:
+            print text
+            print htmlElem
+            print htmlElem in text
+            print text
+
     return text
 
 # End of HTML Escape
@@ -69,7 +70,7 @@ def loadCourses():
                 currentFields["courseLevel"] = htmlEscape(courseInfo[3])
                 currentFields["minUnit"] = units[0]
                 currentFields["maxUnit"] = units[1]
-                currentFields["department"] = department
+                currentFields["department"] = htmlEscape(department)
                 currentCourse["fields"] = currentFields
                 allCourses += [currentCourse]
                 
