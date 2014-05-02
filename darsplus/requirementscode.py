@@ -4172,8 +4172,7 @@ def remainingRequirements(takenClasses, college, major):
 			#Human Environment Interactions: ESPM 102D, ESPM 151, ESPM 155, ESPM 160AC/History 120AC, ESPM 161, ESPM 162, ESPM 163AC/Sociology 137AC, ESPM 166, ESPM C167/Public Health C160, ESPM 168, ESPM 169, ESPM 186; EEP C101/Econ C125, 131, EEP 140AC, EEP 153, EEP 162, C180; ERG 170, ERG 175; Geography 130, 138; Anthropology 137
 			#Elective in Area of Concentration(3-4 units) See http://environmentalsciences.berkeley.edu/ES%20Electives.pdf
 			#Additional ES Elective (2-4 units) May be selected from any area of concentration: http://environmentalsciences.berkeley.edu/ES%20Electives.pdf
-
-
+			ans.append({'reqName':'I am sorry this major is not yet supported', 'reqCompleted':False, 'reqDescription':'','courseDone':[], 'courseLeft':[]})
 			return ans
 		# Forestry and Natural Resources
 		elif(major=='FNR'):
