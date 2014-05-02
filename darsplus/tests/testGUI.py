@@ -24,6 +24,7 @@ class testGUI(unittest.TestCase):
 
     def setUp(self):
         self.driver = webdriver.Firefox()
+        self.driver.maximize_window()
 
     def testCreateUserRegister(self):
         self.driver.get("http://127.0.0.1:8000/")
