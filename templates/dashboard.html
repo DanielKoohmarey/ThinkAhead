@@ -51,7 +51,7 @@
 									{{ planner.0 }}
 								</div>
 								<div class="semesterCourseList">
-								<ul id="planner{{ forloop.counter }}" class="sortableList">
+								<ul id="planner{{ forloop.counter }}" class="sortableList plannerMinHeight">
 									{% for course in planner.1 %}
 										<li class="course">{{ course }}</li>
 									{% endfor %}
@@ -93,7 +93,7 @@
                                   <br/>
 						{% endif %}
 					</ul>
-					<ul id="req{{ forloop.counter }}" class="sortableList">
+					<ul id="req{{ forloop.counter }}" class="sortableList courseMaxHeight">
 						{% if r.courseLeft %}
 							{% for left in r.courseLeft %}
 								<li class="course">{{ left }}</li><br/>
