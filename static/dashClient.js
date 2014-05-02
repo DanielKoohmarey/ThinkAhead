@@ -29,6 +29,13 @@ function getPlanners() {
 	return planners;
 }
 
+function newCourseItem() { 
+    var course = $("#addPlannerCourse").val(); 
+    if (course != '') {
+	$('#newCourseUL').append('<li class="course">' + course + '</li>'); 
+    }
+}
+
 /* On page load, run the following code. */
 $(document).ready(function(){
 
@@ -71,5 +78,22 @@ for (var i = 0; i < numReqs; i++) {
 
 	});
 }
+
+    $("#newCourseUL").sortable({
+	connectWith: '.sortableList', 
+	cursor: 'move',
+	placeholder: 'coursePreview'
+    });
+
+    $("#addPlannerCourse").autocomplete({ 
+	source: "/autocompleteCourse/", 
+	minLength: 2, 
+	change: function(event,ui) { 
+	    if (ui.item==null) { 
+		$(this).val('');
+		$(this).focus(); 
+	    }
+	} 
+    });
 
 });
