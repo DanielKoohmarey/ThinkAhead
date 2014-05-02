@@ -223,6 +223,9 @@ body.noScroll {
 	overflow: hidden;
 	overflow-y: auto;
 }
+.semesterCourseList li{
+float:left;
+}
 
 .reqTitle {
 	margin-top: 1px;
@@ -241,7 +244,7 @@ ul {
 	margin-bottom: 1px;
 }
 li.course {
-	margin-left: 20px;
+	/*margin-left: 20px;*/
     margin-bottom:2px;
     /*float:left;*/
 	background-color:#003262;
@@ -252,8 +255,9 @@ li.course {
     color: white;
     cursor: move;
     padding:3px;
-    max-width:115px;
+    max-width:150px;
 }
+
 .coursePreview {
 	background-color: #D7D7D8;
 	border-style: solid;
@@ -281,11 +285,9 @@ li.courseCompleted {
 }
 .sortableList {
 	min-height: 20px;
+     max-width: 150px;
 }
 
-.sortableList {
-	min-height: 20px;
-}
 .plannerMinHeight {
 	min-height: 100px;
 }
