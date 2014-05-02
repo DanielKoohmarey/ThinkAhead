@@ -243,7 +243,7 @@ ul {
 li.course {
 	margin-left: 20px;
     margin-bottom:2px;
-    float:left;
+    /*float:left;*/
 	background-color:#003262;
     border-color: #FDB515;
 	border-style:solid;
@@ -252,6 +252,7 @@ li.course {
     color: white;
     cursor: move;
     padding:3px;
+    max-width:115px;
 }
 .coursePreview {
 	background-color: #D7D7D8;
