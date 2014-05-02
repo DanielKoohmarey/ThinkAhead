@@ -355,15 +355,30 @@ class TestEnvironmentalDesign(TestCase):
 	def testARCH1(self):
 		ans= remainingRequirements([], "College of Environmental Design", 'Architecture')
 		self.assertEqual(5+8+14,len(ans))
+	def testARCH2Amy(self):
+		# MARION TODO; 'Amy' func name, remove
+		# Meant to cover 4755-4757, change assert
+		ans= reaminingRequirements(['ENVDES.106'], "College of Environmental Design", 'Architecture')
+		self.assertEqual(True, True)
 	def testLDARCH1(self):
 		ans= remainingRequirements([], "College of Environmental Design", 'Landscape Architecture')
 		self.assertEqual(5+8+18,len(ans))
 	def testURDES1(self):
 		ans= remainingRequirements([], "College of Environmental Design", 'Urban Studies')
 		self.assertEqual(5+8+13,len(ans))
+	def testURDES2Amy(self):
+		# MARION TODO; 'Amy' func name, remove
+		# Meant to cover 4863-4865, change assert
+		ans= reaminingRequirements(['ENVDES.106'], "College of Environmental Design", 'Urban Studies')
+		self.assertEqual(True, True)
 	def testSENVDES1(self):
 		ans= remainingRequirements([], "College of Environmental Design", 'Sustainable Environmental Design')
 		self.assertEqual(5+8+17,len(ans))
+	def testR1AR1BAmy(self):
+		# MARION TODO; 'Amy' func name, remove
+		# Meant to cover 4730-4733, change assert
+		ans= reaminingRequirements(['HIST.R1B', 'FILM.R1A'], "College of Environmental Design", 'Urban Studies')
+		self.assertEqual(True, True)
 
 class TestHaas(TestCase):
 	def testUGBA1(self):
@@ -373,6 +388,66 @@ class TestHaas(TestCase):
 class TestNaturalResources(TestCase):
 	def testSE1(self):
 		self.assertEqual(1,1)
+	def testR1AR1BAmy(self):
+		# MARION TODO; 'Amy' func name, remove
+		# Meant to cover part of 4065-4659, change assert
+		ans= reaminingRequirements(['HIST.R1B', 'FILM.R1A'], "College of Natural Resouces", 'Molecular Toxicology')
+		self.assertEqual(True, True)		
+	def testR1AAmy(self):
+		# MARION TODO; 'Amy' func name, remove
+		# Meant to cover part of 4065-4659, change assert
+		ans= reaminingRequirements(['FILM.R1A'], "College of Natural Resouces", 'Molecular Toxicology')
+		self.assertEqual(True, True)	
+	def testR1BAmy(self):
+		# MARION TODO; 'Amy' func name, remove
+		# Meant to cover part of 4065-4659, change assert
+		ans= reaminingRequirements(['HIST.R1B'], "College of Natural Resouces", 'Molecular Toxicology')
+		self.assertEqual(True, True)	
+	def testCRS1(self):
+		# MARION TODO; 'Amy' func name, remove
+		# Meant to cover part of 4065-4659, change assert
+		ans= remainingRequirements([], "College of Natural Resouces", 'Conservation and Resource Studies')
+		self.assertEqual(True, True)
+	def testES1(self):
+		# MARION TODO; 'Amy' func name, remove
+		# Meant to cover part of 4065-4659, change assert
+		ans= remainingRequirements([], "College of Natural Resouces", 'Environmental Sciences')
+		self.assertEqual(True, True)
+	def testFNR1(self):
+		# MARION TODO; 'Amy' func name, remove
+		# Meant to cover part of 4065-4659, change assert
+		ans= remainingRequirements([], "College of Natural Resouces", 'Forestry and Natural Resources')
+		self.assertEqual(True, True)
+	def testGPB1(self):
+		# MARION TODO; 'Amy' func name, remove
+		# Meant to cover part of 4065-4659, change assert
+		ans= remainingRequirements([], "College of Natural Resouces", 'Genetics and Plant Biology')
+		self.assertEqual(True, True)
+	def testMB1(self):
+		# MARION TODO; 'Amy' func name, remove
+		# Meant to cover part of 4065-4659, change assert
+		ans= remainingRequirements([], "College of Natural Resouces", 'Microbial Biology')
+		self.assertEqual(True, True)
+	def testMEB1(self):
+		# MARION TODO; 'Amy' func name, remove
+		# Meant to cover part of 4065-4659, change assert
+		ans= remainingRequirements([], "College of Natural Resouces", 'Molecular and Environmental Biology')
+		self.assertEqual(True, True)
+	def testMT1(self):
+		# MARION TODO; 'Amy' func name, remove
+		# Meant to cover part of 4065-4659, change assert
+		ans= remainingRequirements([], "College of Natural Resouces", 'Molecular Toxicology')
+		self.assertEqual(True, True)
+	def testSE1(self):
+		# MARION TODO; 'Amy' func name, remove
+		# Meant to cover part of 4065-4659, change assert
+		ans= remainingRequirements([], "College of Natural Resouces", 'Society and Environment')
+		self.assertEqual(True, True)
+	def testEEP1(self):
+		# MARION TODO; 'Amy' func name, remove
+		# Meant to cover part of 4065-4659, change assert
+		ans= remainingRequirements([], "College of Natural Resouces", 'Environmental Economics and Policy')
+		self.assertEqual(True, True)
 
 
 
