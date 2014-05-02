@@ -116,7 +116,8 @@ FIXTURE_DIRS = (
 )
 
 
-# The lines that follow configure Heroku settings. Comment out if testing locally
+"""
+The lines that follow configure Heroku settings. Comment out if testing locally
 # Parse database configuration from $DATABASE_URL
 import dj_database_url
 DATABASES['default'] =  dj_database_url.config()
@@ -136,6 +137,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
+"""
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'thinkaheadapp@gmail.com'
