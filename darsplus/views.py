@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import HttpResponse, HttpResponseRedirect, StreamingHttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.forms.util import ErrorList
 from darsplus.abbreviations import abbreviationDict, reverseAbbreviationDict, shorthandDict, reverseShorthandDict
 import datetime
@@ -94,14 +94,29 @@ def userRegistration(request):
     if registrationCheck(request.user):
         return HttpResponseRedirect('/dashboard/')
     elif request.method == 'POST':
-        newUser = addUserProfile(*register(request))
+        registered = register(request)
+        if not isinstance(registered, list):
+            major,college,graduationSemester,graduationYear,coursesTaken = getRegistrationData(request)[1:]
+            email = request.POST['email']
+            initialData = []
+            for course in coursesTaken:
+                initialData.append({'name':course.replace('.', ' ')}) # Revert our representation to a user-friendly one
+            initialData.sort()
+            formset = CourseFormSet(initial=initialData)
+            return render(request, 'registration.html', {'errors':registered,
+                                                         'form0': EmailForm({'email':email}) if email else EmailForm(), 
+                                                        'form1': GradForm({'semester':graduationSemester,'year':graduationYear}) if graduationSemester and graduationYear else GradForm(), 
+                                                        'form2':MajorForm(initial={'college':college, 'major':major}) if college and major else MajorForm(), 
+                                                        'form3':formset if initialData else CourseFormSet(), 
+                                                        'majorDict':majorJSON})
+        newUser = addUserProfile(*registered)
         if newUser == SUCCESS:
             return HttpResponseRedirect('/dashboard/')
         else:
             return render(request, 'registration.html',{'errors':"Error adding user profile to database. Please try again later.", 'form0': EmailForm(), 'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})
     else:
         return render(request, 'registration.html', {'form0': EmailForm(), 'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON})
-        
+
 @csrf_exempt
 def userLogout(request):
     """ Logs out current user session if one exists, return to splashpage
@@ -133,9 +148,9 @@ def dashboard(request):
     if not dashboardContext:
         #Attempt to create user profile with data     
         return HttpResponseRedirect('/registration/') #TODO: test if we can remove this, decorator now ensures user registered
-    elif (request.is_ajax()) :#and request.method == 'POST': 
+    elif (request.is_ajax()) and request.method == 'POST': 
         #Add/Remove courses from the planner
-        return handlePlannerData(request,dashboardContext)
+        handlePlannerData(request,dashboardContext)
     else: # Get. Just display dashboard, no update
         return render(request, 'dashboard.html',dashboardContext)
 
@@ -148,31 +163,30 @@ def updateProfile(request):
         Returns:
             (HttpResponse) The data containing the page the browser will server to the client 
     """
+    newUser = register(request)
     if request.method == 'POST': #updates user
-        newUser = register(request)
-        response = setUserProfile(*newUser)
-        if not isinstance(newUser, list):
-            return newUser #User did not fill out every field, show errors
-        if response == SUCCESS:
-            request.session['update']=True
-            return HttpResponseRedirect('/dashboard/')
+        if isinstance(newUser, list):
+            response = setUserProfile(*newUser)
+            if response == SUCCESS:
+                request.session['update']=True
+                return HttpResponseRedirect('/dashboard/')
     else:
-        profile = getUserProfile(request.user)
-        initialData = []
-        for course in profile.coursesTaken:
-            initialData.append({'name':course.replace('.', ' ')}) # Revert our representation to a user-friendly one
-        initialData.sort()
-        formset = CourseFormSet(initial=initialData)
+        newUser = False
+    profile = getUserProfile(request.user)
+    initialData = []
+    for course in profile.coursesTaken:
+        initialData.append({'name':course.replace('.', ' ')}) # Revert our representation to a user-friendly one
+    initialData.sort()
+    formset = CourseFormSet(initial=initialData)
 
-        return render(request,'registration.html',{'form0': EmailForm({'email':User.objects.filter(username=request.user)[0].email}), 
-                                                   'form1': GradForm({'semester':profile.graduationSemester,'year':profile.graduationYear}),
-                                                   'form2':MajorForm(initial={'college':profile.college, 'major':profile.major}),#,'college_id':2,'major_id':2}), # Does not work. Has to be the index
-                                                   'form3':formset,
-                                                   'majorDict':majorJSON,
-                                                   'userCollege':profile.college,
-                                                   'userMajor':profile.major,
-                                                   }
-                                                   )
+    return render(request,'registration.html',{'errors':newUser, 'form0': EmailForm({'email':User.objects.filter(username=request.user)[0].email}), 
+                                               'form1': GradForm({'semester':profile.graduationSemester,'year':profile.graduationYear}),
+                                               'form2':MajorForm(initial={'college':profile.college, 'major':profile.major}),#,'college_id':2,'major_id':2}), # Does not work. Has to be the index
+                                               'form3':formset,
+                                               'majorDict':majorJSON,
+                                               'userCollege':profile.college,
+                                               'userMajor':profile.major,
+                                               })
 
 def autocompleteCourse(request):
     """ Allow a user to update their profile
@@ -221,28 +235,34 @@ def register(request):
     """
     emailInfo = EmailForm(request.POST)
     majorInfo = MajorForm(request.POST)
-    courseInfo = CourseFormSet(request.POST)
     errors = {}
-    if emailInfo.errors or CourseFormSet.errors:
-        if emailInfo.errors:
-            errors.update(emailInfo.errors)
-        
-        for form in courseInfo:
-            print form.errors #TODO: validate choices
-        #    errors.update(form.errors)
+
+    if emailInfo.errors:
+        errors.update(emailInfo.errors)
         
     majorForm_errors = majorInfo.errors()
     if majorForm_errors:
         errors.update({'major':majorForm_errors})
     if errors:
-        return render(request, 'registration.html',{'errors':errors,'form0': EmailForm(),'form1': GradForm(), 'form2':MajorForm(), 'form3':CourseFormSet(), 'majorDict':majorJSON}) 
-    
-    setEmail(request.user.username,request.POST['email'])     
+        return errors 
+    setEmail(request.user.username,request.POST['email'])  
+    return getRegistrationData(request)
+
+def getRegistrationData(request):   
+    """ Extracts the registration data from the form fields of the POST request
+    Args:
+        request (HTTPResponse): Contains Post Registration Form Data
+    Returns:
+        (list) [request.user.username, major, college, graduationSemester, graduationYear, coursesTaken]
+    """
+
+    courseInfo = CourseFormSet(request.POST)
     major = request.POST['major']
     college = request.POST['college']
     graduationSemester = request.POST['semester'] 
     graduationYear = request.POST['year']  
     coursesTaken = []
+    courseInfo.is_valid()
     for form in courseInfo:
         course = form.cleaned_data.get('name')
         #Convert course name to our format
@@ -253,8 +273,7 @@ def register(request):
                 coursesTaken.append(valid)
             else:
                 continue #could not determine course format, skipping course
-
-    return [request.user.username, major, college, graduationSemester, graduationYear, coursesTaken]    
+    return [request.user.username, major, college, graduationSemester, graduationYear, coursesTaken]
     
 def standardizeCourse(course):
     """ Converts a course name into the standardized form NAME.NUMBER
@@ -288,9 +307,9 @@ def standardizeCourse(course):
 def dbToReadable(course):
     """ Converts a course name from database format DPT.NUM to readable ABBREVIATION NUM
     Args:
-    course (str): The course in DB readable format
+        course (str): The course in DB readable format
     Returns:
-    (str): The course in human readable format
+        (str): The course in human readable format
     """
 
     if course.count('.') >1:
@@ -309,7 +328,7 @@ def handlePlannerData(request,dashboardContext):
         request (HttpRequest): The request sent the Django server 
         dashboardContext (dict): The user information for the dashboard template
     Returns:
-        (HttpResponse) The data containing the page the browser will server to the client 
+        None
     """
     user = request.user.username
     plannerID = getUserProfile(user).plannerID
@@ -323,7 +342,7 @@ def handlePlannerData(request,dashboardContext):
         setPlanner(plannerID, index+1, courses)
     #request.method = 'GET' # prevent infinite loop because request is still ajax
     #dashboardContext = dashboardData(request) # Updates context
-    return HttpRedirect('/registration/')
+    
     #return render(request,'dashboard.html',dashboardContext)
         
 
@@ -345,6 +364,9 @@ def dashboardData(request):
     allCourses = getCoursesTaken(username) #If a course is in the planner, should be excluded as well 
     allCourses += getAllCourses(plannerID)
     userInformation['requirements'] = remainingRequirements(allCourses, majorToCollege(userProfile.major), userProfile.major)
+    for requirement in userInformation['requirements']:
+        requirement['courseDone'] = [dbToReadable(course) if '.' in course else course for course in requirement['courseDone']]
+        requirement['courseLeft'] = [dbToReadable(course) if '.' in course else course for course in requirement['courseLeft']]
     userInformation['planners'] = getPlanners(plannerID)
     readablePlanner = []
     for planner in range(len(userInformation['planners'])):
@@ -377,10 +399,14 @@ def dashboardData(request):
     userInformation['unitsPlanner'] = int(userInformation['unitsCompleted']+sum(unitCount))
     
     userInformation['form'] = CourseFormSet()
-    if request.session['update']:
-        userInformation['update'] = True
+    try:
+        if request.session['update']:
+            userInformation['update'] = True
+            request.session['update'] = False
+        else:
+            userInformation['update'] = False
+    except:
         request.session['update'] = False
-    else:
         userInformation['update'] = False
     return userInformation
 

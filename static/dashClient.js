@@ -5,6 +5,10 @@ Makes a POST request to save current planners state represented as list of lists
 function savePlanners() {
 	var planners = getPlanners();
 	$.post( "/dashboard/", { 'planners[]': planners } );
+    window.setTimeout(function() {
+    	location.reload(true);
+    }, 500);
+      
 }
 
 /*
@@ -35,8 +39,11 @@ http://stackoverflow.com/questions/12480838/use-jquery-to-expand-collapse-ul-lis
 */
 $('.reqComplete ul').hide();
 $('.reqComplete .reqDescription').hide();
+$('.req ul').hide();
+$('.req .reqDescription').hide();
 
 $('.reqTitle').click(function() {
+	$(this).parent().find('.reqTitle').toggleClass('minus');
     $(this).parent().find('ul').slideToggle();
     $(this).parent().find('.reqDescription').slideToggle();
 });
@@ -49,14 +56,19 @@ var selector;
 for (var i = 0; i < numPlanners; i++) {
 	selector = '#planner' + (i + 1);
 	$(selector).sortable({
-		connectWith: '.sortableList'
+		connectWith: '.sortableList',
+		cursor: 'move',
+		placeholder: 'coursePreview'
 	});
 }
 
 for (var i = 0; i < numReqs; i++) {
 	selector = '#req' + (i + 1);
 	$(selector).sortable({
-		connectWith: '.sortableList'
+		connectWith: '.sortableList',
+		cursor: 'move',
+		placeholder: 'coursePreview'
+
 	});
 }
 
