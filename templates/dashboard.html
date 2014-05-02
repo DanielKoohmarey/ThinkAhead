@@ -93,10 +93,10 @@
                                   <br/>
 						{% endif %}
 					</ul>
-					<ul id="req{{ forloop.counter }}" class="sortableList">
+					<ul id="req{{ forloop.counter }}" class="sortableList courseMaxHeight">
 						{% if r.courseLeft %}
 							{% for left in r.courseLeft %}
-								<li class="course">{{ left }}</li><br/>
+								<li class="course">{{ left }}</li>
 							{% endfor %}
 						{% endif %}
 					</ul>

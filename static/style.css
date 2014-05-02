@@ -1,10 +1,16 @@
 /* Base styling to be used across all pages */
+
+html {
+        height: 100%;
+}
+
 body, input, button, select, option, textarea {
 	font-family: Arial, sans-serif;
 }
 
 body {
 	/* font-family: Arial, sans-serif; */
+        height: 100%;
 	color: #000000;
 	margin: 0px;
 	/*background-image: url('lined_paper.png'); /* subtlepatterns.com */
@@ -217,15 +223,18 @@ body.noScroll {
 	border-radius: 5px;
 	margin: 5px;
 	padding: 5px;
-	min-height: 100px;
+	height: 100px;
 	width: 150px;
 	word-wrap: break-word;
 	overflow: hidden;
 	overflow-y: auto;
 }
+
+
 .semesterCourseList li{
 float:left;
 }
+
 
 .reqTitle {
 	margin-top: 1px;
@@ -245,7 +254,7 @@ ul {
 }
 li.course {
     margin-bottom:2px;
-    display:inline-block;
+    /* display:inline-block; */
     background-color:#003262;
     border-color: #FDB515;
 	border-style:solid;
@@ -264,6 +273,7 @@ li.course {
 	border-color: #A7A7A8;
 	border-radius: 5px;
 	min-height: 20px;
+	min-width: 100px;
 	cursor: move;
 }
 
@@ -288,6 +298,11 @@ li.courseCompleted {
 
 .plannerMinHeight {
 	min-height: 100px;
+}
+
+.courseMaxHeight{
+    max-height: 150px;
+    overflow-y: scroll;
 }
 
 .reqCoursesWrapper {
