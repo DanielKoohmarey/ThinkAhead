@@ -10,8 +10,6 @@ class MyError(Exception):
 def main():
 	print 'hello'
 #http://ls-advise.berkeley.edu/requirement/breadth7/al.html
-
-
 artAndLit={'AFRICAM.4A':'AfricanAmerican 4A','AFRICAM.5A':'AfricanAmerican 5A','AFRICAM.5B':'AfricanAmerican 5B','AFRICAM.26':'AfricanAmerican 26','AFRICAM.29AC':'AfricanAmerican 29AC','AFRICAM.39A':'AfricanAmerican 39A','AFRICAM.39G':'AfricanAmerican 39G',
 	'AFRICAM.100':'AfricanAmerican 100','AFRICAM.142A':'AfricanAmerican 142A','AFRICAM.142B':'AfricanAmerican 142B','AFRICAM.142AC':'AfricanAmerican 142AC','AFRICAM.142C':'AfricanAmerican 142C','AFRICAM.142D':'AfricanAmerican 142D',
 	'AFRICAM.150A':'AfricanAmerican 150A','AFRICAM.150B':'AfricanAmerican 150B','AFRICAM.N150B':'AfricanAmerican N150B','AFRICAM.151B':'AfricanAmerican 151B','AFRICAM.152A':'AfricanAmerican 152A','AFRICAM.152E':'AfricanAmerican 152E','AFRICAM.152F':'AfricanAmerican 152F','AFRICAM.153C':'AfricanAmerican 153C','AFRICAM.154':'AfricanAmerican 154','AFRICAM.155':'AfricanAmerican 155',
@@ -530,6 +528,8 @@ international={
 	'OPTOM.39B':'Optometry 39B',
 	'SSEASN.39C':'SouthSouthEastAsian 39C', 'SSEASN.C113':'SouthSouthEastAsian C113', 'SSEASN.C145':'SouthSouthEastAsian C145',
 	'POLECON.101':'PoliticalEcon 101','POLECON.150':'PoliticalEcon 150'}
+
+internationalbreadth = international  
 #http://ls-advise.berkeley.edu/requirement/breadth7/pv.html
 philosophyValues={
 	'BUDDHST.39A':'Buddhist 39A', 'BUDDHST.C50':'Buddhist C50', 'BUDDHST.C114':'Buddhist C114', 'BUDDHST.C115':'Buddhist C115', 'BUDDHST.C122':'Buddhist C122', 'BUDDHST.C124':'Buddhist C124', 
@@ -885,7 +885,6 @@ socialBehavioralScience={
 	'SOCIOL.180E':'Sociology 180E', 'SOCIOL.180I':'Sociology 180I', 'SOCIOL.180P':'Sociology 180P', 'SOCIOL.181':'Sociology 181', 'SOCIOL.182':'Sociology 182', 'SOCIOL.183':'Sociology 183', 'SOCIOL.C184':'Sociology C184', 'SOCIOL.185':'Sociology 185', 'SOCIOL.186':'Sociology 186',
 	'SOCIOL.189':'Sociology 189', 'SOCIOL.C189':'Sociology C189', 'SOCIOL.189G':'Sociology 189G', 'SOCIOL.190':'Sociology 190', 'SOCIOL.190AC':'Sociology 190AC', 'SOCIOL.H190A':'Sociology H190A', 'SOCIOL.H190B':'Sociology H190B', 'SOCIOL.191':'Sociology 191', 'SOCIOL.192':'Sociology 192',
 	'SOCIOL.194':'Sociology 194', 'SOCIOL.195':'Sociology 195', 'SOCIOL.C196A':'Sociology C196A', 'SOCIOL.C196B':'Sociology C196B', 'SOCIOL.C196W':'Sociology C196W', 'SOCIOL.197':'Sociology 197', 'SOCIOL.198':'Sociology 198', 'SOCIOL.199':'Sociology 199'} 
-
 """
 Determines the number of units each course is through accessing the database of classes and units
 For now it just returns 4 for the sake of testing
@@ -928,7 +927,7 @@ def twoReq(takenClasses, requirement, req, reqName, req1, reqName1, description)
 	if ((req in takenClasses)and (req1 in takenClasses)):
 		return {'reqName':requirement, 'reqCompleted':True, 'reqDescription':description,'courseDone':[reqName, reqName1], 'courseLeft':[]}
 	elif (req1 in takenClasses):
-                return {'reqName':requirement, 'reqCompleted':False, 'reqDescription':description,'courseDone':[reqName1], 'courseLeft':[reqName]}
+		return {'reqName':requirement, 'reqCompleted':False, 'reqDescription':description,'courseDone':[reqName1], 'courseLeft':[reqName]}
 	elif (req in takenClasses):
 		return {'reqName':requirement, 'reqCompleted':False, 'reqDescription':description,'courseDone':[reqName], 'courseLeft':[reqName1]}
 	else:
@@ -2353,30 +2352,30 @@ def remainingRequirements(takenClasses, college, major):
 			#Three additional upper division technical courses as follows: One in mathematics, one in statistics, and one from either math or statistics from among: Math 105, 113, 118, 123, 125A, 126, 130, 135, 140, 142, 170, 185, 189, and E117; Statistics 135, 150, 151A, 151B, 152, 153, 154, 157, 158.
 			math=0
 			stats=0
-			math={'MATH.105':'Math 105','MATH.113':'Math 113','MATH.118':'Math 118','MATH.123':'Math 123','MATH.125A':'Math 125A','MATH.126':'Math 126','MATH.130':'Math 130','MATH.135':'Math 135','MATH.140':'Math 140','MATH.142':'Math 142','MATH.170':'Math 170','MATH.185':'Math 185','MATH.189':'Math 189','ENGIN.117':'E 117'}
-			stats={'STAT.135':'Stats 135','STAT.150':'Stats 150','STAT.151A':'Stats 151A','STAT.151B':'Stats 151B','STAT.152':'Stats 152','STAT.153':'Stats 153','STAT.154':'Stats 154','STAT.157':'Stats 157','STAT.158':'Stats 158'}
+			maths={'MATH.105':'Math 105','MATH.113':'Math 113','MATH.118':'Math 118','MATH.123':'Math 123','MATH.125A':'Math 125A','MATH.126':'Math 126','MATH.130':'Math 130','MATH.135':'Math 135','MATH.140':'Math 140','MATH.142':'Math 142','MATH.170':'Math 170','MATH.185':'Math 185','MATH.189':'Math 189','ENGIN.117':'E 117'}
+			statslist={'STAT.135':'Stats 135','STAT.150':'Stats 150','STAT.151A':'Stats 151A','STAT.151B':'Stats 151B','STAT.152':'Stats 152','STAT.153':'Stats 153','STAT.154':'Stats 154','STAT.157':'Stats 157','STAT.158':'Stats 158'}
 			upperTaken=[]
 			upperNotTaken=[]
-			for key in  math:
+			for key in  maths:
 				if (key in takenClasses):
 					if ((key is 'MATH.105') and ('MATH.185' in takenClasses)):
 						math+=1
-						upperTaken.append(math[key])
+						upperTaken.append(maths[key])
 					elif (key is 'MATH.105'):
-						upperTaken.append(math[key])
+						upperTaken.append(maths[key])
 					elif (key is 'MATH.185'):
-						upperTaken.append(math[key])
+						upperTaken.append(maths[key])
 					else:
 						math+=1
-						upperTaken.append(math[key])
+						upperTaken.append(maths[key])
 				else:
-					upperNotTaken.append(math[key])
-			for key in stats:
+					upperNotTaken.append(maths[key])
+			for key in statslist:
 				if (key in takenClasses):
 					stats+=1
-					upperTaken.append(stats[key])
+					upperTaken.append(statslist[key])
 				else:
-					upperNotTaken.append(stats[key])
+					upperNotTaken.append(statslist[key])
 			"""advancement"""
 			if(math>=1 and stats>=1 and (math>1 or stats>1)):
 				ans.append({'reqName':'Upper Division Technical Courses', 'reqCompleted':True, 'reqDescription':"Three additional upper division technical courses as follows: One in mathematics, one in statistics, and one from either math or statistics from among: Math 105, 113, 118, 123, 125A, 126, 130, 135, 140, 142, 170, 185, 189, and E117; Statistics 135, 150, 151A, 151B, 152, 153, 154, 157, 158.",'courseDone':upperTaken, 'courseLeft':upperNotTaken})
@@ -3798,7 +3797,7 @@ def remainingRequirements(takenClasses, college, major):
 			celec={'NUCENG.120':'NucEng 120', 'NUCENG.124':'NucEng 124', 'NUCENG.161':'NucEng 161'}
 			ans.append(doSomeManyChoiceReq(takenClasses, 'Nuclear Engineering Elective', celec, 'At least two courses selected from Nuc Eng 120, 124, or 161', 2))
 			#Chemistry 120A, Physical Chemistry or Physics 137A,Quantum Mechanics
-			ans.append(twoChoiceReq(takenClasses, 'CHEM.120A', 'Chem 120A','PHYSICS.137A','Physics 137A', "The Physical Chemistry or Quantum Mechanics requirement"))
+			ans.append(twoChoiceReq(takenClasses, 'Quantum Mechanics','CHEM.120A', 'Chem 120A','PHYSICS.137A','Physics 137A', "The Physical Chemistry or Quantum Mechanics requirement")) #Marion
 			#Chem Eng 154, Chemical Engineering Laboratory
 			ans.append(basicReq(takenClasses, 'CHMENG.154', 'ChemEng 154', "The Chemical Engineering Laboratory requirement"))
 			#Chem Eng 160, Chemical Process Design
@@ -4175,8 +4174,7 @@ def remainingRequirements(takenClasses, college, major):
 			#Human Environment Interactions: ESPM 102D, ESPM 151, ESPM 155, ESPM 160AC/History 120AC, ESPM 161, ESPM 162, ESPM 163AC/Sociology 137AC, ESPM 166, ESPM C167/Public Health C160, ESPM 168, ESPM 169, ESPM 186; EEP C101/Econ C125, 131, EEP 140AC, EEP 153, EEP 162, C180; ERG 170, ERG 175; Geography 130, 138; Anthropology 137
 			#Elective in Area of Concentration(3-4 units) See http://environmentalsciences.berkeley.edu/ES%20Electives.pdf
 			#Additional ES Elective (2-4 units) May be selected from any area of concentration: http://environmentalsciences.berkeley.edu/ES%20Electives.pdf
-
-
+			ans.append({'reqName':'I am sorry this major is not yet supported', 'reqCompleted':False, 'reqDescription':'','courseDone':[], 'courseLeft':[]})
 			return ans
 		# Forestry and Natural Resources
 		elif(major=='FNR'):
@@ -4317,12 +4315,12 @@ def remainingRequirements(takenClasses, college, major):
 					bnum=bnum+units()
 				else:
 					breadthNotTaken.append(philosophyValues[item])
-			for item in international:
-				if (item in takenClasses) and (not(international[item] in breadthTaken)):
-					breadthTaken.append(international[item])
+			for item in internationalbreadth:
+				if (item in takenClasses) and (not(internationalbreadth[item] in breadthTaken)):
+					breadthTaken.append(internationalbreadth[item])
 					bnum=bnum+units()
 				else:
-					breadthNotTaken.append(international[item])
+					breadthNotTaken.append(internationalbreadth[item])
 			for item in historicalStudies:
 				if (item in takenClasses) and (not(historicalStudies[item] in breadthTaken)):
 					breadthTaken.append(historicalStudies[item])
@@ -4371,37 +4369,143 @@ def remainingRequirements(takenClasses, college, major):
 			return ans
 		#Microbial Biology
 		elif(major=='MB'):
-			#ESPM Environmental Sci Core: 1 from ESPM 2, ESPM 6, ESPM C10 (L&S C30V), or ESPM 15 (formerly ES 10)
-			#ESPM Social Science Core: 1 course from ESPM C11 (L&S C30U), ESPM C12, ESPM 50AC or ESPM 60
-			#One course in General Biology with lab from the following list: Biology 1A: Molecular & Cellular Biology, Biology 1B: Plants/Ecology/Evolution, or Biology 11: Introduction to the Science of Living Organisms. NOTE: Biology 1B is recommended.
-			#One course (3-4 units) in Social & Behavioral Sciences or International Studies chosen from the "Seven Breadth" listing: http://ls-advise.berkeley.edu/requirements/lsreq.html#7breadth
-			#One course (3-4 units) in Physical Sciences chosen from the "Seven Breadth" listing: http://ls-advise.berkeley.edu/requirements/lsreq.html#7breadth
-			#One course (3-4 units) in Arts & Literature, Historical Studies, or Philosophy & Values chosen from the "Seven Breadth" listing: http://ls-advise.berkeley.edu/requirements/lsreq.html#7breadth.
-			#One Calculus or Statistics course: Math 16A, 16B, 1A or 1B; Statistics 2, 20, 25, 131A, or PH 142A.
-			#ESPM 90: Introduction to the CRS Major. Students design Area of Interest statement and declare the major in this class.
-			#Two Preparatory Courses to the Area of Interest (6-8 units), chosen in consultation with advisor
-			#ESPM 100 (Fall only) Environmental Problem Solving (4)
-			#ESPM 194A: Senior Seminar in Conservation & Resource Studies
-			#Eight student-designed Area of Interest Classes (for a minimum of 24 units)
+			#Math 16A/1A: Calculus I [3-4]
+			ans.append(twoChoiceReq(takenClasses, 'Calculus I', 'MATH.16A', 'Math 16A', 'MATH.1A', 'Math 1A', 'You must take an Intro Calculus course either math 16A or 1A'))
+			#Math 16B/1B: Calculus II [3-4]
+			ans.append(twoChoiceReq(takenClasses, 'Calculus II', 'MATH.16B', 'Math 16B', 'MATH.1B', 'Math 1B', 'You must take an Intermediate Calculus course either math 16B or 1B'))
+			#Stat 2, 20, 131A: Probability & Statistics [4]
+			prob={'STAT.2':'Stats 2','STAT.20':'Stats 20','STAT.131A':'Stats 131A'}
+			ans.append(manyChoiceReq(takenClasses, 'Probability & Statistics', prob, 'The Probability & Statistics requirement of one of Stat 2, 20, 131A'))
+			#Chem 1A/L: General Chemistry [4]
+			ans.append(twoReq(takenClasses,'General Chemistry', 'CHEM.1A', 'Chem 1A', 'CHEM.1AL', 'Chem 1AL', "The General Chemistry requirement"))
+			#Chem 3A/L: Organic Chemistry I [5]
+			ans.append(twoReq(takenClasses,'Organic Chemistry I', 'CHEM.3A', 'Chem 3A', 'CHEM.3AL', 'Chem 3AL', "The Organic Chemistry I requirement"))
+			#Chem 3B/L: Organic Chemistry II [5]
+			ans.append(twoReq(takenClasses,'Organic Chemistry II', 'CHEM.3B', 'Chem 3B', 'CHEM.3BL', 'Chem 3BL', "The Organic Chemistry II requirement"))
+			#Bio 1A/L: General Biology [5]
+			ans.append(twoReq(takenClasses,'General Biology', 'BIOLOGY.1A', 'Bio 1A', 'BIOLOGY.1AL', 'Bio 1AL', "The General Biology requirement"))
+			#Bio 1B: General Biology [4]
+			ans.append(basicReq(takenClasses, 'BIOLOGY.1B', 'Bio 1B', 'The General Biology requirement'))
+			#15 units of coursework taken from L&S breadth list,excluding biological and physical science courses
+			breadthTaken=[]
+			bnum=0
+			breadthNotTaken=[]
+			for item in socialBehavioralScience:
+				if (item in takenClasses) and (not(socialBehavioralScience[item] in breadthTaken)):
+					breadthTaken.append(socialBehavioralScience[item])
+					bnum=bnum+units()
+				else:
+					breadthNotTaken.append(socialBehavioralScience[item])
+			for item in philosophyValues:
+				if (item in takenClasses) and (not(philosophyValues[item] in breadthTaken)):
+					breadthTaken.append(philosophyValues[item])
+					bnum=bnum+units()
+				else:
+					breadthNotTaken.append(philosophyValues[item])
+			for item in internationalbreadth:
+				if (item in takenClasses) and (not(internationalbreadth[item] in breadthTaken)):
+					breadthTaken.append(internationalbreadth[item])
+					bnum=bnum+units()
+				else:
+					breadthNotTaken.append(internationalbreadth[item])
+			for item in historicalStudies:
+				if (item in takenClasses) and (not(historicalStudies[item] in breadthTaken)):
+					breadthTaken.append(historicalStudies[item])
+					bnum=bnum+units()
+				else:
+					breadthNotTaken.append(historicalStudies[item])
+			for item in artAndLit:
+				if (item in takenClasses) and (not(artAndLit[item] in breadthTaken)):
+					breadthTaken.append(artAndLit[item])
+					bnum=bnum+units()
+				else:
+					breadthNotTaken.append(artAndLit[item])
+			if (bnum>=15):
+				ans.append( {'reqName':'Breadth', 'reqCompleted':True, 'reqDescription':'15 units of coursework taken from L&S breadth list,excluding biological and physical science courses','courseDone':breadthTaken, 'courseLeft':breadthNotTaken})
+			else:
+				ans.append( {'reqName':'Breadth', 'reqCompleted':False, 'reqDescription':'15 units of coursework taken from L&S breadth list,excluding biological and physical science courses','courseDone':breadthTaken, 'courseLeft':breadthNotTaken})
+			#Physics 8A: Introductory Physics [4]
+			ans.append(basicReq(takenClasses, 'PHYSICS.8A', 'Physics 8A', 'The Introductory Physics requirement'))
+			#MCB C100A, 100B, 102, or 110: Biochemistry
+			biochem={'MCELLBI.C100A':'MCB C100A','MCELLBI.100B':'MCB 100B','MCELLBI.102':'MCB 102','MCELLBI.110':'MCB 110'}
+			ans.append(manyChoiceReq(takenClasses, 'Biochemistry', biochem, 'The biochemistry Requirement of MCB C100A, 100B, 102, or 110'))
+			#PMB C148: Microbial Genomics & Genetics
+			ans.append(basicReq(takenClasses, 'PLANTBI.C148', 'PMB C148', 'The Microbial Genomics & Genetics requirement'))
+			#PMB C112/L: General Microbiology
+			ans.append(twoReq(takenClasses,'General Microbiology', 'PLANTBI.C112', 'PMB C112', 'PLANTBI.C112L', 'PMB C112L', "The General Microbiology requirement"))
+			#Choose 2 courses: Discovery Research in Microbiology [2], PMB C103: Bacterial Pathogenesis [3] or, IB 118: Host-Pathogen Interactions [3] or ,PH 162A: Public Health Microbiology [3], PMB 110: Biology of Fungi [4],PMB 113: California Mushrooms [3], PMB C114: Comparative Virology [4], PMB C116: Microbial Diversity [3], PMB 120: Biology of Algae [4], BioE 135: Frontiers in Microbial Systems Biology [4], ESPM 112: Microbial Ecology [3] or,ESPM 131: Soil Microbial Ecology [3],
+			disc={'PLANTBI.C103':'PMB C112'}
+			discor={}
+			#Microbial Biology Tracks: Choose from Option 1 or 2: Option 1: Choose a track from below and select four courses. One of the four courses may be selected from the Upper Division Core Electives listed above. This course may not be counted for both the Upper Division Core Electives and your track.; Option 2 (General Microbiology Track): Choose any four courses from the Microbial Biology Tracks (below) and/or the Upper Division Core Electives (above). Courses selected in Option 2 may not overlap with the two courses used for the Upper Division Core Electives.
+			#Host-Pathogen Interactions:  PMB 185: Techniques in Light Microscopy [3], PMB 135/L: Physiology & Biochemistry of Plants [4] or*,MCB 150: Molecular Immunology [4], PMB 150/L: Plant Cell Biology [4] or*,MCB 104: Genetics, Genomics & Cell Biology [4], PMB 160/L: Plant Molecular Genetics [4] or*,MCB 140: General Genetics [4], BioE 100: Ethics in Science & Engineering [3] or*,ESPM 162: Bioethics & Society [4], IB 115: Intro to Systems in Biology & Medicine [4], IB 119: Evaluating Scientific Evidence in Medicine [3], PH 150A: Intro to Epidemiology & Human Disease [3], PH 150B: Intro to Environmental Health Sciences [3], PMB H196/199: Research [3-4],
+			#Evolution/Computational Genomics: PMB C144: Intro to Protein Informatics [4] or*,PMB C144L: Protein Informatics Lab [2], BioE 131: Intro to Computational Molecular & Cell Biology [4] or*,CS 61A: The Structure & Interpretation of Computer Programs [4] or*,CS 61B: Data Structures [4], BioE 135: Frontiers in Microbial Systems Biology [4], BioE 143: Computational Methods in Biology [4] or*,Math 127: Mathematical & Computational Methods in Molecular Biology [4], IB 160: Evolution [4] or*,IB 161: Population & Evolutionary Genetics [4], IB 166: Evolutionary Biogeography [4], MCB 111: Intro to Structural Biology [3], MCB 140: General Genetics [4], MCB 143: Evolution of Genomes, Cells & Development [3], PMB H196/199: Research [3-4],
+			#Ecology & Environmental Microbiology: BioE 100: Ethics in Science & Engineering [3] or*, ESPM 162: Bioethics & Society [4], BioE 135: Frontiers in Microbial Systems Biology [4], ESPM 134: Insects, Fire & Diseases in Forest Ecosystems [3], ESPM 192: Molecular Approaches to Environmental Problem Solving [2], IB 153: Ecology [3] or*,IB 153LF: Lab in Population & Community Ecology [3], IB 161: Population & Evolutionary Genetics [4], IB 162: Ecological Genetics [4], IB 166: Evolutionary Biogeography [4], MCB 137: Computer Simulation in Biology [3], PMB H196/199: Research [3-4],
+			#Microbial Biotechnology: PMB 122: Bioenergy [2], PMB C124: Lectures on Energy: Energy from Biomass [3], PMB 150/L: Plant Cell Biology [4] or*,MCB 104: Genetics, Genomics & Cell Biology [4], PMB 170: Modern Applications of Plant Biotechnology [2], BioE 22/L: Biotechnology [5], BioE 100: Ethics in Science & Enginerring [3] or*,ESPM 162: Bioethics & Society [4], BioE 135: Frontiers in Microbial Systems Biology [4], ESPM 192: Molecular Approaches to Environmental Problem Solving [2], MCB 111: Intro to Structural Biology [3], MCB 137: Computer Simulation in Biology [3], MCB 140: General Genetics [4], PMB H196/199: Research [3-4],
+			ans.append({'reqName':'Microbial Biology Tracks', 'reqCompleted':True, 'reqDescription':'Choose from Option 1 or 2: Option 1: Choose a track from below and select four courses. One of the four courses may be selected from the Upper Division Core Electives listed above. This course may not be counted for both the Upper Division Core Electives and your track.; Option 2 (General Microbiology Track): Choose any four courses from the Microbial Biology Tracks (below) and/or the Upper Division Core Electives (above). Courses selected in Option 2 may not overlap with the two courses used for the Upper Division Core Electives.','courseDone':[], 'courseLeft':[]})
 
 			return ans
 		#Molecular Environmental Biology
 		elif(major=='MEB'):
-			#ESPM Environmental Science Core: 1 course from ES 10, ESPM 2, 6, C10 (L&S C30V), or 15 
-			#ESPM Social Science Core: 1 course from ESPM C11 (L&S C30U), C12 (ENG C77), 50AC or 60
-			#One course (3-4 units) in Arts & Literature, Historical Studies, or Philosophy & Values
+			#ESPM Environmental Sci Core: 1 from ESPM 2, ESPM 6, ESPM C10 (L&S C30V), or ESPM 15 (formerly ES 10)
+			core={'ESPM.2':'ESPM 2', 'ESPM.6':'ESPM 6', 'ESPM.C10':'ESPM C10', 'ESPM.15':'ESPM 15','L&S.C30V':'L&S C30V'}
+			ans.append(manyChoiceReq(takenClasses, 'ESPM Environmental Science Core', core, 'For the ESPM Environmental Sci Core you must complete one from ESPM 2, ESPM 6, ESPM C10 (L&S C30V), or ESPM 15'))
+			#ESPM Social Science Core: 1 course from ESPM C11 (L&S C30U), ESPM C12, ESPM 50AC or ESPM 60
+			socialcore={'ESPM.50AC':'ESPM 50AC', 'ESPM.C12':'ESPM C12', 'ESPM.C11':'ESPM C11', 'ESPM.60':'ESPM 60','L&S.C30U':'L&S C30U'}
+			ans.append(manyChoiceReq(takenClasses, 'ESPM Social Science Core', socialcore, 'For the ESPM Social Science Core you must complete one from ESPM C11 (L&S C30U), ESPM C12, ESPM 50AC or ESPM 60'))
+			#Breadth
+			temp=sevenBreadth(takenClasses)
+			one=False
+			oneTaken=[]
+			oneNotTaken=[]
+			two=False
+			twoTaken=[]
+			twoNotTaken=[]
+			three=False
+			threeTaken=[]
+			threeNotTaken=[]
+			for item in temp:
+				if item['reqName'] in ['International Studies Breadth','Social and Behavioral Science Breadth'] :
+					one= one or item['reqCompleted']
+					oneTaken= oneTaken + item['courseDone']
+					oneNotTaken= oneNotTaken + item['courseLeft']
+				elif item['reqName'] is 'Physical Science Breadth':
+					two= two or item['reqCompleted']
+					twoTaken= twoTaken + item['courseDone']
+					twoNotTaken= twoNotTaken + item['courseLeft']
+				elif item['reqName'] in ['Art and Literature Breadth','Historical Studies Breadth','Philosophy and Values Breadth'] :
+					three= three or item['reqCompleted']
+					threeTaken= threeTaken + item['courseDone']
+					threeNotTaken= threeNotTaken + item['courseLeft']
 			#One course (3-4 units) in Social & Behavioral Sciences or International Studies
+				if one:
+					ans.append({'reqName':'Social & Behavioral Sciences or International Studies Breadth', 'reqCompleted':True, 'reqDescription':'You must take one social & behavioral sciences or international studies course. For more info see: http://http://ls-advise.berkeley.edu/requirement/7breadth.html','courseDone':oneTaken, 'courseLeft':oneNotTaken})
+				else:
+					ans.append({'reqName':'Social & Behavioral Sciences or International Studies Breadth', 'reqCompleted':False, 'reqDescription':'You must take one social & behavioral sciences or international studies course. For more info see: http://http://ls-advise.berkeley.edu/requirement/7breadth.html','courseDone':[], 'courseLeft':oneNotTaken})
+			#One course (3-4 units) in Arts & Literature, Historical Studies, or Philosophy & Values
+				if three:
+					ans.append({'reqName':'Arts & Literature, Historical Studies, or Philosophy & Values Breadth', 'reqCompleted':True, 'reqDescription':'You must take one Arts & Literature, Historical Studies, or Philosophy & Values course. For more info see: http://http://ls-advise.berkeley.edu/requirement/7breadth.html','courseDone':threeTaken, 'courseLeft':threeNotTaken})
+				else:
+					ans.append({'reqName':'Arts & Literature, Historical Studies, or Philosophy & Values Breadth', 'reqCompleted':False, 'reqDescription':'You must take one Arts & Literature, Historical Studies, or Philosophy & Values course. For more info see: http://http://ls-advise.berkeley.edu/requirement/7breadth.html','courseDone':[], 'courseLeft':threeNotTaken})
 			#Chemistry 1A (4 units) effective Summer 2011: Chem 1A (3 units) & Chem 1AL (1 unit) 
-			# Chemistry 3A and lab (5 units) 
+			ans.append(twoReq(takenClasses,'Chemistry', 'CHEM.1A', 'Chem 1A','CHEM.1AL', 'Chem 1AL', "The freshman year Chemistry requirement of Chem 1A and 1AL"))
+			# Chemistry 3A and lab (5 units)
+			ans.append(twoReq(takenClasses,'Chemistry', 'CHEM.3A', 'Chem 3A','CHEM.3AL', 'Chem 3AL', "The freshman year Chemistry requirement of Chem 3A and 3AL"))
 			# Chemistry 3B and lab (5 units)
+			ans.append(twoReq(takenClasses,'Chemistry', 'CHEM.3B', 'Chem 3B','CHEM.3BL', 'Chem 3BL', "The freshman year Chemistry requirement of Chem 3B and 3BL"))
 			#Biology 1A and lab (5 units) and 
-			#Biology 1B (4 units) NOTE: Bio 1B may be taken prior to Bio 1A. 
-			#Math 16A (or 1A)  
+			ans.append( twoReq(takenClasses,'General Biology', 'BIOLOGY.1A', 'Bio 1A', 'BIOLOGY.1AL', 'Bio 1AL', "The sophomore year biology requirement of both Bio 1A and 1AL"))
+			#Biology 1B (4 units) NOTE: Bio 1B may be taken prior to Bio 1A.
+			ans.append(basicReq(takenClasses, 'BIOLOGY.1B', 'Bio 1B', 'Required general biology course'))
 			#Math 16B (or 1B) Math 16B/1B may be replaced by Statistics 2, 20, 25, PH 142A or Stat 131A.
+			calcTwo= {'MATH.1B':'Math 1B', 'MATH.16B':'Math 16B','STAT.2':'Stats 2','STAT.20':'Stats 20','STAT.25':'Stats 25','STAT.131A':'Stats 131A','PBHLTH.142A':'Public Health 142A'}
+			ans.append(manyChoiceReq(takenClasses, 'Calculus Two', calcTwo, "Requirement of Math 16B/1B that may be replaced by Statistics 2, 20, 25, PH 142A or Stat 131A"))
+			#Math 16A (or 1A) 
+			ans.append(twoChoiceReq(takenClasses, 'Calculus','MATH.1A', 'Math 1A', 'MATH.16A', 'Math 16A', "Part of the freshman year Calculus requirement of beginning calculus")) #Marion			
 			#Physics 8A: 4 units
+			ans.append(basicReq(takenClasses,  'PHYSICS.8A', 'Physics 8A', 'Requirement of PHYSICS 8A'))
 			#Biological Core: select one course from each of the seven categories below
-			"""here"""
-
+			#Area of Concentration Requirement: Select 12 units from one concentration below. View courses on the back side of this form. Up to four independent study units (e.g., ESPM 199, ESPM H196) may be applied to the concentration.
+			ans.append({'reqName':'Biological Core and Area of Concentration', 'reqCompleted':True, 'reqDescription':'Select one course from each of the seven categories; Select 12 units from one concentration','courseDone':[], 'courseLeft':[]})
 
 			return ans
 		#Molecular Toxicology
@@ -4414,19 +4518,19 @@ def remainingRequirements(takenClasses, college, major):
 			humanityCourses=artAndLit
 			for item in historicalStudies:
 				if item not in humanityCourses:
-					humanityCourses.append(item)
-			for item in international:
+					humanityCourses.update({item:item}) #Marion
+			for item in internationalbreadth:
 				if item not in humanityCourses:
-					humanityCourses.append(item)
+					humanityCourses.update({item:item})
 			for item in philosophyValues:
 				if item not in humanityCourses:
-					humanityCourses.append(item)
+					humanityCourses.update({item:item})
 			for item in physicalScience:
 				if item not in humanityCourses:
-					humanityCourses.append(item)
+					humanityCourses.update({item:item})
 			for item in socialBehavioralScience:
 				if item not in humanityCourses:
-					humanityCourses.append(item)
+					humanityCourses.update({item:item})
 			for item in humanityCourses:
 				if ('AC' not in item) and (item in takenClasses):
 					humanity+=units(item)
@@ -4625,7 +4729,7 @@ def remainingRequirements(takenClasses, college, major):
 			#UGBA 102A, Intro to Financial Accounting
 			#NST 160, Metabolic Bases of Human Health and Diseases 
 			#UGBA 105, Intro to Organizational Behavior  
-
+			ans.append({'reqName':'I am sorry this major is not yet supported', 'reqCompleted':False, 'reqDescription':'','courseDone':[], 'courseLeft':[]})
 			return ans
 		#Society and Environment
 		elif(major=='SE'):
@@ -4641,7 +4745,7 @@ def remainingRequirements(takenClasses, college, major):
 			#One course in Environmental or Political Economics: POL SCI 126A or 139B; GEOG C110, C112, or 156; DEV STD C100; ECON C125; ENVECON 100, C101, 131, 140AC, 153, 161, or C180; ERG C180; ISF C101; PEIS 100 or 101; GPP 115/IAS 115; PUB POL C103
 			#Capstone Presentation. ESPM 194B (1-2) Research or poster presentation (Final semester of the senior year)
 			#Seven courses from the Area of Concentration requirement
-			
+			ans.append({'reqName':'I am sorry this major is not yet supported', 'reqCompleted':False, 'reqDescription':'','courseDone':[], 'courseLeft':[]})
 			return ans
 		#Environmental Economics and Policy
 		elif(major=='EEP'):
@@ -4654,8 +4758,7 @@ def remainingRequirements(takenClasses, college, major):
 			#Quantitative Methods: EEP C115 or EEP C118
 			#At least 5 courses to form an Area of Concentration: 3 of these must be upper-division EEP courses
 			#A total of at least 5 upper division EEP courses (not 195-199)
-			
-			
+			ans.append({'reqName':'I am sorry this major is not yet supported', 'reqCompleted':False, 'reqDescription':'','courseDone':[], 'courseLeft':[]})
 			return ans
 		#Should not occur but in the case that the major given does not match
 		else:
@@ -4664,7 +4767,138 @@ def remainingRequirements(takenClasses, college, major):
 	elif (college=='LettersAndSciences'):
 		# College Requirements
 		if (major=='COMPSCI'):
-			
+			#design course: 1 of CSC149, 150,160,162,164,169,184,186
+			design={'COMPSCI.C149':'CS 149','COMPSCI.150':'CS 150','COMPSCI.160':'CS 160','COMPSCI.162':'CS 162','COMPSCI.164':'CS 164','COMPSCI.169':'CS 169','COMPSCI.184':'CS 184','COMPSCI.186':'CS 186'}
+			designnum=0
+			designTaken=[]
+			designLeft=[]
+			for item in design:
+				if item in takenClasses:
+					designnum+=1
+					designTaken.append(design[item])
+				else:
+					designLeft.append(design[item])
+			if designnum>=1:
+				ans.append({'reqName':'Design Requirement', 'reqCompleted':True, 'reqDescription':"You must take one design course from CS: C149, 150,160,162,164,169,184, or 186",'courseDone':designTaken, 'courseLeft':designLeft})
+			else:
+				ans.append({'reqName':'Design Requirement', 'reqCompleted':False, 'reqDescription':"You must take one design course from CS: C149, 150,160,162,164,169,184, or 186",'courseDone':designTaken, 'courseLeft':designLeft})
+			#upper div cs: 2 of 152,161,170,172,174,176,188,189
+			udcs={'COMPSCI.152':'CS 152','COMPSCI.161':'CS 161','COMPSCI.170':'CS 170','COMPSCI.172':'CS 172','COMPSCI.174':'CS 174','COMPSCI.176':'CS 176','COMPSCI.188':'CS 188','COMPSCI.189':'CS 189'}
+			udcsnum=0
+			udcsTaken=[]
+			udcsLeft=[]
+			for item in udcs:
+				if item in takenClasses:
+					udcsnum+=1
+					udcsTaken.append(udcs[item])
+				else:
+					udcsLeft.append(udcs[item])
+			counted=False
+			for item in designTaken:
+				if (not counted):
+					udcsTaken.append(item+ ' (counted for Design Requirement)')
+					counted=True
+				else:
+					udcsTaken.append(item)
+			if(udcsnum>=2) or ((udcsnum+designnum)>=3): #Marion changed design to design num
+				ans.append({'reqName':'Upper Division Computer Science', 'reqCompleted':True, 'reqDescription':"You must take at least two upper division computer science courses in addition to the one course for the design requirement",'courseDone':udcsTaken, 'courseLeft':designLeft+udcsLeft})
+			else:
+				ans.append({'reqName':'Upper Division Computer Science', 'reqCompleted':False, 'reqDescription':"You must take at least two upper division computer science courses in addition to the one course for the design requirement",'courseDone':udcsTaken, 'courseLeft':designLeft+udcsLeft})
+			#upper div eeccs: 2 of EE or CS upper div
+			#100,105,113,117,118,120,121,122,123,C125,126,127,C128,129,130,134,137A, 137B,140,141,142,144,C145B,C145L,C145M, C145O,147,C149,192
+			udee={'ELENG.100':'EE 100', 'ELENG.105':'EE 105', 'ELENG.113':'EE 113', 'ELENG.117':'EE 117', 'ELENG.118':'EE 118', 'ELENG.120':'EE 120', 'ELENG.121':'EE 121', 'ELENG.122':'EE 122', 'ELENG.123':'EE 123', 'ELENG.C125':'EE C125', 'ELENG.126':'EE 126', 'ELENG.127':'EE 127', 'ELENG.C128':'EE C128', 'ELENG.129':'EE 129', 'ELENG.130':'EE 130', 'ELENG.134':'EE 134', 'ELENG.137A':'EE 137A', 'ELENG.137B':'EE 137B', 'ELENG.140':'EE 140', 'ELENG.141':'EE 141', 'ELENG.142':'EE 142', 'ELENG.144':'EE 144', 'ELENG.C145B':'EE C145B', 'ELENG.C145L':'EE C145L', 'ELENG.C145M':'EE C145M', 'ELENG.C145O':'EE C145O', 'ELENG.147':'EE 147', 'ELENG.C149':'EE C149', 'ELENG.192':'EE 192'}
+			udeenum=0
+			udeeTaken=[]
+			udeeLeft=[]
+			for item in udee:
+				if item in takenClasses:
+					udeenum+=1
+					udeeTaken.append(udee[item])
+				else:
+					udeeLeft.append(udee[item])
+			counts=0
+			for item in udcsTaken:
+				if '(counted for Design Requirement)' in item:
+					udeeTaken.append(item)
+				elif counts>=2:
+					udeeTaken.append(item)
+				else:
+					counts+=1
+					udeeTaken.append(item+ ' (counted for Upper Division Computer Science Requirement)')
+			if(udeenum>=2) or ((udeenum+udcsnum)>=4) or ((udeenum+udcsnum+designnum)>=5):
+				ans.append({'reqName':'Upper Division EECS', 'reqCompleted':True, 'reqDescription':"You must take at least two upper division computer science or electrical engineering courses in addition to the one course for the design requirement and two courses for the upper division computer science requirement",'courseDone':udeeTaken, 'courseLeft':designLeft+udcsLeft+udeeLeft})
+			else:
+				ans.append({'reqName':'Upper Division EECS', 'reqCompleted':False, 'reqDescription':"You must take at least two upper division computer science or electrical engineering courses in addition to the one course for the design requirement and two courses for the upper division computer science requirement",'courseDone':udeeTaken, 'courseLeft':designLeft+udcsLeft+udeeLeft})
+			#tech electives: 2 of Arch 122,Arch 129,Arch 222,Arch 229,Art 175, Astron C162, Bio Eng 104,Bio Eng 131/231,Bio Eng 143/243,Bio Eng 240,UGBA 103,UGBA 119,UGBA 137,UGBA 140,UGBA 146,UGBA 152,CNM 190,CNM 290,Chem 120A 
+				#Chem 120B,Chem C130, Cog Sci C101,Cog Sci C110,Cog Sci C127,Cog Sci C131,Geog C188,Film 140,EPS 104,EPS C162,Info 152,Info 214,Info 219,Info 242,Info 256,Info 257,Info 290-8,Info 296A,Ling C105,Ling C109,Ling 120,Ling 158,
+				#MCB 102,MCB 130L,MCB 150L,MCB 160L,MCB 166,MCB 262,MCB C100A,Music 108,Music 158,Music 209,Psych 101,Psych 123,Psych 128/290Q,VS 265
+				#Civil Engineering , Computer Science, Electrical Eng. (EECS), Engineering, Mathematics,Mechanical Engineering,Physics,
+				# Statistics
+				#Except Civil Engineering 192, 252L, and 290R,Except Engineering 102,Except Mathematics 160, Except Statistics 131A, 131B, and 131F
+			te={ 'ARCH.122':'Arch 122','ARCH.129':'Arch 129','ARCH.222':'Arch 222','ARCH.229':'Arch 229','ART.175':'Art 175', 'ASTRON.C162':'Astron C162','BIOENG.104':'Bio Eng 104','BIOENG.131':'Bio Eng 131','BIOENG.231':'Bio Eng 231','BIOENG.143':'Bio Eng 143','BIOENG.243':'Bio Eng 243','BIOENG.240':'Bio Eng 240','UGBA.103':'UGBA 103','UGBA.119':'UGBA 119','UGBA.137':'UGBA 137','UGBA.140':'UGBA 140','UGBA.146':'UGBA 146','UGBA.152':'UGBA 152','NWMEDIA.190':'CNM 190','NWMEDIA.290':'CNM 290','CHEM.120A':'Chem 120A',
+				'MCELLBI.102':'MCB 102','MCELLBI.130L':'MCB 130L','MCELLBI.150L':'MCB 150L','MCELLBI.160L':'MCB 160L','MCELLBI.166':'MCB 166','MCELLBI.262':'MCB 262','MCELLBI.C100A':'MCB C100A','MUSIC.108':'Music 108','MUSIC.158':'Music 158','MUSIC.209':'Music 209','PSYCH.101':'Psych 101','PSYCH.123':'Psych 123','PSYCH.128':'Psych 128','PSYCH.290Q':'Psych 290Q','VISSCI.265':'VS 265',
+				'CIVENG.100':'CivEng 100', 'CIVENG.101':'CivEng 101', 'CIVENG.103':'CivEng 103', 'CIVENG.105':'CivEng 105', 'CIVENG.C106':'CivEng C106', 'CIVENG.107':'CivEng 107', 'CIVENG.108':'CivEng 108', 'CIVENG.111':'CivEng 111', 'CIVENG.111L':'CivEng 111L', 'CIVENG.112':'CivEng 112', 'CIVENG.113N':'CivEng 113N', 'CIVENG.114':'CivEng 114', 'CIVENG.115':'CivEng 115', 'CIVENG.C116':'CivEng C116', 'CIVENG.120':'CivEng 120', 'CIVENG.121':'CivEng 121', 'CIVENG.122L':'CivEng 122L', 'CIVENG.122N':'CivEng 122N',
+				'CIVENG.123L':'CivEng 123L', 'CIVENG.123N':'CivEng 123N', 'CIVENG.124':'CivEng 124', 'CIVENG.130N':'CivEng 130N', 'CIVENG.C133':'CivEng C133', 'CIVENG.140':'CivEng 140', 'CIVENG.153':'CivEng 153', 'CIVENG.155':'CivEng 155', 'CIVENG.156':'CivEng 156', 'CIVENG.165':'CivEng 165', 'CIVENG.166':'CivEng 166', 'CIVENG.167':'CivEng 167', 'CIVENG.169C':'CivEng 169C', 'CIVENG.171':'CivEng 171', 'CIVENG.173':'CivEng 173', 'CIVENG.174':'CivEng 174', 'CIVENG.175':'CivEng 175', 'CIVENG.176':'CivEng 176', 
+				'CIVENG.177':'CivEng 177', 'CIVENG.C178':'CivEng C178', 'CIVENG.179':'CivEng 179', 'CIVENG.180':'CivEng 180', 'CIVENG.186':'CivEng 186', 'CIVENG.191':'CivEng 191','CIVENG.193':'CivEng 193', 'CIVENG.H194':'CivEng H194', 'CIVENG.197':'CivEng 197', 'CIVENG.198':'CivEng 198', 'CIVENG.199':'CivEng 199', 'CIVENG.200A':'CivEng 200A', 'CIVENG.200B':'CivEng 200B', 'CIVENG.200C':'CivEng 200C', 'CIVENG.202A':'CivEng 202A', 'CIVENG.203A':'CivEng 203A', 'CIVENG.203N':'CivEng 203N',
+				'CIVENG.205B':'CivEng 205B', 'CIVENG.209':'CivEng 209', 'CIVENG.210A':'CivEng 210A', 'CIVENG.211A':'CivEng 211A', 'CIVENG.211B':'CivEng 211B', 'CIVENG.213':'CivEng 213', 'CIVENG.217':'CivEng 217', 'CIVENG.218A':'CivEng 218A', 'CIVENG.218B':'CivEng 218B', 'CIVENG.218C':'CivEng 218C', 'CIVENG.220':'CivEng 220', 'CIVENG.221':'CivEng 221', 'CIVENG.222':'CivEng 222', 'CIVENG.223':'CivEng 223', 'CIVENG.225':'CivEng 225', 'CIVENG.226':'CivEng 226', 'CIVENG.227':'CivEng 227', 'CIVENG.228':'CivEng 228', 
+				'CIVENG.229':'CivEng 229', 'CIVENG.C231':'CivEng C231', 'CIVENG.232':'CivEng 232', 'CIVENG.233':'CivEng 233', 'CIVENG.234':'CivEng 234', 'CIVENG.C235':'CivEng C235', 'CIVENG.C236':'CivEng C236', 'CIVENG.C237':'CivEng C237', 'CIVENG.240':'CivEng 240', 'CIVENG.241':'CivEng 241', 'CIVENG.244':'CivEng 244', 'CIVENG.245':'CivEng 245', 'CIVENG.246':'CivEng 246', 'CIVENG.247':'CivEng 247', 'CIVENG.248':'CivEng 248', 'CIVENG.249':'CivEng 249', 'CIVENG.C250N':'CivEng C250N', 'CIVENG.251':'CivEng 251', 
+				'CIVENG.252':'CivEng 252', 'CIVENG.253':'CivEng 253', 'CIVENG.254':'CivEng 254', 'CIVENG.255':'CivEng 255', 'CIVENG.256':'CivEng 256', 'CIVENG.258':'CivEng 258', 'CIVENG.C258':'CivEng C258', 'CIVENG.259':'CivEng 259', 'CIVENG.260':'CivEng 260', 'CIVENG.261':'CivEng 261', 'CIVENG.262':'CivEng 262', 'CIVENG.263':'CivEng 263', 'CIVENG.264':'CivEng 264', 'CIVENG.C265':'CivEng C265', 'CIVENG.268A':'CivEng 268A', 'CIVENG.268B':'CivEng 268B', 'CIVENG.268D':'CivEng 268D', 'CIVENG.268E':'CivEng 268E', 
+				'CIVENG.268H':'CivEng 268H', 'CIVENG.268I':'CivEng 268I', 'CIVENG.268K':'CivEng 268K', 'CIVENG.270':'CivEng 270', 'CIVENG.271':'CivEng 271', 'CIVENG.272':'CivEng 272', 'CIVENG.273':'CivEng 273', 'CIVENG.275':'CivEng 275', 'CIVENG.C276':'CivEng C276', 'CIVENG.277':'CivEng 277', 'CIVENG.281':'CivEng 281', 'CIVENG.285C':'CivEng 285C', 'CIVENG.286':'CivEng 286', 'CIVENG.C289':'CivEng C289', 'CIVENG.290':'CivEng 290', 'CIVENG.C290U':'CivEng C290U', 'CIVENG.290F':'CivEng 290F', 'CIVENG.290I':'CivEng 290I',
+				'CIVENG.290J':'CivEng 290J', 'CIVENG.290T':'CivEng 290T', 'CIVENG.C291F':'CivEng C291F', 'CIVENG.291G':'CivEng 291G', 'CIVENG.292A':'CivEng 292A', 'CIVENG.297':'CivEng 297', 'CIVENG.298':'CivEng 298', 'CIVENG.299':'CivEng 299',
+				'COMPSCI.C219D':'CS C219D', 'COMPSCI.C249A':'CS C249A', 'COMPSCI.250':'CS 250', 'COMPSCI.252':'CS 252', 'COMPSCI.260A':'CS 260A', 'COMPSCI.260B':'CS 260B', 'COMPSCI.261':'CS 261', 'COMPSCI.261N':'CS 261N', 'COMPSCI.262A':'CS 262A', 'COMPSCI.262B':'CS 262B', 'COMPSCI.263':'CS 263', 'COMPSCI.264':'CS 264', 'COMPSCI.265':'CS 265', 'COMPSCI.266':'CS 266', 'COMPSCI.C267':'CS C267', 'COMPSCI.268':'CS 268', 'COMPSCI.270':'CS 270', 'COMPSCI.271':'CS 271', 'COMPSCI.273':'CS 273', 'COMPSCI.274':'CS 274', 
+				'COMPSCI.276':'CS 276', 'COMPSCI.C280':'CS C280', 'COMPSCI.C281A':'CS C281A', 'COMPSCI.C281B':'CS C281B', 'COMPSCI.283B':'CS 283B', 'COMPSCI.284A':'CS 284A', 'COMPSCI.284B':'CS 284B', 'COMPSCI.285':'CS 285', 'COMPSCI.286A':'CS 286A', 'COMPSCI.286B':'CS 286B', 'COMPSCI.287':'CS 287', 'COMPSCI.288':'CS 288', 'COMPSCI.289A':'CS 289A', 'COMPSCI.294':'CS 294', 'COMPSCI.C294P':'CS C294P', 'COMPSCI.297':'CS 297', 'COMPSCI.298':'CS 298', 'COMPSCI.299':'CS 299',
+				'ELENG.210':'EE 210', 'ELENG.C213':'EE C213', 'ELENG.215A':'EE 215A', 'ELENG.218A':'EE 218A', 'ELENG.219A':'EE 219A', 'ELENG.219B':'EE 219B', 'ELENG.219C':'EE 219C', 'ELENG.C219D':'EE C219D', 'ELENG.C220A':'EE C220A', 'ELENG.C220B':'EE C220B', 'ELENG.C220C':'EE C220C', 'ELENG.221A':'EE 221A', 'ELENG.222':'EE 222', 'ELENG.223':'EE 223', 'ELENG.224A':'EE 224A', 'ELENG.224B':'EE 224B', 'ELENG.225A':'EE 225A', 'ELENG.225B':'EE 225B', 'ELENG.C225E':'EE C225E', 'ELENG.225D':'EE 225D', 'ELENG.226A':'EE 226A', 
+				'ELENG.226B':'EE 226B', 'ELENG.227AT':'EE 227AT', 'ELENG.227BT':'EE 227BT', 'ELENG.C227B':'EE C227B', 'ELENG.C227C':'EE C227C', 'ELENG.C227T':'EE C227T', 'ELENG.228A':'EE 228A', 'ELENG.229A':'EE 229A', 'ELENG.229B':'EE 229B', 'ELENG.230A':'EE 230A', 'ELENG.230B':'EE 230B', 'ELENG.230C':'EE 230C', 'ELENG.W230A':'EE W230A', 'ELENG.W230B':'EE W230B', 'ELENG.232':'EE 232', 'ELENG.C235':'EE C235', 'ELENG.236A':'EE 236A', 'ELENG.C239':'EE C239', 'ELENG.240A':'EE 240A', 'ELENG.240B':'EE 240B', 'ELENG.240C':'EE 240C',
+				'ELENG.W240A':'EE W240A', 'ELENG.W240B':'EE W240B', 'ELENG.W240C':'EE W240C', 'ELENG.241A':'EE 241A', 'ELENG.241B':'EE 241B', 'ELENG.W241A':'EE W241A', 'ELENG.W241B':'EE W241B', 'ELENG.242A':'EE 242A', 'ELENG.242B':'EE 242B', 'ELENG.W242A':'EE W242A', 'ELENG.W242B':'EE W242B', 'ELENG.243':'EE 243', 'ELENG.244':'EE 244', 'ELENG.W244':'EE W244', 'ELENG.C246':'EE C246', 'ELENG.247A':'EE 247A', 'ELENG.C247B':'EE C247B', 'ELENG.W247B':'EE W247B', 'ELENG.C249':'EE C249', 'ELENG.C249A':'EE C249A', 'ELENG.290A':'EE 290A',
+				'ELENG.290B':'EE 290B', 'ELENG.290C':'EE 290C', 'ELENG.290D':'EE 290D', 'ELENG.290F':'EE 290F', 'ELENG.290N':'EE 290N', 'ELENG.290O':'EE 290O', 'ELENG.290P':'EE 290P', 'ELENG.290Q':'EE 290Q', 'ELENG.290S':'EE 290S', 'ELENG.290T':'EE 290T', 'ELENG.W290C':'EE W290C', 'ELENG.290Y':'EE 290Y', 'ELENG.C2991':'EE C2991', 'ELENG.C291E':'EE C291E', 'ELENG.298':'EE 298', 'ELENG.299':'EE 299',
+				'ENGIN.115':'E 115', 'ENGIN.117':'E 117', 'ENGIN.120':'E 120', 'ENGIN.125':'E 125', 'ENGIN.128':'E 128', 'ENGIN.147':'E 147', 'ENGIN.157AC':'E 157AC', 'ENGIN.177':'E 177', 'ENGIN.194':'E 194', 'ENGIN.198':'E 198', 'ENGIN.201':'E 201', 'ENGIN.230':'E 230', 'ENGIN.231':'E 231', 'ENGIN.C233':'E C233', 'ENGIN.266A':'E 266A', 'ENGIN.266B':'E 266B', 'ENGIN.271':'E 271', 'ENGIN.272':'E 272', 'ENGIN.C282':'E C282', 'ENGIN.290':'E 290', 'ENGIN.290A':'E 290A', 'ENGIN.290B':'E 290B', 'ENGIN.290E':'E 290E', 'ENGIN.290G':'E 290G',
+				'ENGIN.290H':'E 290H', 'ENGIN.290J':'E 290J', 'ENGIN.290O':'E 290O', 'ENGIN.290P':'E 290P', 'ENGIN.290S':'E 290S', 'ENGIN.295':'E 295', 'ENGIN.296MA':'E 296MA', 'ENGIN.296MB':'E 296MB', 'ENGIN.298A':'E 298A', 'ENGIN.298B':'E 298B',
+				'MATH.C103':'Math C103', 'MATH.104':'Math 104', 'MATH.H104':'Math H104', 'MATH.105':'Math 105', 'MATH.110':'Math 110', 'MATH.H110':'Math H110', 'MATH.113':'Math 113', 'MATH.H113':'Math H113', 'MATH.114':'Math 114', 'MATH.115':'Math 115', 'MATH.116':'Math 116', 'MATH.118':'Math 118', 'MATH.121A':'Math 121A', 'MATH.121B':'Math 121B', 'MATH.123':'Math 123', 'MATH.125A':'Math 125A', 'MATH.126':'Math 126', 'MATH.127':'Math 127', 'MATH.128A':'Math 128A', 'MATH.128B':'Math 128B', 'MATH.130':'Math 130', 'MATH.135':'Math 135', 
+				'MATH.136':'Math 136', 'MATH.140':'Math 140', 'MATH.141':'Math 141', 'MATH.142':'Math 142', 'MATH.143':'Math 143', 'MATH.151':'Math 151', 'MATH.152':'Math 152', 'MATH.153':'Math 153',  'MATH.170':'Math 170', 'MATH.172':'Math 172', 'MATH.185':'Math 185', 'MATH.H185':'Math H185', 'MATH.189':'Math 189', 'MATH.191':'Math 191', 'MATH.195':'Math 195', 'MATH.196':'Math 196', 'MATH.197':'Math 197', 'MATH.198':'Math 198', 'MATH.198BC':'Math 198BC', 'MATH.199':'Math 199', 'MATH.202A':'Math 202A', 'MATH.202B':'Math 202B',
+				'MATH.203':'Math 203', 'MATH.204':'Math 204', 'MATH.205':'Math 205', 'MATH.206':'Math 206', 'MATH.208':'Math 208', 'MATH.209':'Math 209', 'MATH.212':'Math 212', 'MATH.214':'Math 214', 'MATH.215A':'Math 215A', 'MATH.215B':'Math 215B', 'MATH.C218A':'Math C218A', 'MATH.C218B':'Math C218B', 'MATH.219':'Math 219', 'MATH.220':'Math 220', 'MATH.221':'Math 221', 'MATH.222A':'Math 222A', 'MATH.222B':'Math 222B', 'MATH.C223A':'Math C223A', 'MATH.C2223B':'Math C2223B', 'MATH.224A':'Math 224A', 'MATH.224B':'Math 224B', 'MATH.225A':'Math 225A',
+				'MATH.225B':'Math 225B', 'MATH.227A':'Math 227A', 'MATH.228A':'Math 228A', 'MATH.228B':'Math 228B', 'MATH.229':'Math 229', 'MATH.235A':'Math 235A', 'MATH.236':'Math 236', 'MATH.239':'Math 239', 'MATH.C239':'Math C239', 'MATH.240':'Math 240', 'MATH.241':'Math 241', 'MATH.242':'Math 242', 'MATH.C243':'Math C243', 'MATH.245A':'Math 245A', 'MATH.249':'Math 249', 'MATH.250A':'Math 250A', 'MATH.250B':'Math 250B', 'MATH.251':'Math 251', 'MATH.252':'Math 252', 'MATH.253':'Math 253', 'MATH.254A':'Math 254A', 'MATH.255':'Math 255', 
+				'MATH.256A':'Math 256A', 'MATH.256B':'Math 256B', 'MATH.257':'Math 257', 'MATH.258':'Math 258', 'MATH.261A':'Math 261A', 'MATH.261B':'Math 261B', 'MATH.265':'Math 265', 'MATH.270':'Math 270', 'MATH.273F':'Math 273F', 'MATH.273I':'Math 273I', 'MATH.274':'Math 274', 'MATH.275':'Math 275', 'MATH.276':'Math 276', 'MATH.277':'Math 277', 'MATH.278':'Math 278', 'MATH.279':'Math 279', 'MATH.290':'Math 290', 'MATH.295':'Math 295', 'MATH.299':'Math 299',
+				'MECENG.101':'MecEng 101', 'MECENG.102A':'MecEng 102A', 'MECENG.102B':'MecEng 102B', 'MECENG.104':'MecEng 104', 'MECENG.106':'MecEng 106', 'MECENG.107':'MecEng 107', 'MECENG.108':'MecEng 108', 'MECENG.109':'MecEng 109', 'MECENG.110':'MecEng 110', 'MECENG.C115':'MecEng C115', 'MECENG.C117':'MecEng C117', 'MECENG.118':'MecEng 118', 'MECENG.119':'MecEng 119', 'MECENG.120':'MecEng 120', 'MECENG.122':'MecEng 122', 'MECENG.127':'MecEng 127', 'MECENG.128':'MecEng 128', 'MECENG.130':'MecEng 130', 'MECENG.131':'MecEng 131', 
+				'MECENG.132':'MecEng 132', 'MECENG.133':'MecEng 133', 'MECENG.C134':'MecEng C134', 'MECENG.135':'MecEng 135', 'MECENG.138':'MecEng 138', 'MECENG.140':'MecEng 140', 'MECENG.146':'MecEng 146', 'MECENG.150A':'MecEng 150A', 'MECENG.151':'MecEng 151', 'MECENG.163':'MecEng 163', 'MECENG.164':'MecEng 164', 'MECENG.165':'MecEng 165', 'MECENG.167':'MecEng 167', 'MECENG.168':'MecEng 168', 'MECENG.170':'MecEng 170', 'MECENG.171':'MecEng 171', 'MECENG.173':'MecEng 173', 'MECENG.175':'MecEng 175', 'MECENG.C176':'MecEng C176', 
+				'MECENG.C180':'MecEng C180', 'MECENG.185':'MecEng 185', 'MECENG.190A':'MecEng 190A', 'MECENG.190K':'MecEng 190K', 'MECENG.190L':'MecEng 190L', 'MECENG.190M':'MecEng 190M', 'MECENG.190Y':'MecEng 190Y', 'MECENG.191AC':'MecEng 191AC', 'MECENG.191K':'MecEng 191K', 'MECENG.H194':'MecEng H194', 'MECENG.196':'MecEng 196', 'MECENG.197':'MecEng 197', 'MECENG.198':'MecEng 198', 'MECENG.199':'MecEng 199', 'MECENG.C201':'MecEng C201', 'MECENG.C202':'MecEng C202', 'MECENG.203':'MecEng 203', 'MECENG.C210':'MecEng C210', 'MECENG.211':'MecEng 211', 
+				'MECENG.C212':'MecEng C212', 'MECENG.C213':'MecEng C213', 'MECENG.C214':'MecEng C214', 'MECENG.C215':'MecEng C215', 'MECENG.C216':'MecEng C216', 'MECENG.C217':'MecEng C217', 'MECENG.C218':'MecEng C218', 'MECENG.C219':'MecEng C219', 'MECENG.220':'MecEng 220', 'MECENG.C223':'MecEng C223', 'MECENG.224':'MecEng 224', 'MECENG.C225':'MecEng C225', 'MECENG.226':'MecEng 226', 'MECENG.227':'MecEng 227', 'MECENG.229':'MecEng 229', 'MECENG.230':'MecEng 230', 'MECENG.C231A':'MecEng C231A', 'MECENG.C231B':'MecEng C231B', 'MECENG.C232':'MecEng C232',
+				'MECENG.233':'MecEng 233', 'MECENG.234':'MecEng 234', 'MECENG.235':'MecEng 235', 'MECENG.C236':'MecEng C236', 'MECENG.237':'MecEng 237', 'MECENG.238':'MecEng 238', 'MECENG.239':'MecEng 239', 'MECENG.240A':'MecEng 240A', 'MECENG.240B':'MecEng 240B', 'MECENG.241A':'MecEng 241A', 'MECENG.241B':'MecEng 241B', 'MECENG.243245':'MecEng 243245', 'MECENG.246':'MecEng 246', 'MECENG.251':'MecEng 251', 'MECENG.252':'MecEng 252', 'MECENG.253':'MecEng 253', 'MECENG.254':'MecEng 254', 'MECENG.256':'MecEng 256', 'MECENG.257':'MecEng 257', 
+				'MECENG.258':'MecEng 258', 'MECENG.259':'MecEng 259', 'MECENG.260A':'MecEng 260A', 'MECENG.260B':'MecEng 260B', 'MECENG.262':'MecEng 262', 'MECENG.263':'MecEng 263', 'MECENG.266':'MecEng 266', 'MECENG.C268':'MecEng C268', 'MECENG.273':'MecEng 273', 'MECENG.274':'MecEng 274', 'MECENG.275':'MecEng 275', 'MECENG.277':'MecEng 277', 'MECENG.C279':'MecEng C279', 'MECENG.280A':'MecEng 280A', 'MECENG.280B':'MecEng 280B', 'MECENG.281':'MecEng 281', 'MECENG.282':'MecEng 282', 'MECENG.283':'MecEng 283', 'MECENG.284':'MecEng 284', 
+				'MECENG.285A':'MecEng 285A', 'MECENG.285B':'MecEng 285B', 'MECENG.285C':'MecEng 285C', 'MECENG.285D':'MecEng 285D', 'MECENG.286':'MecEng 286', 'MECENG.288':'MecEng 288', 'MECENG.289':'MecEng 289', 'MECENG.290C':'MecEng 290C', 'MECENG.C290S':'MecEng C290S', 'MECENG.C290U':'MecEng C290U', 'MECENG.C290X':'MecEng C290X', 'MECENG.290G':'MecEng 290G', 'MECENG.290H':'MecEng 290H', 'MECENG.290I':'MecEng 290I', 'MECENG.290J':'MecEng 290J', 'MECENG.290KA':'MecEng 290KA', 'MECENG.290KB':'MecEng 290KB', 'MECENG.290L':'MecEng 290L', 
+				'MECENG.290M':'MecEng 290M', 'MECENG.290N':'MecEng 290N', 'MECENG.290P':'MecEng 290P', 'MECENG.290Q':'MecEng 290Q', 'MECENG.290R':'MecEng 290R', 'MECENG.290T':'MecEng 290T', 'MECENG.290U':'MecEng 290U', 'MECENG.297':'MecEng 297', 'MECENG.298':'MecEng 298', 'MECENG.299':'MecEng 299',
+				'PHYSICS.100':'Physics 100', 'PHYSICS.105':'Physics 105', 'PHYSICS.110A':'Physics 110A', 'PHYSICS.110B':'Physics 110B', 'PHYSICS.111':'Physics 111', 'PHYSICS.112':'Physics 112', 'PHYSICS.129':'Physics 129', 'PHYSICS.130':'Physics 130', 'PHYSICS.132':'Physics 132', 'PHYSICS.137A':'Physics 137A', 'PHYSICS.137B':'Physics 137B', 'PHYSICS.138':'Physics 138', 'PHYSICS.139':'Physics 139', 'PHYSICS.141A':'Physics 141A', 'PHYSICS.141B':'Physics 141B', 'PHYSICS.142':'Physics 142', 'PHYSICS.151':'Physics 151', 'PHYSICS.C161':'Physics C161',
+				'PHYSICS.177':'Physics 177', 'PHYSICS.H190':'Physics H190', 'PHYSICS.C191':'Physics C191', 'PHYSICS.H195A':'Physics H195A', 'PHYSICS.H195B':'Physics H195B', 'PHYSICS.198':'Physics 198', 'PHYSICS.198BC':'Physics 198BC', 'PHYSICS.199':'Physics 199', 'PHYSICS.C201':'Physics C201', 'PHYSICS.C202':'Physics C202', 'PHYSICS.C203':'Physics C203', 'PHYSICS.205A':'Physics 205A', 'PHYSICS.205B':'Physics 205B', 'PHYSICS.C207':'Physics C207', 'PHYSICS.209':'Physics 209', 'PHYSICS.211':'Physics 211', 'PHYSICS.212':'Physics 212', 'PHYSICS.216':'Physics 216',
+				'PHYSICS.221A':'Physics 221A', 'PHYSICS.221B':'Physics 221B', 'PHYSICS.226':'Physics 226', 'PHYSICS.C228':'Physics C228', 'PHYSICS.229':'Physics 229', 'PHYSICS.231':'Physics 231', 'PHYSICS.232A':'Physics 232A', 'PHYSICS.232B':'Physics 232B', 'PHYSICS.233A':'Physics 233A', 'PHYSICS.233B':'Physics 233B', 'PHYSICS.234A':'Physics 234A', 'PHYSICS.234B':'Physics 234B', 'PHYSICS.238':'Physics 238', 'PHYSICS.240A':'Physics 240A', 'PHYSICS.240B':'Physics 240B', 'PHYSICS.242A':'Physics 242A', 'PHYSICS.242B':'Physics 242B', 'PHYSICS.250':'Physics 250',
+				'PHYSICS.251':'Physics 251', 'PHYSICS.C254':'Physics C254', 'PHYSICS.C285':'Physics C285', 'PHYSICS.290A':'Physics 290A', 'PHYSICS.290B':'Physics 290B', 'PHYSICS.C290C':'Physics C290C', 'PHYSICS.290D':'Physics 290D', 'PHYSICS.290E':'Physics 290E', 'PHYSICS.290F':'Physics 290F', 'PHYSICS.290G':'Physics 290G', 'PHYSICS.290H':'Physics 290H', 'PHYSICS.290I':'Physics 290I', 'PHYSICS.290J':'Physics 290J', 'PHYSICS.290K':'Physics 290K', 'PHYSICS.290L':'Physics 290L', 'PHYSICS.290N':'Physics 290N', 'PHYSICS.290P':'Physics 290P', 'PHYSICS.290Q':'Physics 290Q',
+				'PHYSICS.290R':'Physics 290R', 'PHYSICS.290S':'Physics 290S', 'PHYSICS.290T':'Physics 290T', 'PHYSICS.290X':'Physics 290X', 'PHYSICS.290Y':'Physics 290Y', 'PHYSICS.290Z':'Physics 290Z', 'PHYSICS.295':'Physics 295', 'PHYSICS.299':'Physics 299',
+				'STAT.100':'Stats 100', 'STAT.132':'Stats 132', 'STAT.133':'Stats 133', 'STAT.134':'Stats 134', 'STAT.135':'Stats 135', 'STAT.150':'Stats 150', 'STAT.151A':'Stats 151A', 'STAT.151B':'Stats 151B', 'STAT.152':'Stats 152', 'STAT.153':'Stats 153', 'STAT.154':'Stats 154', 'STAT.155':'Stats 155', 'STAT.157':'Stats 157', 'STAT.158':'Stats 158', 'STAT.H195':'Stats H195', 'STAT.197':'Stats 197', 'STAT.198':'Stats 198', 'STAT.199':'Stats 199', 'STAT.200A':'Stats 200A', 'STAT.200B':'Stats 200B', 'STAT.201A':'Stats 201A', 'STAT.201B':'Stats 201B', 
+				'STAT.204':'Stats 204', 'STAT.C205A':'Stats C205A', 'STAT.C205B':'Stats C205B', 'STAT.C206A':'Stats C206A', 'STAT.C206B':'Stats C206B', 'STAT.210A':'Stats 210A', 'STAT.210B':'Stats 210B', 'STAT.212A':'Stats 212A', 'STAT.212B':'Stats 212B', 'STAT.215A':'Stats 215A', 'STAT.215B':'Stats 215B', 'STAT.222':'Stats 222', 'STAT.230A':'Stats 230A', 'STAT.232':'Stats 232', 'STAT.239A':'Stats 239A', 'STAT.239B':'Stats 239B', 'STAT.C239A':'Stats C239A', 'STAT.240':'Stats 240', 'STAT.C241A':'Stats C241A', 'STAT.C241B':'Stats C241B', 'STAT.243':'Stats 243',
+				'STAT.244':'Stats 244', 'STAT.C245A':'Stats C245A', 'STAT.C245B':'Stats C245B', 'STAT.C245C':'Stats C245C', 'STAT.C245D':'Stats C245D', 'STAT.C245E':'Stats C245E', 'STAT.C245F':'Stats C245F', 'STAT.C247C':'Stats C247C', 'STAT.248':'Stats 248', 'STAT.C249A':'Stats C249A', 'STAT.260':'Stats 260', 'STAT.C261':'Stats C261', 'STAT.272':'Stats 272', 'STAT.278B':'Stats 278B', 'STAT.298':'Stats 298', 'STAT.299':'Stats 299'
+				}
+			tenum=0
+			teTaken=[]
+			teLeft=[]
+			for item in te:
+				if item in takenClasses:
+					tenum+=1
+					teTaken.append(te[item])
+				else:
+					teLeft.append(te[item])
+			counts=0
+			for item in udeeTaken:
+				if '(counted for Design Requirement)' in item:
+					teTaken.append(item)
+				elif '(counted for Upper Division Computer Science Requirement)' in item:
+					teTaken.append(item)
+				elif counts>=2:
+					teTaken.append(item)
+				else:
+					counts+=1
+					teTaken.append(item+ ' (counted for Upper Division EECS Requirement)')
+			if(tenum>=2) or ((tenum+udeenum)>=4)or((tenum+udeenum+udcsnum)>=6) or ((tenum+udeenum+udcsnum+designnum)>=7): #Marion changed
+				ans.append({'reqName':'Technical Electives', 'reqCompleted':True, 'reqDescription':"You must take at least two upper division technical electives in addition to the one course for the design requirement and two courses for the upper division computer science requirement and two courses for the upper division eecs requirement ",'courseDone':teTaken, 'courseLeft':teLeft+designLeft+udcsLeft+udeeLeft})
+			else:
+				ans.append({'reqName':'Technical Electives', 'reqCompleted':False, 'reqDescription':"You must take at least two upper division technical electives in addition to the one course for the design requirement and two courses for the upper division computer science requirement and two courses for the upper division eecs requirement ",'courseDone':teTaken, 'courseLeft':teLeft+designLeft+udcsLeft+udeeLeft})
 			return ans
 		else:
 			ans.append({'reqName':'I am sorry this major is not yet supported', 'reqCompleted':False, 'reqDescription':'','courseDone':[], 'courseLeft':[]})
