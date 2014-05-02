@@ -13,16 +13,18 @@
 
 <body class="noScroll">
 	<div class="wrapper">
-		
+
 		<header>
 	        <a href="/home/">
 	        	<div class="logoHead"></div>
 	        </a>
 	        <div class="userBar">
-	            Hello,
-	            <a href="/profile">
-	            	<div class="userIcon"></div>
-	            	{{ user.username }}</a>.
+	           <form action="/profile">
+	               <input class="button" type="submit" name="profile" value="Profile">
+	           </form>
+	           <form action="/dashboard">
+	               <input class="activeButton" type="submit" name="dashboard" value="Dashboard">
+	           </form>	           
 	            <form action="/logout">
 	                <input class="button" type="submit" name="logout" value="Logout">
 	            </form>
