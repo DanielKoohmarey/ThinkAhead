@@ -223,7 +223,7 @@ body.noScroll {
 	border-radius: 5px;
 	margin: 5px;
 	padding: 5px;
-	height: 100px;
+	height: 120px;
 	width: 150px;
 	word-wrap: break-word;
 	overflow: hidden;
@@ -232,9 +232,13 @@ body.noScroll {
 
 
 .semesterCourseList li{
-float:left;
+	float: left;
 }
 
+.plannerUtil {
+	border-spacing: 20px 2px;
+	border-collapse: separate;
+}
 
 .reqTitle {
 	margin-top: 1px;
@@ -248,22 +252,20 @@ float:left;
 
 ul {
 	list-style-type: none;
-	/*padding: 0px;*/
 	margin-top: 1px;
 	margin-bottom: 1px;
 }
 li.course {
-    margin-bottom:2px;
-    /* display:inline-block; */
-    background-color:#003262;
+    margin-bottom: 2px;
+    background-color: #003262;
     border-color: #FDB515;
-	border-style:solid;
-	border-width:2px;
+	border-style: solid;
+	border-width: 2px;
 	border-radius: 5px;
     color: white;
     cursor: move;
-    padding:3px;
-    max-width:150px;
+    padding: 3px;
+    max-width: 150px;
 }
 
 .coursePreview {
@@ -311,6 +313,18 @@ li.courseCompleted {
 
 }
 
+#deletePlannerCourse {
+	height: 40px;
+	width: 150px;
+	background-color: #D7D7D8;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #A7A7A8;
+	border-radius: 5px;
+	font-size: 80%;
+	text-align: center;
+	vertical-align: middle;
+}
 
 input {
 	width: 200px;
