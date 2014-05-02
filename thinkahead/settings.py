@@ -136,3 +136,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'thinkaheadapp@gmail.com'
+EMAIL_HOST_PASSWORD = 'darsplus'
+EMAIL_PORT = 587
