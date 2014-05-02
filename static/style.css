@@ -274,7 +274,9 @@ li.course {
 	border-radius: 5px;
 	min-height: 20px;
 	min-width: 100px;
+	max-width: 150px;
 	cursor: move;
+	padding: 3px;
 }
 
 li.courseCompleted {
