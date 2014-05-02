@@ -201,7 +201,9 @@ shorthandDict = {
             'LAS':'LATAMST',
             'AAS':'AFRICAM',
             'ES':'ETHSTD',
-            'SW':'SOCWEL'
+            'SW':'SOCWEL',
+            'CNM':'NWMEDIA',
+            'VS':'VISSCI'
 }
 
 reverseShorthandDict = dict (zip(shorthandDict.values(), shorthandDict.keys()))
