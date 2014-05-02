@@ -5,9 +5,9 @@ Makes a POST request to save current planners state represented as list of lists
 function savePlanners() {
 	var planners = getPlanners();
 	$.post( "/dashboard/", { 'planners[]': planners } );
-        window.setTimeout(function() {
-            location.reload(true);
-        }, 500);
+    window.setTimeout(function() {
+    	location.reload(true);
+    }, 500);
       
 }
 
@@ -56,14 +56,19 @@ var selector;
 for (var i = 0; i < numPlanners; i++) {
 	selector = '#planner' + (i + 1);
 	$(selector).sortable({
-		connectWith: '.sortableList'
+		connectWith: '.sortableList',
+		cursor: 'move',
+		placeholder: 'coursePreview'
 	});
 }
 
 for (var i = 0; i < numReqs; i++) {
 	selector = '#req' + (i + 1);
 	$(selector).sortable({
-		connectWith: '.sortableList'
+		connectWith: '.sortableList',
+		cursor: 'move',
+		placeholder: 'coursePreview'
+
 	});
 }
 
