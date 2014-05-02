@@ -347,39 +347,39 @@ class TestChem(TestCase):
 	def testHSS1(self):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover part of 3615-3617, change assert
-		ans= remainingRequirements(['AEROSPC.2A', 'AEROSPC.2B'], "College of Chemistry", 'B.S. Chemistry')
+		ans= remainingRequirements(['AEROSPC.2A', 'AEROSPC.2B'], "College of Chemistry", 'Chemical Biology')
 	def testHSS2(self):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover part of 3604-3606, change assert
-		ans= remainingRequirements(['COMLIT.120'], "College of Chemistry", 'B.S. Chemistry')
+		ans= remainingRequirements(['COMLIT.120'], "College of Chemistry", 'Chemical Biology')
 	def testHSS3(self):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover part of 3599-3601, change assert
-		ans= remainingRequirements(['ECON.100A'], "College of Chemistry", 'B.S. Chemistry')
+		ans= remainingRequirements(['ECON.100A'], "College of Chemistry", 'Chemical Biology')
 	def testHSS4(self):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover part of 3594-3596, change assert
-		ans= remainingRequirements(['ENGLISH.112'], "College of Chemistry", 'B.S. Chemistry')
+		ans= remainingRequirements(['ENGLISH.112'], "College of Chemistry", 'Chemical Biology')
 	def testHSS5(self):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover part of 3589-3591, change assert
-		ans= remainingRequirements(['FRENCH.120A'], "College of Chemistry", 'B.S. Chemistry')
+		ans= remainingRequirements(['FRENCH.120A'], "College of Chemistry", 'Chemical Biology')
 	def testHSS5(self):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover part of 3494-3589, change assert
-		ans= remainingRequirements(['GWS.14', 'GERMAN.41', 'HISTART.12', 'HISTORY.2', 'ITALIAN.24', 'LEGALST.155', 'MEDIAST.150', 'NATAMST.175', 'NESTUD.132', 'POLSCI.171', 'POLECON.98', 'PHILOS.110', 'SASIAN.121', 'SOCIOL.146', 'SLAVIC.190', 'SCADIN.150', 'RHETOR.108', 'SPANISH.163'], "College of Chemistry", 'B.S. Chemistry')
+		ans= remainingRequirements(['GWS.14', 'GERMAN.41', 'HISTART.12', 'HISTORY.2', 'ITALIAN.24', 'LEGALST.155', 'MEDIAST.150', 'NATAMST.175', 'NESTUD.132', 'POLSCI.171', 'POLECON.98', 'PHILOS.110', 'SASIAN.121', 'SOCIOL.146', 'SLAVIC.190', 'SCADIN.150', 'RHETOR.108', 'SPANISH.163'], "College of Chemistry", 'Chemical Biology')
 	def testR1AR1BAmy(self):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover part of 3644-3647, change assert
-		ans= remainingRequirements(['HIST.R1B', 'FILM.R1A'], "College of Chemistry", 'B.S. Chemistry')
+		ans= remainingRequirements(['HIST.R1B', 'FILM.R1A'], "College of Chemistry", 'Chemical Biology')
 	def testR1AAmy(self):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover part of 3644-3647, change assert
-		ans= remainingRequirements(['FILM.R1A'], "College of Chemistry", 'B.S. Chemistry')
+		ans= remainingRequirements(['FILM.R1A'], "College of Chemistry", 'Chemical Biology')
 	def testR1BAmy(self):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover part of 3644-3647, change assert
-		ans= remainingRequirements(['HIST.R1B'], "College of Chemistry", 'B.S. Chemistry')
+		ans= remainingRequirements(['HIST.R1B'], "College of Chemistry", 'Chemical Biology')
 	def testBSCHEM1(self):
 		ans= remainingRequirements([], "College of Chemistry", 'Chemistry B.S.')
 		self.assertEqual(5+8+5,len(ans))
