@@ -17,7 +17,7 @@ if testUser:
 class testGUI(unittest.TestCase):
 
     def setUp(self):
-        drivers = [webdriver.Firefox()]#, webdriver.Chrome(), webdriver.Ie(), webdriver.Safari()]
+        self.drivers = [webdriver.Firefox()]#, webdriver.Chrome(), webdriver.Ie(), webdriver.Safari()]
     
     def testCreateUserLogout(self):
         for driver in self.drivers:
