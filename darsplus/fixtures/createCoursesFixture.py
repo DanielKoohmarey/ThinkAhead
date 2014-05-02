@@ -16,9 +16,18 @@ html_escape_table = {
     ",": "&#44;",
     }
 
+def unescape(x):
+    return html_escape_table[x]
+"""
 def htmlEscape(text):
     return text.replace('&#44;', ' ').replace('&amp;',' ').replace('&apos;',"")
     #return escape(text, html_escape_table)    
+"""
+
+def htmlEscape(text):
+    for htmlElem in html_escape_table:
+        text.replace(unescape(htmlElem), htmlElem)
+    return text
 
 # End of HTML Escape
 
