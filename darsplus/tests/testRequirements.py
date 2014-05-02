@@ -84,6 +84,12 @@ class TestRequirements(TestCase):
 		self.assertTrue(not ans['reqCompleted'])
 		self.assertEqual('Electronics',ans['reqName'])
 		self.assertEqual("Engineering class",ans['reqDescription'])
+	def testTwoChoiceReq6(self):
+		ans  = twoChoiceReq(['ELENG.40', 'ELENG.20'], 'Electronics', 'COMPSCI.61A', 'COMPSCI 61A', 'ELENG.40', 'EE 40', "Engineering class")
+		self.assertIn('EE 40', ans['courseDone'])
+		self.assertFalse(ans['reqCompleted'])
+		self.asssertIn('COMPSCI 61A', ans['courseLeft'])
+
 	def testManyChoiceReq1(self):
 		listelec={'ELENG.20':'EE 20','ELENG.40':'EE 40','ELENG.100':'EE 100'}
 		ans=manyChoiceReq([],'Electronics',listelec,"Engineering class")
@@ -327,10 +333,10 @@ class TestEngineering(TestCase):
 
 class TestChem(TestCase):
 	def testBSCHEM1(self):
-		ans= remainingRequirements([], "College of Chemistry", 'B.S. Chemistry')
+		ans= remainingRequirements([], "College of Chemistry", 'Chemistry B.S.')
 		self.assertEqual(5+8+5,len(ans))
 	def testBACHEM1(self):
-		ans= remainingRequirements([], "College of Chemistry", 'B.A. Chemistry')
+		ans= remainingRequirements([], "College of Chemistry", 'Chemistry B.A.')
 		self.assertEqual(5+8+3,len(ans))
 	def testCHEMENG1(self):
 		ans= remainingRequirements([], "College of Chemistry", 'Chemical Engineering')
