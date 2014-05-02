@@ -243,6 +243,7 @@ body.noScroll {
 .reqTitle {
 	margin-top: 1px;
 	margin-bottom: 1px;
+	cursor: hand;
 }
 
 .reqDescription {
@@ -384,13 +385,14 @@ ul.errorlist {
 }
 
 #simplemodal-container {
-     background-color: #00B0DA;
-     border-color: #003262;
-     color:white;
+    background-color: #00B0DA;
+    border-color: #003262;
+    color:white;
 	border: 2px solid;
 	border-radius: 5px;
-     padding: 5px;
-     max-width:300px;
+    padding: 5px;
+    max-width:300px;
+    top: 150px;
 }
 #simplemodal-container a.modalCloseImg {
 	background:url('x.png') no-repeat; /* adjust url as required */
