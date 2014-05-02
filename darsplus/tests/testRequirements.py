@@ -483,30 +483,28 @@ class TestBreadth(TestCase):
 			self.assertTrue (temp[i]['reqCompleted'])
 
 	def testBreadth6Marion(self): #Marion TODO
+		
+		courses = ['IAS.C145','CHICANO.161'] #overlaps history and international
+		temp = sevenBreadth(courses)
+		self.assertTrue(temp[1]['reqCompleted'])
+
+		courses = ['RELIGST.123','RELIGST.125'] #overlaps history and philosophy
+		temp = sevenBreadth(courses)
+		self.assertTrue(temp[2]['reqCompleted'])
+
+		courses = ['L&S.16','ANTHRO.134']
+		temp = sevenBreadth(courses)
+		self.assertTrue(temp[3]['reqCompleted'])
+		
+		courses = ['HISTORY.4A', 'HISTORY.4B']
+		temp = sevenBreadth(courses)
+		self.assertTrue(temp[4]['reqCompleted'])
+		
 		courses = ['THEATER.151B','THEATER.151A'] #overlaps History and arts
 		temp = sevenBreadth(courses)
+		self.assertTrue(temp[5]['reqCompleted'])
 		self.assertTrue(temp[6]['reqCompleted'])
 		
-		print "intern"
-		print overlap(historicalStudies, international)
-		courses = ['IAS.C145','CHICANO.161'] #overlaps history and international
-
-		print "philosophy"
-		print overlap(historicalStudies, philosophyValues)
-		courses = ['RELIGST.123','RELIGST.125'] #overlaps history and philosophy
-
-		print "physical"
-		print overlap(historicalStudies, physicalScience)
-		courses = ['L&S.16','ANTHRO.134']
-
-		print "social"
-		print overlap(historicalStudies, socialBehavioralScience)
-		courses = ['HISTORY.4A', 'HISTORY.4B']
-		
-		
-		#temp = sevenBreadth
-		#self.assertTrue(temp[0]['reqCompleted'])
-      		print "bio"
 		
 allCourses = [artAndLit, biologicalScience, international, philosophyValues, physicalScience, socialBehavioralScience,historicalStudies]
 
