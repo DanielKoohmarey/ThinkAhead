@@ -33,7 +33,7 @@
 	     <script> {% if update %} $.modal("<div>Your profile has been updated.</div>"); $("#simplemodal-container").css('border-color','#003262');{%endif%}</script>
            <script> $(document).ready(function(){if (document.referrer.contains("registration")){ $.modal("<div>To get started, you can expand one of your remaining requirements from the right, and drag classes to fill your planner on the left!</div>"); $("#simplemodal-container").css('border-color','#003262');}}); </script>
 	</div>		
-	
+
 		<div class="container">
 	            <b>Total Unit Count: {{ unitsPlanner }} 
 	            {% if unitsCompleted %}
@@ -43,8 +43,10 @@
 
 		      <input id="savePlanners" class="button" type="submit" value="Save Planner" onClick="savePlanners()">         
 		      
+		      <br><br><br>
+
 		      <div> 
-			<input id="addPlannerCourse" type="text"> 
+			<input id="addPlannerCourse" type="text">  
 			<input class="button" type="submit" value="Add Class" onClick="newCourseItem()"> 
 		      </div> 
 		      <ul id="newCourseUL"> </ul>
