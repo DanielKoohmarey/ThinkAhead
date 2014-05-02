@@ -339,4 +339,4 @@ class TestUserCase(TestCase):
         #self.assertIn('<h3 class="reqTitle">American Cultures</h3><p class="reqDescription">Description: Take at least one course labeled AC </p><p>Requirement Completed: False</p>', self.strip(body))
         
         # Major Requirement
-        self.assertIn('<h3 class="reqTitle">Introduction to Applied Computing (Completed)</h3><p class="reqDescription">Description: The freshman year Introduction to Applied Computing requirement of either E 7 or CS 61A', self.strip(body))
+        #self.assertIn('<h3 class="reqTitle">Introduction to Applied Computing (Completed)</h3><p class="reqDescription">Description: The freshman year Introduction to Applied Computing requirement of either E 7 or CS 61A', self.strip(body))
