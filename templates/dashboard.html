@@ -4,7 +4,6 @@
 	<title>Think Ahead</title>
 	{% load staticfiles %}
 	<script type="text/javascript" src="{% static "jquery-1.11.0.min.js" %}"></script>
-     <script type="text/javascript" src="{% static "jquery.simplemodal-1.4.4.js" %}"></script>
 	<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
 	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
 
@@ -20,12 +19,10 @@
 	        	<div class="logoHead"></div>
 	        </a>
 	        <div class="userBar">
-	           <form action="/profile">
-	               <input class="button" type="submit" name="profile" value="Profile">
-	           </form>
-	           <form action="/dashboard">
-	               <input class="activeButton" type="submit" name="dashboard" value="Dashboard">
-	           </form>	           
+	            Hello,
+	            <a href="/profile">
+	            	<div class="userIcon"></div>
+	            	{{ user.username }}</a>.
 	            <form action="/logout">
 	                <input class="button" type="submit" name="logout" value="Logout">
 	            </form>
@@ -33,7 +30,7 @@
 		</header>
 	     <script> {% if update %} $.modal("<div>Your profile has been updated.</div>"); $("#simplemodal-container").css('border-color','#003262');{%endif%}</script>
            <script> $(document).ready(function(){if (document.referrer.contains("registration")){ $.modal("<div>To get started, you can expand one of your remaining requirements from the right, and drag classes to fill your planner on the left!</div>"); $("#simplemodal-container").css('border-color','#003262');}}); </script>
-	</div>	
+	</div>		
 	
 		<div class="container">
 	            <b>Total Unit Count: {{ unitsPlanner }} 
@@ -41,8 +38,8 @@
 	                <small><i>({{unitsCompleted}} units already completed.)</i></small>
 	            {% endif %}
 	            </b> 
-        
-		      <input id="savePlanners" class="button" type="submit" value="Save Planner" style="margin: 0 0 25px 25px;" onClick="savePlanners()">         
+
+		      <input id="savePlanners" class="button" type="submit" value="Save Planner" onClick="savePlanners()">         
 
 			<table class="planner centered">
 				<tr>
@@ -93,7 +90,7 @@
 							{% endfor %}
 						{% endif %}
 					</ul>
-					<ul id="planner{{ forloop.counter }}" class="sortableList plannerMinHeight">
+					<ul id="req{{ forloop.counter }}" class="sortableList">
 						{% if r.courseLeft %}
 							{% for left in r.courseLeft %}
 								<li class="course">{{ left }}</li>
