@@ -243,6 +243,8 @@ body.noScroll {
 .reqTitle {
 	margin-top: 1px;
 	margin-bottom: 1px;
+}
+.reqTitle:hover {
 	cursor: hand;
 }
 
