@@ -282,14 +282,26 @@ class TestEngineering(TestCase):
 		# MARION TODO
 		# Meant to cover 2359-2368, change assert
 		ans= remainingRequirements(['COMPSCI.61C','MATH.105', 'MATH.185'], "College of Engineering", 'Engineering Mathematics & Statistics')
+		self.assertTrue(ans[2]['reqCompleted'])
+		self.assertTrue(ans[3]['reqCompleted'])
+		self.assertTrue(ans[4]['reqCompleted'])
+		self.assertTrue(ans[6]['reqCompleted'])
 	def testENGMS7(self):
 		# MARION TODO
 		# Meant to cover 2359-2368, change assert
 		ans= remainingRequirements(['COMPSCI.61C', 'MATH.185'], "College of Engineering", 'Engineering Mathematics & Statistics')
+		self.assertTrue(ans[2]['reqCompleted'])
+		self.assertTrue(ans[3]['reqCompleted'])
+		self.assertTrue(ans[4]['reqCompleted'])
+		self.assertTrue(ans[6]['reqCompleted'])
 	def testENGMS8(self):
 		# MARION TODO
 		# Meant to cover 2359-2368, change assert
 		ans= remainingRequirements(['COMPSCI.61C','MATH.105'], "College of Engineering", 'Engineering Mathematics & Statistics')
+		self.assertTrue(ans[2]['reqCompleted'])
+		self.assertTrue(ans[3]['reqCompleted'])
+		self.assertTrue(ans[4]['reqCompleted'])
+		self.assertTrue(ans[6]['reqCompleted'])
 	def testENGP1(self):
 		ans= remainingRequirements([], "College of Engineering", 'Engineering Physics')
 		self.assertEqual(5+2+21,len(ans))
@@ -348,22 +360,27 @@ class TestChem(TestCase):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover part of 3615-3617, change assert
 		ans= remainingRequirements(['AEROSPC.2A', 'AEROSPC.2B'], "College of Chemistry", 'Chemical Biology')
+		self.assertEquals(5+8+9, len(ans))
 	def testHSS2(self):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover part of 3604-3606, change assert
 		ans= remainingRequirements(['COMLIT.120'], "College of Chemistry", 'Chemical Biology')
+		self.assertEquals(5+8+9, len(ans))
 	def testHSS3(self):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover part of 3599-3601, change assert
 		ans= remainingRequirements(['ECON.100A'], "College of Chemistry", 'Chemical Biology')
+		self.assertEquals(5+8+9, len(ans))
 	def testHSS4(self):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover part of 3594-3596, change assert
 		ans= remainingRequirements(['ENGLISH.112'], "College of Chemistry", 'Chemical Biology')
+		self.assertEquals(5+8+9, len(ans))
 	def testHSS5(self):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover part of 3589-3591, change assert
 		ans= remainingRequirements(['FRENCH.120A'], "College of Chemistry", 'Chemical Biology')
+		self.assertEquals(5+8+13, len(ans))
 	def testHSS5(self):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover part of 3494-3589, change assert
@@ -372,14 +389,17 @@ class TestChem(TestCase):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover part of 3644-3647, change assert
 		ans= remainingRequirements(['HIST.R1B', 'FILM.R1A'], "College of Chemistry", 'Chemical Biology')
+		self.assertEquals(5+8+9, len(ans))
 	def testR1AAmy(self):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover part of 3644-3647, change assert
 		ans= remainingRequirements(['FILM.R1A'], "College of Chemistry", 'Chemical Biology')
+		self.assertEquals(5+8+9, len(ans))
 	def testR1BAmy(self):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover part of 3644-3647, change assert
 		ans= remainingRequirements(['HIST.R1B'], "College of Chemistry", 'Chemical Biology')
+		self.assertEquals(5+8+9, len(ans))
 	def testBSCHEM1(self):
 		ans= remainingRequirements([], "College of Chemistry", 'Chemistry B.S.')
 		self.assertEqual(5+8+5,len(ans))
@@ -414,14 +434,20 @@ class TestEnvironmentalDesign(TestCase):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover part of 4730-4733, change assert
 		ans= remainingRequirements(['HIST.R1B', 'FILM.R1A'], "College of Environmental Design", 'Architecture')
+		self.assertEqual(5+8+13,len(ans))
+
 	def testR1AAmy(self):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover part of 4730-4733, change assert
 		ans= remainingRequirements(['FILM.R1A'], "College of Environmental Design", 'Architecture')
+		self.assertEqual(5+8+14,len(ans))
+
 	def testR1BAmy(self):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover part of 4730-4733, change assert
 		ans= remainingRequirements(['HIST.R1B'], "College of Environmental Design", 'Architecture')
+		self.assertEqual(5+8+14,len(ans))
+
 	def testARCH1(self):
 		ans= remainingRequirements([], "College of Environmental Design", 'Architecture')
 		self.assertEqual(5+8+14,len(ans))
@@ -429,6 +455,8 @@ class TestEnvironmentalDesign(TestCase):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover 4755-4757, change assert
 		ans= remainingRequirements(['ENVDES.106'], "College of Environmental Design", 'Architecture')
+		self.assertEqual(5+8+14,len(ans))
+
 	def testLDARCH1(self):
 		ans= remainingRequirements([], "College of Environmental Design", 'Landscape Architecture')
 		self.assertEqual(5+8+18,len(ans))
@@ -436,6 +464,8 @@ class TestEnvironmentalDesign(TestCase):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover 4812-4814, change assert
 		ans= remainingRequirements(['ENVDES.106'], "College of Environmental Design", 'Landscape Architecture')
+		self.assertEqual(5+8+18,len(ans))
+
 	def testURDES1(self):
 		ans= remainingRequirements([], "College of Environmental Design", 'Urban Studies')
 		self.assertEqual(5+8+13,len(ans))
@@ -443,6 +473,8 @@ class TestEnvironmentalDesign(TestCase):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover 4863-4865, change assert
 		ans= remainingRequirements(['ENVDES.106'], "College of Environmental Design", 'Urban Studies')
+		self.assertEqual(5+8+13,len(ans))
+
 	def testSENVDES1(self):
 		ans= remainingRequirements([], "College of Environmental Design", 'Sustainable Environmental Design')
 		self.assertEqual(5+8+17,len(ans))
@@ -450,6 +482,8 @@ class TestEnvironmentalDesign(TestCase):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover 4730-4733, change assert
 		ans= remainingRequirements(['HIST.R1B', 'FILM.R1A'], "College of Environmental Design", 'Urban Studies')
+		self.assertEqual(5+8+13,len(ans))
+
 
 class TestHaas(TestCase):
 	def testUGBA1(self):
@@ -457,56 +491,78 @@ class TestHaas(TestCase):
 		self.assertEqual(5+18,len(ans))
 
 class TestNaturalResources(TestCase):
-	def testSE1(self):
-		self.assertEqual(1,1)
 	def testR1AR1BAmy(self):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover part of 4065-4659, change assert
 		ans= remainingRequirements(['HIST.R1B', 'FILM.R1A'], "College of Natural Resources", 'Molecular Toxicology')
+		self.assertEquals(5+18+2, len(ans))
+
 	def testR1AAmy(self):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover part of 4065-4659, change assert
 		ans= remainingRequirements(['FILM.R1A'], "College of Natural Resources", 'Molecular Toxicology')
+		self.assertEquals(5+18+2, len(ans))
+
 	def testR1BAmy(self):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover part of 4065-4659, change assert
 		ans= remainingRequirements(['HIST.R1B'], "College of Natural Resources", 'Molecular Toxicology')
+		self.assertEquals(5+18+2, len(ans))
+
 	def testCRS1(self):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover part of 4065-4659, change assert
 		ans= remainingRequirements([], "College of Natural Resources", 'Conservation and Resource Studies')
+		self.assertEquals(5+18+14, len(ans))
+
 	def testES1(self):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover part of 4065-4659, change assert
 		ans= remainingRequirements([], "College of Natural Resources", 'Environmental Sciences')
+		self.assertEquals(5+3, len(ans))
+
 	def testFNR1(self):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover part of 4065-4659, change assert
 		ans= remainingRequirements([], "College of Natural Resources", 'Forestry and Natural Resources')
+		self.assertEquals(5+18+8, len(ans))
+
 	def testGPB1(self):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover part of 4065-4659, change assert
 		ans= remainingRequirements([], "College of Natural Resources", 'Genetics and Plant Biology')
+		self.assertEquals(5+18, len(ans))
+
 	def testMB1(self):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover part of 4065-4659, change assert
 		ans= remainingRequirements([], "College of Natural Resources", 'Microbial Biology')
+		self.assertEquals(5+16, len(ans))
+
 	def testMEB1(self):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover part of 4065-4659, change assert
 		ans= remainingRequirements([], "College of Natural Resources", 'Molecular and Environmental Biology')
+		self.assertEquals(5+18+9, len(ans))
+
 	def testMT1(self):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover part of 4065-4659, change assert
 		ans= remainingRequirements([], "College of Natural Resources", 'Molecular Toxicology')
+		self.assertEquals(5+18+2, len(ans))
+
 	def testSE1(self):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover part of 4065-4659, change assert
 		ans= remainingRequirements([], "College of Natural Resources", 'Society and Environment')
+		self.assertEquals(5+3, len(ans))
+
 	def testEEP1(self):
 		# MARION TODO; 'Amy' func name, remove
 		# Meant to cover part of 4065-4659, change assert
 		ans= remainingRequirements([], "College of Natural Resources", 'Environmental Economics and Policy')
+		self.assertEquals(5+3, len(ans))
+
 
 
 
@@ -565,107 +621,64 @@ class TestBreadth(TestCase):
 	def testBreadth7Marion(self): #Marion TODO (Social behavioral)
 		courses = ['L&S.126','PSYCH.125'] #overlaps with bio
 		temp = sevenBreadth(courses)
-		#self.assertTrue(temp[6]['reqCompleted'])
-
 		courses = ['PACS.N127A','JAPAN.80'] #overlaps international
 		temp = sevenBreadth(courses)
-		#self.assertTrue(temp[6]['reqCompleted'])
-
 		courses = ['EALANG.C126','MILAFF.144','NESTUD.C92'] #overlaps philosophy
 		temp = sevenBreadth(courses)
-		#self.assertTrue(temp[6]['reqCompleted'])
-
 		courses = ['ANTRHO.134','ANTHRO.133','ENERES.102','ENERES.100','ENERES.141','EPS.170AC','ENVSCI.10'] #overlaps physical
-		temp = sevenBreadth(courses)
-		#self.assertTrue(temp[6]['reqCompleted'])
-		
 		courses = ['HISTORY.4A', 'HISTORY.4B','HISTORY.141B','SPANISH.C178','HISTORY.119A','HISTORY.134A','HISTORY.165A'] #overlaps history
 		temp = sevenBreadth(courses)
-		#self.assertTrue(temp[6]['reqCompleted'])
-		
 		courses = ['ISF.C160','ANTHRO.160AC'] #overlaps arts
 		temp = sevenBreadth(courses)
-		#self.assertTrue(temp[6]['reqCompleted'])
+		self.assertTrue(temp[6]['reqCompleted'])
 
 	def testBreadth8Marion(self): #Marion TODO ART
 
 		courses = ['ENGLISH.C77', 'ESPM.C12'] #overlaps with bio
 		temp = sevenBreadth(courses)
-		#self.assertTrue(temp[5]['reqCompleted'])
-
 		courses = ['MUSIC.134B', 'SLAVIC.39C'] #overlaps international
 		temp = sevenBreadth(courses)
-		#self.assertTrue(temp[5]['reqCompleted'])
-
 		courses = ['EALANG.C124', 'NESTUD.C92'] #overlaps philosophy
 		temp = sevenBreadth(courses)
-		#self.assertTrue(temp[5]['reqCompleted'])
-
 		courses = [] #overlaps physical
 		temp = sevenBreadth(courses)
-		#self.assertTrue(temp[4]['reqCompleted'])
-		
 		courses = ['THEATER.151B', 'THEATER.151A'] #overlaps history
 		temp = sevenBreadth(courses)
-		#self.assertTrue(temp[5]['reqCompleted'])
-		
 		courses = ['ISF.C160', 'ANTHRO.160AC'] #overlaps social
 		temp = sevenBreadth(courses)
-		#self.assertTrue(temp[5]['reqCompleted'])
+		self.assertTrue(temp[5]['reqCompleted'])
 
 
 	def testBreadth9Marion(self): #Marion TODO Physical Science
-		y = 3
-
 		courses = ['ENERES.100', 'ENERES.102']# 'INDENG.39A', 'ENVSCI.10', 'PUBPOL.C184', 'GEOG.39C', 'L&S.C170AC'] #overlaps social
 		temp = sevenBreadth(courses)
-		#self.assertTrue(temp[y]['reqCompleted'])
-
 		courses = ['EPS.185', 'EPS.C82', 'GEOG.143', 'COMPBIO.170B', 'ESPM.181', 'INTEGBI.C82', 'GEOG.C82'] #overlaps with bio
-		temp = sevenBreadth(courses)
-
 		courses = ['INTEGBI.C158', 'ESPM.C107']  #overlaps international
-		temp = sevenBreadth(courses)
-		#self.assertTrue(temp[y]['reqCompleted'])
-
 		courses = ['OPTOM.39A'] #overlaps philosophy
-		temp = sevenBreadth(courses)
-		#self.assertTrue(temp[y]['reqCompleted'])
-
-		
-
 		courses = ['INTEGBI.C158', 'ESPM.C107'] #'L&S.122', 'L&S.16', 'L&S.C70X', 'ANTHRO.134A', 'HISTORY.181B', 'EPS.C51'] #overlaps international
 		temp = sevenBreadth(courses)
 
 		courses = ['EPS.C82', 'EPS.185'] # 'GEOG.143', 'COMPBIO.170B', 'ESPM.181', 'INTEGBI.C82', 'GEOG.C82'] #overlaps with bio
 		temp = sevenBreadth(courses)
+		temp = sevenBreadth(courses)
+
+		self.assertTrue(temp[5]['reqCompleted'])
+
 
 	def testBreadth10Marion(self): #Marion TODO Philosophy
-		y = 3
-
 		courses = ['PACS.N127A', 'EALANG.C128'] # 'PACS.128AC', 'PACS.127B', 'PACS.127A', 'ISF.60', 'POLECON.101', 'GPP.105']  #overlaps international
 		temp = sevenBreadth(courses)
-		#self.assertTrue(temp[y]['reqCompleted'])
-
 		courses = ['EALANG.C124', 'CELTIC.C168'] # 'RHETOR.50C', 'RHETOR.50B', 'RHETOR.50A', 'RHETOR.50D', 'CLASSIC.34', 'PHILOS.7']#overlaps art
 		temp = sevenBreadth(courses)
-		#self.assertTrue(temp[y]['reqCompleted'])
-
 		courses = ['OPTOM.39A'] #overlaps physical
 		temp = sevenBreadth(courses)
-		#self.assertTrue(temp[4]['reqCompleted'])
-		
 		courses = ['RELIGST.123', 'RELIGST.125'] # 'NESTUD.131', 'NESTUD.134', 'NESTUD.137', 'NESTUD.146A', 'NESTUD.105B', 'NESTUD.105A', 'RELIGST.173AC'] #overlaps history
 		temp = sevenBreadth(courses)
-		#self.assertTrue(temp[y]['reqCompleted'])
-		
 		courses = ['EALANG.C126', 'PACS.128AC'] # 'MILAFF.144', 'L&S.18', 'IDS.182', 'PACS.151', 'PACS.155', 'IAS.105', 'PHILOS.2'] #overlaps social
 		temp = sevenBreadth(courses)
-		#self.assertTrue(temp[y]['reqCompleted'])
-
 		courses = ['L&S.126', 'ENGLISH.C77'] # 'L&S.18', 'UGIS.C12', 'ESPM.C12']  #overlaps with bio
 		temp = sevenBreadth(courses)
-		#self.assertTrue(temp[y]['reqCompleted'])
+		self.assertTrue(temp[4]['reqCompleted'])
 
 
 allCourses = [artAndLit, biologicalScience, international, philosophyValues, physicalScience, socialBehavioralScience,historicalStudies]
