@@ -268,7 +268,8 @@ li.course {
     color: white;
     cursor: move;
     padding: 3px;
-    max-width: 150px;
+    width: 130px;
+    text-align:center;
 }
 
 .coursePreview {
