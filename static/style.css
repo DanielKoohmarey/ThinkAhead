@@ -10,7 +10,7 @@ body, input, button, select, option, textarea {
 
 body {
 	/* font-family: Arial, sans-serif; */
-        height: 100%;
+        height: 90%;
 	color: #000000;
 	margin: 0px;
 	/*background-image: url('lined_paper.png'); /* subtlepatterns.com */
@@ -36,7 +36,7 @@ header {
 .wrapper {
     margin-left: auto;
     margin-right: auto;
-    min-width: 960px;
+    min-width: 800px;
 }
 
 .centered {
@@ -244,6 +244,9 @@ body.noScroll {
 	margin-top: 1px;
 	margin-bottom: 1px;
 }
+.reqTitle:hover {
+	cursor: hand;
+}
 
 .reqDescription {
 	margin-top: 1px;
@@ -307,7 +310,7 @@ li.courseCompleted {
 
 .courseMaxHeight{
     max-height: 150px;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .reqCoursesWrapper {
@@ -315,8 +318,8 @@ li.courseCompleted {
 }
 
 #deletePlannerCourse {
-	height: 40px;
-	width: 150px;
+	height: 50px;
+	width: 170px;
 	background-color: #D7D7D8;
 	border-style: solid;
 	border-width: 1px;
@@ -394,6 +397,7 @@ ul.errorlist {
      border-color: #003262;
     text-align:center;
 }
+
 #simplemodal-container a.modalCloseImg {
 	background:url('x.png') no-repeat; /* adjust url as required */
 	width:25px;
