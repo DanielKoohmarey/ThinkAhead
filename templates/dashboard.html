@@ -31,8 +31,19 @@
 	            </form>
 	        </div>
 		</header>
-	     <script> {% if update %} $.modal("<div>Your profile has been updated.</div>"); $("#simplemodal-container").css('border-color','#003262');{%endif%}</script>
-           <script> $(document).ready(function(){if (document.referrer.contains("registration")){ $.modal("<div>To get started, you can expand one of your<br/> remaining requirements from the right, and <br/>drag classes to fill your planner on the left!</div>"); $("#simplemodal-container").css('border-color','#003262');}}); </script>
+	     {% if update %} <script> $.modal("<div>Your profile has been updated.</div>"); $("#simplemodal-container").css('border-color','#003262');</script>{%endif%}
+           <script> $(document).ready(function(){
+                                                    if (!String.prototype.contains) {
+                                                        String.prototype.contains = function(s, i) {
+                                                            return this.indexOf(s, i) != -1;
+                                                        }
+                                                    }   
+                                                    if (document.referrer.contains("registration")){ 
+                                                        $.modal("<div>To get started, you can click to expand one of your remaining requirements from the right, and drag classes to fill your planner on the left!</div>"); 
+                                                        $("#simplemodal-container").css('border-color','#003262');
+                                                    }
+                                                });
+         </script>
 	</div>		
 
 		<div class="container">
