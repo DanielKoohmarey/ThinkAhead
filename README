@@ -77,7 +77,7 @@ CONFIGURING DATABASE
 	2) Create a database
 	   a) In the terminal, type "createdb darsplus"
 	   b) In the project directory, type "python manage.py syncdb". It shouldn't be an issue but you might have to change DATABASE settings like 'host', 'username' and 'password' to fit your database
-
+	   Note: If you ever change your models, you'll need to "dropdb darsplus" and repeat step 2.
 	3) Manually add entries to DB (Just in case)
 	   To manually add the entries, type "python manage.py loaddata darsplus/fixtures/initial_data.json"
 	   If successful, you should see "XXX objects installed out of XXX fixtures"
